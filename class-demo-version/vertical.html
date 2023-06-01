@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Motion Testing</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />        
+    <link rel="stylesheet" href="./styles/dropdown.css">
+    <link rel="stylesheet" href="./styles/simple-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="./libraries/d3.js"></script>
+    <script src="./libraries/jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+
+
+
+<div id="heading">
+<h2 style="text-align:center;">Perception of Motion in Graph</h2>
+</div>
+<div>
+
+<p> Please hit the play button to observe the motion graph and then answer the following questions</p>
+</div>
+
+
+<div id="chart">
+
+</div>
+
+<div id="btns">
+    <button id="startbtn"> <i class="fa fa-play"></i></button>
+    <button id="stopbtn"> <i class="fa fa-stop"></i></button>
+</div>
+
+
+ <div id="test">     
+   
+    <form  id="input_form2">
+     Which circle is moving faster?<br>
+    <input type="radio" name="id" value="1" id="radio21"> 1<br>
+    <input type="radio" name="id" value="2" id="radio22"> 2<br>
+     How much faster is one circle than another?(i.e.2 times,3 times etc)<br>0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20<br>
+     <input type="range" list="tickmarks" min="0" max="20" step="1" name="speed" id="value2">
+     <datalist id="tickmarks">
+     <option value="0" label="0">
+  <option value="1">
+  <option value="2">
+  <option value="3">
+  <option value="4">
+  <option value="5">
+  <option value="6">
+  <option value="7">
+  <option value="8">
+  <option value="9">
+  <option value="10" label="10">
+  <option value="11">
+  <option value="12">
+  <option value="13">
+  <option value="14">
+  <option value="15">
+  <option value="16">
+  <option value="17">
+  <option value="18">
+  <option value="19">
+  <option value="20" label="20">
+</datalist>
+</form>  
+ 
+ </div>
+
+   <button id="submit">Submit</button> 
+   <button onclick="WriteFile()">End study</button> </div>
+
+<script src="./scripts/motion2.js"></script>
+<script> motion2(1.6,1.8);  </script>
+<script>
+function show_value2()
+{
+      var ID;
+      
+      var radio1=document.getElementById("radio21");
+      var radio2=document.getElementById("radio22");
+      var Value=document.getElementById("value2").value;
+      
+      if(radio1.checked) ID=1;
+      else if(radio2.checked) ID=2;
+      else ID=0;
+
+      console.log(ID);
+      console.log(Value);
+      window.confirm("You Entered "+ID+" and "+Value);
+
+}
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<head>
+  <style type="text/css">
+    html,
+    body {
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+    }
+    #content {
+      height: 100%;
+      width: 100%;
+    }
+    .example_e {
+      border: none;
+      background: #404040;
+      color: #ffffff !important;
+      font-weight: 100;
+      padding: 5px;
+      text-transform: uppercase;
+      border-radius: 6px;
+      display: inline-block;
+      transition: all 0.3s ease 0s;
+    }
+    .example_e:hover {
+      font-weight: 700 !important;
+      letter-spacing: 3px;
+      background: #00b8e6;
+      -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+      -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+      transition: all 0.3s ease 0s;
+      border-radius: 50px;
+    }
+  </style>
+  <script>
+    function getId() {
+      let xhr = new XMLHttpRequest();
+      xhr.open(
+        "GET",
+        "https://siddheshgupte2.pythonanywhere.com/get_participant_id/",
+        false
+      );
+      xhr.send(null);
+      if (xhr.status == 200) {
+        participant_id = JSON.parse(xhr.responseText)["ID"];
+      } else {
+        participant_id = -1;
+        console.log("Error fetching participantId from the server");
+      }
+      console.log(`getId() completed, id: ${participant_id}`);
+      load_page();
+    }
+
+    //var ratios = [4];
+    //var trails = [1];
+    var ratios = [1.5, 2, 2.5, 3, 3.5, 4];
+    var trails = [1, 2];
+    var pages = [
+      "./position.html",
+      "./length.html",
+      "./color.html",
+      "./vibration.html",
+      "./vertical_motion.html",
+      "./flicker.html",
+      "./expansion.html",
+      "./area.html",
+      "./angle.html"
+    ];
+    var items = [];
+    for (ratio of ratios) {
+      for (trail of trails) {
+        for (page of pages) {
+          items.push([page, ratio, trail]);
+        }
+      }
+    }
+    var page_to_name = {
+      "./position.html": "Position",
+      "./length.html": "Length",
+      "./color.html": "Color",
+      "./vibration.html": "Vibration",
+      "./vertical_motion.html": "Vertical Motion",
+      "./flicker.html": "Flicker",
+      "./expansion.html": "Expansion",
+      "./area.html": "Area",
+      "./angle.html": "Angle"
+    };
+
+    function load_page() {
+      console.log(`parent domain: ${document.domain}`);
+      if (items.length == 0) {
+        window.setTimeout(
+          () => window.location.assign(`./end.html?id=${participant_id}`),
+          500
+        );
+      }
+      var rand_item = items.splice(Math.floor(Math.random() * items.length), 1);
+      console.log(rand_item[0][1], items.length);
+
+      document.getElementById("head").innerHTML = `${
+        page_to_name[rand_item[0][0]]
+      }`;
+      document
+        .getElementById("content")
+        .setAttribute(
+          "src",
+          `${rand_item[0][0]}?ratio=${rand_item[0][1]}&trail=${rand_item[0][2]}&id=${participant_id}`
+        );
+    }
+  </script>
+</head>
+
+<body onload="getId()">
+  <h1 id="head"></h1>
+  <iframe id="content" src=""></iframe>
+</body>
