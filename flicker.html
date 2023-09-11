@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Motion Testing</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" href="./styles/dropdown.css" />
+    <link rel="stylesheet" href="./styles/simple-style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="./libraries/d3.js"></script>
+    <script src="./libraries/jquery-3.2.1.min.js"></script>
+    <script src="./libraries/timeme.js"></script>
+    <script type="text/javascript">
+      var params = location.href.split("?")[1].split("&");
+      url_data = {};
+      for (ele of params) {
+        ele = ele.split("=");
+        url_data[ele[0]] = ele[1];
+      }
+      TimeMe.initialize({
+        currentPageName: "flicker", // page name
+        idleTimeoutInSeconds: 15 // time before user considered idle
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="chart"></div>
+
+    <div id="test" style="margin-left:25%;">
+      How many times faster is the <b>fastest circle </b> compared to the
+      <b>slowest circle</b>?
+    </div>
+    <div id="ranger" style="width:45%;margin-left:25%;">
+      <input
+        type="range"
+        class="slider"
+        min="1"
+        max="20"
+        step="0.1"
+        name="speed"
+        id="value2"
+        value="1"
+      />
+      <br /><br />
+      &nbsp;&nbsp;Value: <span id="demo"></span>
+    </div>
+
+    <div id="last">
+      <br />
+      <br />
+
+      <button class="button" id="submit" style="margin-left:25%;">
+        Submit
+      </button>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <br /><br /><br />
+    </div>
+    <script src="./scripts/flicker.js"></script>
+    <script>
+      var slider = document.getElementById("value2");
+      var output = document.getElementById("demo");
+      output.innerHTML = slider.value;
+
+      slider.oninput = function() {
+        output.innerHTML = this.value;
+      };
+      function postMessage(timeSpentOnPage) {
+        var xhr = new XMLHttpRequest();
+        xhr.open(
+          "POST",
+          "http://localhost:5000/store_data/",
+          false
+        );
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(
+          JSON.stringify({
+            participant_id: url_data["id"],
+            ratio: parseFloat(url_data["ratio"]),
+            trial_number: parseInt(url_data["trail"]),
+            time_spent: timeSpentOnPage,
+            participant_answer: slider.value,
+            correct_answer: 10,
+            trial_number: 1,
+            type_of_encoding: "flicker",
+            difference: 10 - slider.value
+          })
+        );
+        if (xhr.status == 200) {
+          console.log("made request");
+          window.top.load_page();
+        } else {
+          console.log("Error sending msg to the server...retrying");
+          postMessage();
+        }
+      }
+      var btn = document.getElementById("submit");
+      btn.onclick = function() {
+        btn.disabled = true;
+        //  btn.style.background = "#e8e7d8";
+        var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+        postMessage(timeSpentOnPage);
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,144 @@
+.motion1{
+	height: 100%;
+	width: 50%;
+}
+/* changed by Reza to allign */
+#chart {
+   height: 95%;
+   width: 77%;
+   margin: 1px auto;
+   padding-right: 210px;
+   shape-rendering: auto;
+   border: 0px solid #262626;
+   border-radius: 4px;
+   position: relative;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+ }
+ 
+ #chart svg {
+   max-width: 100%;
+   max-height: 100%;
+   transform: translate(0%, 0px);
+
+ }
+ 
+
+#chart_container {
+    height:90%;
+    width:90%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: lightgrey;
+    shape-rendering: auto;
+    border-style: solid;
+    border-color: #d3d3d3;
+ }
+#test{
+
+	position:relative;
+    background-color: #f2f2f2;
+    margin-bottom: 20px;
+    margin-top: 40px;
+
+}
+
+#test2{
+
+	background-color: lightgrey;
+	height: 55%;
+	width: 35%;
+	margin-left: 40%;
+
+
+}
+
+#myBox{
+
+    
+    height:90%;
+    width:90%;
+    background-color: white;
+    margin-left: 100px;
+    margin-top: 50px;
+    overflow: scroll;
+    padding: 10px;
+
+}
+
+
+
+#heading
+{
+    background-color: #008fb3;
+    height:10%;
+    width: 100%;
+    font-size: 15px;
+    color: white;
+    border-style:double;
+    border-color: #005266;
+    border-width: 2px;
+    border-radius: 5px;
+
+}
+
+
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+ .text0 {
+    fill: red;
+ }
+
+ .text1 {
+    fill: green;
+ }
+
+ .text2 {
+    fill:steelblue;
+ }
+
+ .text3 {
+    fill: yellow;
+ }
+
+ .text4 {
+    fill: purple;
+ }
+
+ .text5 {
+    fill:brown;
+ }
+
+ .node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+
+#mainContainer {
+   display: flex;
+   width: 100%;
+   height: 100vh;
+}
+
+#chartContainer {
+   flex: 4;
+   padding-top: 10px;
+}
+
+#controlContainer {
+   flex: 1;
+   box-sizing: border-box;
+   padding-right: 15px;
+}
+
