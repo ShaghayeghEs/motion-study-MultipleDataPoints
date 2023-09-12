@@ -1,131 +1,236 @@
-var margin = { top: 20, right: 20, bottom: 20, left: 20 };
-var width = 500;
-var height = 350;
+var ID;
+var Value;
+var radio1;
+var radio2;
+var results_json = [];
+var current_elem = 0;
+var array_elem1 = 0;
+var array_elem2 = 0;
+var array_elem3 = 0;
+var motion_type = [1, 2, 3];
+var move_true;
+var count;
+var padding = 10;
+var timer_ret_val = false;
 
-var data;
-var chart;
-var chartWidth;
-var chartHeight;
+var speeds = [1,2,3,4,5,6,8,10,12,14,16]; // Define the speeds array (you can adjust these values)
 
-init(drawDots);
+var margin = {
+  top: 18,
+  left: 18,
+  bottom: 18,
+  right: 18
+};
 
-function init(drawChart) {
-  console.log("initiating!");
-  chartWidth = width - margin.left - margin.right;
-  chartHeight = height - margin.top - margin.bottom;
+var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
+var chartHeight = document.getElementById("chartContainer").offsetHeight - margin.top - margin.bottom;
 
-  var N = 4; // Change N to the desired size of the grid
+var svg = d3
+  .select("#chart")
+  .append("svg")
+  .attr("width", chartWidth)
+  .attr("height", chartHeight)
+  .append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  data = [];
+var display1 = d3.select("#chart");
+var display2 = d3.select("#test");
+var display3 = d3.select("#ranger");
+var display4 = d3.select("#last");
+var display5 = d3.select("#notice");
+// Added by Shae
+var display6 = d3.select("#test_difficulty");
+var display7 = d3.select("#ranger_difficulty");
 
-  var cellSize = Math.min(chartWidth, chartHeight) / N; // Size of each grid cell
-  var circleRadius = cellSize / 4.7; // Adjust the fraction to control the circle size
+var N = 10; // Change N to the desired size of the grid
 
-  // Generate data for each cell in the grid
+motion4(array_elem3, N); // Pass the N value to the function
+
+var circles_2; // Declare circles_2 as a global variable
+var borders; // Declare borders as a global variable to maintain cell borders
+
+// Function to animate the circles
+function animate() {
+  var maxSpeed = Math.max(...speeds); // Find the maximum speed in the array
+
+  var circleData = circles_2.data();
+
+  var timer = d3.timer(function (elapsed) {
+    circles_2.each(function (d) {
+      var circle = d3.select(this);
+      var speedFactor = d.speed; // Use the speed from the circle's data
+
+      // Calculate the adjusted duration based on speedFactor and the maximum speed
+      var adjustedDuration = 1000 / (speedFactor / maxSpeed);
+
+      var progress = (elapsed % adjustedDuration) / adjustedDuration;
+
+      if (progress <= 0.5) {
+        circle.attr("r", d.currentRadius * (1 + progress * 2));
+      } else {
+        circle.attr("r", d.currentRadius * (3 - progress * 2));
+      }
+    });
+  });
+}
+
+// Start the animation when your visualization is ready
+animate();
+
+function motion4(num, N) {
+  var circle_data_2 = [];
+  var box_data_2 = [];
+
+  var gridWidth = chartWidth - margin.left - margin.right; // Width of the grid area
+  var gridHeight = chartHeight - margin.top - margin.bottom; // Height of the grid area
+
+  var maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
+  var cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
+
+  var totalGridWidth = cellSize * N;
+  var totalGridHeight = cellSize * N;
+
+  var translateX = (chartWidth - totalGridWidth) / 2;
+  var translateY = (chartHeight - totalGridHeight) / 2;
+  svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
+
+  // Generate circle data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
 
-      data.push({
+      var colors = ["#008fb3"]; // Add more colors if needed
+
+      circle_data_2.push({
+        x: cx,
+        y: cy,
         id: i * N + j + 1,
-        cx: cx,
-        cy: cy,
-        radius: circleRadius,
-        expanding: true,
+        r_diff: 0.13,
+        currentRadius: cellSize / 5,
+        move: 0,
+        color: colors[i % colors.length], // Store the color for each circle
+        speed: speeds[(i * N + j) % speeds.length]  // Assigning speed to each circle
+
+      });
+
+      box_data_2.push({
+        x: j * cellSize,
+        y: i * cellSize,
+        h: cellSize,
+        w: cellSize
       });
     }
   }
 
-  initializeChart();
-  drawChart();
-} //end init
+  // Create borders for cells
+  borders = svg
+    .selectAll(".rect")
+    .data(box_data_2)
+    .enter()
+    .append("rect")
+    .attr("class", "rect")
+    .style("fill", "none")
+    .attr("stroke", "black")
+    .attr("stroke-width", 0.5)
+    .attr("x", function (d) {
+      return d.x;
+    })
+    .attr("y", function (d) {
+      return d.y;
+    })
+    .attr("height", function (d) {
+      return d.h;
+    })
+    .attr("width", function (d) {
+      return d.w;
+    });
 
-function initializeChart() {
-  chart = d3
-    .select("#chart")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-  chart.plotArea = chart
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-}
-
-function drawDots() {
-
-  var speeds = [200];
-
-  // plot dots
-  var dots = chart.plotArea
-    .selectAll(".dot")
-    .data(data)
+  circles_2 = svg
+    .selectAll(".circle") // Assign to the global variable
+    .data(circle_data_2)
     .enter()
     .append("circle")
-    .attr("class", "dot")
-    .attr("cx", function(d) {
-      return d.cx;
+    .attr("class", "circle")
+    .attr("r", 8) // Set the fixed radius value to 8
+    .attr("fill", function (d) {
+      return d.color; // Use the stored color value
     })
-    .attr("cy", function(d) {
-      return d.cy;
+    .attr("cx", function (d) {
+      return d.x;
     })
-    .attr("r", function(d) {
-      return d.radius;
-    })
-    .attr("fill", "#008fb3")
-    .on("click", function(d) {
-      console.log("circle: ", d.id, ", ", d.cx, ", ", d.cy);
-      // Perform action on circle click
+    .attr("cy", function (d) {
+      return d.y;
     });
 
-  chart.plotArea
-    .selectAll(".text")
-    .data(data)
-    .enter()
-    .append("text")
-    .attr("class", "label")
-    .attr("x", function(d) {
-      return d.cx;
-    })
-    .attr("y", function(d) {
-      return d.cy;
-    })
-    .attr("text-anchor", "middle") // Set the text anchor to the middle
-    .attr("dy", "0.35em") // Adjust the dy value for vertical alignment
-    .text(function(d) {
-      return d.id;
-    });
+  // Create arrow markers
+  svg
+    .append("defs")
+    .append("marker")
+    .attr("id", "arrowhead")
+    .attr("refX", 0) // Set refX to half of the cell size
+    .attr("refY", 3)
+    .attr("markerWidth", 30)
+    .attr("markerHeight", 30)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M 0,0 V 6 L9,3 Z")
+    .attr("fill", "black");
 
-  animate();
+  // Function to add an arrow to a specific cell
+  function addArrow(row, col) {
+    var cellSize = maxCellSize;
+    var cx = (col + 0.5) * cellSize;
+    var cy = (row + 0.5) * cellSize;
+    var circleRadius = circle_data_2[row * N + col].currentRadius; // Get the circle's current radius
 
-  function animate() {
-    dots.each(function(d, i) {
-      var circle = d3.select(this);
-      var expanding = d.expanding;
-      var speed = speeds[i % speeds.length]; // Get the speed based on the index
+    // Define the endpoint for the arrow (the middle of the outside border)
+    var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
 
-      if (expanding) {
-        // Expand circle
-        circle
-          .transition()
-          .duration(speed)
-          .attr("r", d.radius * 2)
-          .on("end", function() {
-            d.expanding = false;
-            animate();
-          });
-      } else {
-        // Shrink circle
-        circle
-          .transition()
-          .duration(speed)
-          .attr("r", d.radius)
-          .on("end", function() {
-            d.expanding = true;
-            animate();
-          });
-      }
-    });
+    if (col === 0) {
+      arrowStartX = -cellSize / 2;
+      arrowEndX = cx - circleRadius - 15; // Adjusted to avoid overlap with circle
+    } else if (col === N - 1) {
+      arrowStartX = totalGridWidth + cellSize / 2;
+      arrowEndX = cx + circleRadius + 15; // Adjusted to avoid overlap with circle
+    } else {
+      arrowStartX = arrowEndX = cx;
+    }
+
+    if (row === 0) {
+      arrowStartY = -cellSize / 2;
+      arrowEndY = cy - circleRadius - 15; // Adjusted to avoid overlap with circle
+    } else if (row === N - 1) {
+      arrowStartY = totalGridHeight + cellSize / 2;
+      arrowEndY = cy + circleRadius + 15; // Adjusted to avoid overlap with circle
+    } else {
+      arrowStartY = arrowEndY = cy;
+    }
+
+    // Add an arrow line
+    svg
+      .append("line")
+      .attr("x1", arrowStartX)
+      .attr("y1", arrowStartY)
+      .attr("x2", arrowEndX)
+      .attr("y2", arrowEndY)
+      .attr("stroke", "black")
+      .attr("stroke-width", 1.5)
+      .attr("marker-end", "url(#arrowhead)");
   }
+
+  // Add arrows to cells [0, 2] and [2, 0]
+  addArrow(0, 2);
+  addArrow(1, 0);
+
+  move_true = true;
+  console.log("area");
+
+  // Initialize the "expanding" property for circles
+  circles_2.each(function (d) {
+    d.expanding = true;
+  });
+
+  // Start the animation
+  animate();
 }
