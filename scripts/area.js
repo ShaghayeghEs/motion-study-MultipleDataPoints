@@ -197,18 +197,4 @@ function motion4(num, N) {
 
   move_true = true;
   console.log("area");
-
-  function animate_2(elapsed) {
-    circles_2
-      .attr("cx", function(d) {
-        return d.x;
-      })
-      .attr("cy", function(d) {
-        return d.y;
-      })
-      .attr("r", function(d) {
-        return d.radius;
-      });
-    return timer_ret_val;
-  }
 }
