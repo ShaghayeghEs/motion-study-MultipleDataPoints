@@ -27,35 +27,25 @@
   </head>
 
   <body>
-    <div id="chart"></div>
-
-    <div id="test" style="margin-left:25%;">
-      How many times darker is the<b> darkest color</b> compared to the<b> brightest color</b>?
-    </div>
-    <div id="ranger" style="width:45%;margin-left:25%;">
-      <input
-        type="range"
-        class="slider"
-        min="1"
-        max="20"
-        step="0.1"
-        name="speed"
-        id="value2"
-        value="1"
-      />
-      <br /><br />
-      &nbsp;&nbsp;Value: <span id="demo"></span>
-      <!-- <div id="rangeVal"> </div> -->
-    </div>
-
-    <div id="last">
-      <br />
-      <br />
-      <button class="button" id="submit" style="margin-left:25%;">
-        Submit
-      </button>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <br /><br /><br />
+    <div id="mainContainer">
+        <div id="chartContainer">
+            <div id="chart"></div>
+        </div>
+        <div id="controlContainer">
+            <div id="test">
+                How many times larger is the <b>biggest circle </b> compared to the <b>smallest circle</b>?
+            </div>
+            <div id="ranger">
+                <input type="range" class="slider" min="1" max="20" step="0.1" name="speed" id="value2" value="1" />
+                <br /><br />
+                &nbsp;&nbsp;Value: <span id="demo"></span>
+            </div>
+            <div id="last">
+                <br />
+                <button class="button" id="submit">Submit</button>
+                <br /><br /><br />
+            </div>
+        </div>
     </div>
     <script>
       var slider = document.getElementById("value2");
