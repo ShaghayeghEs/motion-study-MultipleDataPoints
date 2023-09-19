@@ -40,20 +40,13 @@ var display5 = d3.select("#notice");
 var display6 = d3.select("#test_difficulty");
 var display7 = d3.select("#ranger_difficulty");
 
-var N = 10; // Change N to the desired size of the grid
+var N = 3; // Change N to the desired size of the grid
 
 motion4(array_elem3, N); // Pass the N value to the function
 
 function motion4(num, N) {
-  var circle1_2 = [0.9, 0.1, 0.2, 0.4, 0.2, 1.6, 1.4, 1.0, 0.3, 0.2];
-  var circle2_2 = circle1_2;
 
-  var count1_2 = 1;
-  var count2_2 = 1;
-  var m_s_2 = circle1_2[num];
-  var m_s0_2 = circle2_2[num];
-  var m_s1_2 = m_s_2 / 0.2;
-  var m_s2_2 = m_s0_2 / 0.2;
+
 
   count = 0;
   move_true = false;
@@ -80,8 +73,8 @@ function motion4(num, N) {
     for (var j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
-      var Values = [1,2,4,1,1,1,1,1,,1,1,1,1,1,1,1,1,1,1]
-      var value = Values[i * N + j]; // Get the value from the array based on the circle's index
+      var Values = [20,45,90,125,175,270,320,200,340,180,180,180,180,180]
+      var value = Values[i * N + j]/20; // Get the value from the array based on the circle's index
 
 
       circle_data_2.push({
@@ -89,9 +82,8 @@ function motion4(num, N) {
         y: cy,
         id: i * N + j + 1,
         r_diff: 0.13,
-        radius: (cellSize / 2) * (value / 5), // Adjust the radius based on cell size
+        radius: (cellSize / 2.5) , // Adjust the radius based on cell size
         move: 0,
-        value: value
       });
 
 
@@ -100,8 +92,9 @@ function motion4(num, N) {
         x: cx,
         y: cy,
         id: i * N + j + 1,
-        startAngle: Values[value] // Convert angle to radians, Add this "* (Math.PI / 180")
-      });
+        startAngle: (90 - (20 * value)) * (Math.PI / 180) // Convert degrees to radians
+      }
+      );
 
       box_data_2.push({
         x: j * cellSize,
@@ -196,13 +189,30 @@ if (row === 0) {
       .startAngle(function(d) {
         return d.startAngle;
       })
-      .endAngle(1.5708)
+      .endAngle(function(d) {
+        return d.startAngle;
+      })
     )
     .attr("fill", "none")
     .attr('stroke', 'black');
 
-
-
+    var angles_3 = svg
+    .selectAll(".path")
+    .data(angle_data_2)
+    .enter()
+    .append("path")
+    .attr("transform", function(d) {
+      return "translate(" + d.x + "," + d.y + ")";
+    })
+    .attr("d", d3.arc()
+      .innerRadius(0)
+      .outerRadius(cellSize / 2 - 10) // Adjust the outerRadius based on cell size
+      .startAngle(1.5708) 
+      
+      .endAngle(1.5708)
+    )
+    .attr("fill", "none")
+    .attr('stroke', 'black');
 
 
   // Add an arrow line
@@ -228,27 +238,10 @@ if (row === 0) {
   console.log(chartWidth);
   console.log(chartHeight);
 
-  texts_2.attr("x", function(d) {
-    return d.x;
-  })
-  .attr("y", function(d) {
-    return d.y;
-  });
+  
 
 
   
 
-  function animate_2(elapsed) {
-    circles_2
-      .attr("cx", function(d) {
-        return d.x;
-      })
-      .attr("cy", function(d) {
-        return d.y;
-      })
-      .attr("r", function(d) {
-        return d.radius;
-      });
-    return timer_ret_val;
-  }
+  
 }

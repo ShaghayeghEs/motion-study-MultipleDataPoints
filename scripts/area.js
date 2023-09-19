@@ -135,47 +135,91 @@ function motion4(num, N) {
       arrowStartY = arrowEndY = cy;
   }
 
+  var box_2 = svg
+  .selectAll(".rect")
+  .data(box_data_2)
+  .enter()
+  .append("rect")
+  .attr("class", "rect clickable") // Add 'clickable' class
+  .style("fill", "white")
+  .attr("stroke", "black")
+  .attr("stroke-width", 0.5)
+  .attr("x", function(d) {
+    return d.x;
+  })
+  .attr("y", function(d) {
+    return d.y;
+  })
+  .attr("height", function(d) {
+    return d.h;
+  })
+  .attr("width", function(d) {
+    return d.w;
+  });
 
-    var box_2 = svg
-    .selectAll(".rect")
-    .data(box_data_2)
-    .enter()
-    .append("rect")
-    .attr("class", "rect")
-    .style("fill", "white")
-    .attr("stroke", "black")
-    .attr("stroke-width", 0.5)
-    .attr("x", function(d) {
-      return d.x;
-    })
-    .attr("y", function(d) {
-      return d.y;
-    })
-    .attr("height", function(d) {
-      return d.h;
-    })
-    .attr("width", function(d) {
-      return d.w;
-    });
+// Event listener for cell clicks to highlight the corresponding circle
+box_2.on("click", function(d, i) {
+  var clickedCircle = circles_2.nodes()[i];
+  if (selectedCircle === clickedCircle) {
+    // If the same circle is clicked again, unselect it
+    d3.select(clickedCircle).attr("stroke", "none");
+    selectedCircle = null;
+  } else {
+    // Unselect the previously selected circle (if any)
+    if (selectedCircle) {
+      d3.select(selectedCircle).attr("stroke", "none");
+    }
+    // Highlight the corresponding circle
+    d3.select(clickedCircle).attr("stroke", "black").attr("stroke-width", 2);
+    selectedCircle = clickedCircle;
+  }
+});
 
-  var circles_2 = svg
-    .selectAll(".circle")
-    .data(circle_data_2)
-    .enter()
-    .append("circle")
-    .attr("class", "circle")
-    .attr("r", function(d) {
-      return d.radius; // Use the adjusted radius
-    })
-    .attr("fill", "#008fb3")
-    .attr("cx", function(d) {
-      return d.x;
-    })
-    .attr("cy", function(d) {
-      return d.y;
-    });
+// Add a class to the circles to make them clickable
+var circles_2 = svg
+  .selectAll(".circle")
+  .data(circle_data_2)
+  .enter()
+  .append("circle")
+  .attr("class", "circle clickable") // Add 'clickable' class
+  .attr("r", function(d) {
+    return d.radius; // Use the adjusted radius
+  })
+  .attr("fill", "#008fb3")
+  .attr("cx", function(d) {
+    return d.x;
+  })
+  .attr("cy", function(d) {
+    return d.y;
+  });
 
+var selectedCircle = null; // To keep track of the selected circle
 
+// Event listener for left-click to highlight the cell
+circles_2.on("click", function(d) {
+  if (selectedCircle === d) {
+    // If the same circle is clicked again, unselect it
+    d3.select(this).attr("stroke", "none");
+    selectedCircle = null;
+  } else {
+    // Unselect the previously selected circle (if any)
+    if (selectedCircle) {
+      d3.select(selectedCircle).attr("stroke", "none");
+    }
+    // Highlight the clicked circle
+    d3.select(this).attr("stroke", "black").attr("stroke-width", 2);
+    selectedCircle = this;
+  }
+});
+
+// Event listener for right-click anywhere to unselect the cell
+d3.select("body").on("contextmenu", function() {
+  if (selectedCircle) {
+    d3.select(selectedCircle).attr("stroke", "none");
+    selectedCircle = null;
+  }
+  d3.event.preventDefault(); // Prevent the default right-click context menu
+});
 
     // Add an arrow line
     svg
