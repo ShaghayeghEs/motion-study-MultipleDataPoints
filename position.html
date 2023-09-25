@@ -1,17 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <meta charset="utf-8" />
   <head>
-    <title>Position Encoding</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-      rel="stylesheet"
-    />
-
-    <!-- Custom styles for this template-->
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <link rel="stylesheet" href="./styles/dropdown.css" />
-    <link rel="stylesheet" href="./styles/simple-style.css" />
+    <title>Motion Testing</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <link rel="stylesheet" href="./styles/dropdown.css" />
     <link rel="stylesheet" href="./styles/simple-style.css" />
@@ -30,44 +20,35 @@
         url_data[ele[0]] = ele[1];
       }
       TimeMe.initialize({
-        currentPageName: "position", // page name
+        currentPageName: "Position", // page name
         idleTimeoutInSeconds: 15 // time before user considered idle
       });
     </script>
   </head>
 
   <body>
-    <div id="chart"></div>
-    <div id="test" style="margin-left:25%;">
-      How many times farther is the <b>position of circle 2</b> compared to the
-      <b>position of circle 1</b>?
-    </div>
-    <div id="ranger" style="width:45%;margin-left:25%;">
-      <input
-        type="range"
-        class="slider"
-        min="1"
-        max="20"
-        step="0.1"
-        name="speed"
-        id="value2"
-        value="1"
-      />
-      <br /><br />
-      &nbsp;&nbsp;Value: <span id="demo"></span>
-    </div>
-
-    <div id="last">
-      <br />
-      <br />
-      <button class="button" id="submit" style="margin-left:25%;">
-        Submit
-      </button>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <br /><br /><br />
+    <div id="mainContainer">
+        <div id="chartContainer">
+            <div id="chart"></div>
+        </div>
+        <div id="controlContainer">
+            <div id="test">
+                How many times larger is the <b>biggest circle </b> compared to the <b>smallest circle</b>?
+            </div>
+            <div id="ranger">
+                <input type="range" class="slider" min="1" max="20" step="0.1" name="speed" id="value2" value="1" />
+                <br /><br />
+                &nbsp;&nbsp;Value: <span id="demo"></span>
+            </div>
+            <div id="last">
+                <br />
+                <button class="button" id="submit">Submit</button>
+                <br /><br /><br />
+            </div>
+        </div>
     </div>
 
-    <script src="./libraries/d3.v5.min.js"></script>
+    
     <script src="./scripts/position_encoding.js"></script>
     <script>
       var slider = document.getElementById("value2");
@@ -93,11 +74,10 @@
             time_spent: timeSpentOnPage,
             participant_answer: slider.value,
             correct_answer: 10,
-            type_of_encoding: "position",
+            type_of_encoding: "area",
             difference: 10 - slider.value
           })
         );
-
         if (xhr.status == 200) {
           console.log("made request");
           window.top.load_page();
@@ -109,7 +89,7 @@
       var btn = document.getElementById("submit");
       btn.onclick = function() {
         btn.disabled = true;
-        //btn.style.background = "#e8e7d8";
+        //  btn.style.background = "#e8e7d8";
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
         postMessage(timeSpentOnPage);
       };
