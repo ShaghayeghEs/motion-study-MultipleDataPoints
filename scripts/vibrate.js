@@ -50,6 +50,11 @@ motion4(array_elem3, N); // Pass the N value to the function
 var circles_2; // Declare circles_2 as a global variable
 var borders; // Declare borders as a global variable to maintain cell borders
 
+// Flag to control animation
+var animationStopped = false;
+var vibrateInterval;
+
+
 function motion4(num, N) {
   var circle_data_2 = [];
   var box_data_2 = [];
@@ -236,34 +241,53 @@ function motion4(num, N) {
   vibrate();
 }
 
+// Handle the stop button click event
+var stopButton = document.getElementById("stop");
+stopButton.onclick = function () {
+  stopAnimation();
+};
+
 // Function to start the vibration animation
 function startVibration() {
-  // Set the interval to continuously vibrate the circles
-  setInterval(function () {
-    vibrate();
-  }, Math.max(...speeds)); // Adjust the interval as needed for your desired speed
-
-  // Call vibrate initially to start the animation
+  vibrateInterval = setInterval(function () {
+      vibrate();
+  }, Math.max(...speeds));
   vibrate();
 }
 
+function stopAnimation() {
+  animationStopped = true; // Set the flag to true
+  clearInterval(vibrateInterval); // Clear the interval to prevent more vibrations
+  circles_2.interrupt().transition(); // Interrupt ongoing transitions on the circles
+}
+
 function vibrate() {
+  if (animationStopped) {
+    return; // Stop the animation if the flag is set
+  }
+
   circles_2.transition().on("start", function repeat() {
     d3.active(this)
-      .attr("cx", function(d) {
+      .attr("cx", function (d) {
         return d.x + 10; // Move the circle 10 units right
       })
       .transition()
-      .duration(function(d) {
+      .duration(function (d) {
         return d.speed;
       })
-      .attr("cx", function(d) {
-        return d.x -10; // Move the circle back to its original position
+      .attr("cx", function (d) {
+        return d.x - 10; // Move the circle back to its original position
       })
       .transition()
-      .duration(function(d) {
+      .duration(function (d) {
         return d.speed;
       })
       .on("start", repeat);
   });
 }
+
+
+
+
+// Start the vibration animation when your visualization is ready
+startVibration();

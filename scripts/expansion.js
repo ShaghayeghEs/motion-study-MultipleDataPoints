@@ -24,6 +24,7 @@ var margin = {
 
 var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
 var chartHeight = document.getElementById("chartContainer").offsetHeight - margin.top - margin.bottom;
+var animationStopped = false;
 
 var svg = d3
   .select("#chart")
@@ -56,6 +57,11 @@ function animate() {
   var circleData = circles_2.data();
 
   var timer = d3.timer(function (elapsed) {
+    if (animationStopped) {
+      timer.stop(); // Stop the animation timer
+      return;
+    }
+
     circles_2.each(function (d) {
       var circle = d3.select(this);
       var speedFactor = d.speed; // Use the speed from the circle's data
@@ -77,6 +83,17 @@ function animate() {
 // Start the animation when your visualization is ready
 animate();
 
+// Function to stop the animation
+function stopAnimation() {
+  animationStopped = true;
+}
+
+// Handle the stop button click event
+var stopButton = document.getElementById("stop");
+stopButton.onclick = function () {
+  stopAnimation();
+};
+
 function motion4(num, N) {
   var circle_data_2 = [];
   var box_data_2 = [];
@@ -93,7 +110,7 @@ function motion4(num, N) {
   var translateX = (chartWidth - totalGridWidth) / 2;
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
-
+  // Flag to control animation
   // Generate circle data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
@@ -265,4 +282,6 @@ function motion4(num, N) {
 
   // Start the animation
   animate();
+
+  
 }

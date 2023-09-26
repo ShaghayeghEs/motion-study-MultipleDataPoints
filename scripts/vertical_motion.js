@@ -41,7 +41,7 @@ var display5 = d3.select("#notice");
 // Added by Shae
 var display6 = d3.select("#test_difficulty");
 var display7 = d3.select("#ranger_difficulty");
-
+var animationStopped = false;
 motion2(array_elem1);
 
 function motion2(num) {
@@ -293,6 +293,10 @@ addArrow(2, 0);
 
 
   function animate(elapsed) {
+    if (animationStopped) {
+      // Stop the animation if the flag is set to true
+      return true; // Returning true stops the timer
+    }
     circles.attr("cy", function (d) {
       d.cy = d.cy + d.speed * m_s1 * d.y_diff ;
 
@@ -309,7 +313,25 @@ addArrow(2, 0);
 
     return timer_ret_val;
   }
+
+  // Add an event listener to the "STOP" button
+  var stopButton = document.getElementById("stop");
+  stopButton.onclick = function () {
+    stopAnimation();
+  };
+
+  // Function to stop the animation
+  function stopAnimation() {
+    animationStopped = true;
+  }
+
+  var t;
+
+  // Start the animation
+  t = d3.timer(animate);
+
 }
+
 
 // Call the motion2 function with the desired parameter (num)
 motion2(0);

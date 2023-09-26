@@ -24,6 +24,7 @@ var margin = {
 
 var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
 var chartHeight = document.getElementById("chartContainer").offsetHeight - margin.top - margin.bottom;
+var isAnimating = true;  // This flag will control whether the animation should run or not.
 
 var svg = d3
   .select("#chart")
@@ -227,6 +228,7 @@ addArrow(2, 0);
   animate();
 
   function animate() {
+    if (!isAnimating) return;  // If animation should not run, simply return
     circles.each(function(d) {
       var circle = d3.select(this);
       var flickering = d.flickering;
@@ -242,6 +244,10 @@ addArrow(2, 0);
       }
     });
   
+    document.getElementById("stop").addEventListener("click", function() {
+      isAnimating = false;  // Set the flag to false to stop animation
+  });
+
     // Recursive call after a delay based on the speed of each circle
     circles.each(function(d) {
       var circle = d3.select(this);
@@ -253,6 +259,8 @@ addArrow(2, 0);
   }
   
   function animateCircle(circle, speed) {
+    if (!isAnimating) return;  // If animation should not run, simply return
+
     var flickering = circle.datum().flickering;
   
     if (flickering) {
