@@ -142,6 +142,33 @@ function motion4(num, N) {
     .append("path")
     .attr("d", "M 0,0 V 6 L9,3 Z")
     .attr("fill", "black");
+
+    var selectedRect = null; // To keep track of the selected circle
+
+    cells.on("click", function(d, i) {
+      var parentCellGroup = d3.select(this).node();
+      var borderRect = d3.select(parentCellGroup).select(".cell-border").node();
+      handleHighlight(borderRect);
+    });
+    
+
+    function handleHighlight(clickedElem) {
+      if (selectedRect === clickedElem) {
+        // If the same cell is clicked again, unselect it
+        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+        selectedRect = null;
+      } else {
+        // Unselect the previously selected cell (if any)
+        if (selectedRect) {
+          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+        }
+        // Highlight the corresponding cell border
+        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+        selectedRect = clickedElem;
+      }
+    }
+
+    
   // Function to add an arrow to a specific cell
   function addArrow(row, col) {
     var cellSize = maxCellSize;

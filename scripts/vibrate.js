@@ -149,6 +149,35 @@ function motion4(num, N) {
     .attr("d", "M 0,0 V 6 L9,3 Z")
     .attr("fill", "black");
 
+    var selectedRect = null; // To keep track of the selected circle
+
+    borders.on("click", function(d, i) {
+      handleHighlight(this);
+    });
+    
+    circles_2.on("click", function(d, i) {
+      var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
+      var correspondingRect = borders.nodes()[cellIndex];
+      handleHighlight(correspondingRect);
+    });
+
+    function handleHighlight(clickedElem) {
+      if (selectedRect === clickedElem) {
+        // If the same cell is clicked again, unselect it
+        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+        selectedRect = null;
+      } else {
+        // Unselect the previously selected cell (if any)
+        if (selectedRect) {
+          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+        }
+        // Highlight the corresponding cell border
+        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+        selectedRect = clickedElem;
+      }
+    }
+
+
   // Function to add an arrow to a specific cell
   function addArrow(row, col) {
     var cellSize = maxCellSize;

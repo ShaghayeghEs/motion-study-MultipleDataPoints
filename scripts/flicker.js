@@ -136,52 +136,33 @@ function motion3(num) {
 
 
 
-    var selectedCircle = null; // To keep track of the selected circle
+    var selectedRect = null; // To keep track of the selected circle
 
+    box_2.on("click", function(d, i) {
+      handleHighlight(this);
+    });
+    
+    circles.on("click", function(d, i) {
+      var cellIndex = d.id ; // Adjust the index to match the box_data_2 array
+      var correspondingRect = box_2.nodes()[cellIndex];
+      handleHighlight(correspondingRect);
+    });
 
-    // Event listener for cell clicks to highlight the corresponding circle
-box_2.on("click", function(d, i) {
-  var clickedCircle = circles_2.nodes()[i];
-  if (selectedCircle === clickedCircle) {
-    // If the same circle is clicked again, unselect it
-    d3.select(clickedCircle).attr("stroke", "none");
-    selectedCircle = null;
-  } else {
-    // Unselect the previously selected circle (if any)
-    if (selectedCircle) {
-      d3.select(selectedCircle).attr("stroke", "none");
+    function handleHighlight(clickedElem) {
+      if (selectedRect === clickedElem) {
+        // If the same cell is clicked again, unselect it
+        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+        selectedRect = null;
+      } else {
+        // Unselect the previously selected cell (if any)
+        if (selectedRect) {
+          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+        }
+        // Highlight the corresponding cell border
+        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+        selectedRect = clickedElem;
+      }
     }
-    // Highlight the corresponding circle
-    d3.select(clickedCircle).attr("stroke", "black").attr("stroke-width", 2);
-    selectedCircle = clickedCircle;
-  }
-});
-// Event listener for left-click to highlight the cell
-circles.on("click", function(d) {
-  if (selectedCircle === d) {
-    // If the same circle is clicked again, unselect it
-    d3.select(this).attr("stroke", "none");
-    selectedCircle = null;
-  } else {
-    // Unselect the previously selected circle (if any)
-    if (selectedCircle) {
-      d3.select(selectedCircle).attr("stroke", "none");
-    }
-    // Highlight the clicked circle
-    d3.select(this).attr("stroke", "black").attr("stroke-width", 2);
-    selectedCircle = this;
-  }
-});
-
-// Event listener for right-click anywhere to unselect the cell
-d3.select("body").on("contextmenu", function() {
-  if (selectedCircle) {
-    d3.select(selectedCircle).attr("stroke", "none");
-    selectedCircle = null;
-  }
-  d3.event.preventDefault(); // Prevent the default right-click context menu
-});
-
 
     // Create arrow markers
   svg
