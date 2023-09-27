@@ -40,7 +40,7 @@ var display5 = d3.select("#notice");
 var display6 = d3.select("#test_difficulty");
 var display7 = d3.select("#ranger_difficulty");
 
-var N = 3; // Change N to the desired size of the grid
+var N = 10; // Change N to the desired size of the grid
 
 motion4(array_elem3, N); // Pass the N value to the function
 
@@ -73,7 +73,7 @@ function motion4(num, N) {
     for (var j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
-      var Values = [20,45,90,125,175,270,320,200,340,180,180,180,180,180]
+      var Values = [10,180,90,125,180,270,320,200,340,180,180,180,180,180]
       var value = Values[i * N + j]/20; // Get the value from the array based on the circle's index
 
 
