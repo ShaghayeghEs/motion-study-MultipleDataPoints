@@ -69,7 +69,7 @@ function motion4(num, N) {
 
       var radius = cellSize * 1; // Adjust the radius based on cell size
 
-      var Values = [10,20,30,40,80,10,20,30,40,80,40,20,60,20,40,30,20,40,10,20,30,40,80,10,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4]; // Set a constant value of 5 for all circles
+      var Values = [200,0.125,30,40,80,10,20,30,40,80,40,20,60,20,40,30,20,40,10,20,30,40,80,10,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4]; // Set a constant value of 5 for all circles
       var value = Values[i * N + j]; // Get the value from the array based on the circle's index
 
       circle_data_2.push({
@@ -77,7 +77,7 @@ function motion4(num, N) {
         y: cy,
         id: i * N + j + 1,
         r_diff: 0.13,
-        radius: Math.sqrt(value),
+        radius: Math.sqrt(value * 10),
         move: 0,
         value: value
       });
