@@ -40,7 +40,7 @@ var display5 = d3.select("#notice");
 var display6 = d3.select("#test_difficulty");
 var display7 = d3.select("#ranger_difficulty");
 
-var N = 5; // Change N to the desired size of the grid
+var N = 10; // Change N to the desired size of the grid
 
 motion4(array_elem3, N); // Pass the N value to the function
 
@@ -62,7 +62,7 @@ function motion4(num, N) {
 
   // Specify the height values for each bar chart in the format [h1, h2, h3, ...]
   var cellHeights = [
-    [5, 10, 15, 20, 25, 30, 40, 50, 60, 70],
+    [5, 85, 15, 20, 25, 30, 40, 50, 60, 70],
     [5, 10, 15, 20, 25, 30, 40, 50, 60, 70],
     [5, 10, 15, 20, 25, 30, 40, 50, 60, 70],
     [5, 10, 15, 20, 25, 30, 40, 50, 60, 70],
@@ -93,7 +93,7 @@ function motion4(num, N) {
     var cell = d3.select(this);
   
     // Calculate the adjusted width of the bar chart within the cell
-    var barWidth = d.w - 2 * paddingLR;
+    var barWidth = d.w - 7 * paddingLR; //changed by Shae from 2 to 7 to make the bar width narrower
   
     // Create a group element for the cell
     var cellGroup = cell.append("g")
@@ -103,7 +103,7 @@ function motion4(num, N) {
     // Create a single rectangle for the bar chart
     cellGroup.append("rect")
       .attr("class", "bar")
-      .attr("x", paddingLR) // Adjusted x-coordinate
+      .attr("x", 3.5 * paddingLR) // Adjusted x-coordinate   //Shae: Added 3.5 to make the bar charts centered
       .attr("y", d.h - d.cellHeights) // Adjusted y-coordinate
       .attr("width", barWidth)
       .attr("height", d.cellHeights) // Adjusted height
