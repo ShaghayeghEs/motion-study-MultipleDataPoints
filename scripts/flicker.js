@@ -49,7 +49,7 @@ var box_data_2 = [];
 motion3(array_elem2);
 
 function motion3(num) {
-  var N = 5 ;
+  var N = 10 ;
   var circle_data_2 = [];
   var box_data_2 = [];
 
