@@ -66,8 +66,9 @@ function motion4(num, N) {
     for (var j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
-
-      var colors = ["#ff0000", "#00ff00", "#0000ff", "#808080"]; // Add more colors if needed
+      
+      // 5 shades
+      var colors = ["#fafafa", "#bfbfbf", "#7f7f7f", "#404040", "#000000"]; // Add more colors if needed
 
       var Values = []
       var value = Values[i * N + j]; // Get the value from the array based on the circle's index
