@@ -13,7 +13,7 @@ var count;
 var padding = 10;
 var timer_ret_val = false;
 
-var speeds = [1,2,3,4,5,6,8,10,12,14,16]; // Define the speeds array (you can adjust these values)
+var speeds = [50, 1]; // Define the speeds array (you can adjust these values)
 
 var margin = {
   top: 18,
