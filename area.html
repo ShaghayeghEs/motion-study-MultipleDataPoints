@@ -13,7 +13,7 @@
     <script src="./libraries/jquery-3.2.1.min.js"></script>
     <script src="./libraries/timeme.js"></script>
     <script type="text/javascript">
-      var params = location.href.split("?")[1].split("&");
+  var params = location.href.split("?")[1].split("&");
       url_data = {};
       for (ele of params) {
         ele = ele.split("=");
@@ -58,6 +58,7 @@
       slider.oninput = function() {
         output.innerHTML = this.value;
       };
+      var btn = document.getElementById("submit");
       function postMessage(timeSpentOnPage) {
         var xhr = new XMLHttpRequest();
         xhr.open(
@@ -70,11 +71,11 @@
           JSON.stringify({
             participant_id: url_data["id"],
             ratio: parseFloat(url_data["ratio"]),
-            trial_number: parseInt(url_data["trail"]),
+            trial_number: parseInt(url_data["trial"]),
             time_spent: timeSpentOnPage,
             participant_answer: slider.value,
             correct_answer: 10,
-            type_of_encoding: "area",
+            type_of_encoding: "angle",
             difference: 10 - slider.value
           })
         );
@@ -86,10 +87,9 @@
           postMessage();
         }
       }
-      var btn = document.getElementById("submit");
       btn.onclick = function() {
         btn.disabled = true;
-        //  btn.style.background = "#e8e7d8";
+        // btn.style.background = "#e8e7d8";
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
         postMessage(timeSpentOnPage);
       };
