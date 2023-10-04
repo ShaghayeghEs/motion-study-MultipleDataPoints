@@ -35,7 +35,7 @@
   <script>
     
     function getId() {
-      // Check if participant ID exists in local storage
+      // Check if participant ID exists inal  locstorage
       if (localStorage.getItem("participant_id")) {
         participant_id = localStorage.getItem("participant_id");
       } else {
@@ -65,9 +65,9 @@
     
     var items = [];
     for (ratio of ratios) {
-      for (trail of trails) {
+      for (trial of trials) {
         for (page of pages) {
-          items.push([page, ratio, trail]);
+          items.push([page, ratio, trial]);
         }
       }
     }
@@ -102,7 +102,7 @@
         .getElementById("content")
         .setAttribute(
           "src",
-          `${rand_item[0][0]}?ratio=${rand_item[0][1]}&trail=${rand_item[0][2]}&id=${participant_id}`
+          `${rand_item[0][0]}?ratio=${rand_item[0][1]}&trial=${rand_item[0][2]}&id=${participant_id}`
         );
     }
   </script>
