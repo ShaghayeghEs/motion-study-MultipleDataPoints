@@ -57,14 +57,14 @@
 #myBox{
 
     
-    height:90%;
-    width:90%;
+    height:80%;
+    width:80%;
     background-color: white;
     margin-left: 100px;
     margin-top: 50px;
     overflow: scroll;
     padding: 10px;
-
+    
 }
 
 

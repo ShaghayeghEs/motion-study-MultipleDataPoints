@@ -46,10 +46,15 @@ html,body {
 .show {display:block;}
 
 
+/* Modified by Shae */
 .button {
   display: inline-block;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
   padding: 6px 10px;
-  font-size: 15px;
+  font-size: 20px;
+  font-family: "Gill Sans", sans-serif;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -57,15 +62,15 @@ html,body {
   color: #fff;
   background-color: #00b8e6;
   border: none;
-  border-radius: 15px;
-  box-shadow: 0 3px #999;
+  border-radius: 5px;
+  /* box-shadow: 0 3px #999; */
 }
 
 .button:hover {background-color: #007a99}
 
 .button:active {
   background-color:  #00b8e6;
-  box-shadow: 0 5px #666;
+  /*box-shadow: 0 5px #666;*/
   transform: translateY(4px);
 }
 
@@ -95,10 +100,11 @@ html,body {
   position: right;
 }*/
 
-#submitForm{
+/* #submitForm Commented by the Shae */
+/* #submitForm{
 
  
-}
+} */
 
 /*#submitFormEnd{
 
