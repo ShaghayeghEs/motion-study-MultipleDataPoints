@@ -32,80 +32,8 @@
     }
   </style>
   
-  <script>
-    
-    function getId() {
-      // Check if participant ID exists inal  locstorage
-      if (localStorage.getItem("participant_id")) {
-        participant_id = localStorage.getItem("participant_id");
-      } else {
-        // Generate a new participant ID
-        participant_id = Math.floor(Math.random() * 1000);
-        // Store the participant ID in local storage for future sessions
-        localStorage.setItem("participant_id", participant_id);
-      }
-    
-      console.log(`getId() completed, id: ${participant_id}`);
-      load_page();
-    }
-
-    var ratios = [1.5, 2, 2.5, 3, 3.5, 4];
-    var trials = [1, 2];
-    var pages = [
-      "./position.html",
-      "./length.html",
-      "./color.html",
-      "./vibration.html",
-      "./vertical_motion.html",
-      "./flicker.html",
-      "./expansion.html",
-      "./area.html",
-      "./angle.html"
-    ];
-    
-    var items = [];
-    for (ratio of ratios) {
-      for (trial of trials) {
-        for (page of pages) {
-          items.push([page, ratio, trial]);
-        }
-      }
-    }
-    
-    var page_to_name = {
-      "./area.html": "Area",
-      "./angle.html": "Angle",
-      "./color.html": "Color",
-      "./length.html": "Length",
-      "./position.html": "Position",
-      "./expansion.html": "Expansion",
-      "./flicker.html": "Flicker",
-      "./vibration.html": "Vibration",
-      "./vertical_motion.html": "Vertical Motion"
-    };
-
-    function load_page() {
-      console.log(`parent domain: ${document.domain}`);
-      if (items.length == 0) {
-        window.setTimeout(
-          () => window.location.assign(`./end.html?id=${participant_id}`),
-          500
-        );
-      }
-      var rand_item = items.splice(Math.floor(Math.random() * items.length), 1);
-      console.log(rand_item[0][1], items.length);
-
-      document.getElementById("head").innerHTML = `${
-        page_to_name[rand_item[0][0]]
-      }`;
-      document
-        .getElementById("content")
-        .setAttribute(
-          "src",
-          `${rand_item[0][0]}?ratio=${rand_item[0][1]}&trial=${rand_item[0][2]}&id=${participant_id}`
-        );
-    }
-  </script>
+  <script src="./scripts/parent.js"></script>
+  
 </head>
 
 <body onload="getId()">

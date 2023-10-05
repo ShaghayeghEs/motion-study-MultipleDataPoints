@@ -1,17 +1,21 @@
-var ID;
-var Value;
-var radio1;
-var radio2;
-var results_json = [];
-var current_elem = 0;
-var array_elem1 = 0;
-var array_elem2 = 0;
-var array_elem3 = 0;
-var motion_type = [1, 2, 3];
-var move_true;
-var count;
-var padding = 10;
-var timer_ret_val = false;
+// var ID;
+// var Value;
+// var radio1;
+// var radio2;
+// var results_json = [];
+// var current_elem = 0;
+// var array_elem1 = 0;
+// var array_elem2 = 0;
+// var array_elem3 = 0;
+// var motion_type = [1, 2, 3];
+// var move_true;
+// var count;
+// var padding = 10;
+// var timer_ret_val = false;
+
+
+var uniform_3 = [];
+var uniform_10 = [];
 
 var margin = {
   top: 18,
@@ -31,20 +35,21 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var display1 = d3.select("#chart");
-var display2 = d3.select("#test");
-var display3 = d3.select("#ranger");
-var display4 = d3.select("#last");
-var display5 = d3.select("#notice");
+// var display1 = d3.select("#chart");
+// var display2 = d3.select("#test");
+// var display3 = d3.select("#ranger");
+// var display4 = d3.select("#last");
+// var display5 = d3.select("#notice");
 // Added by Shae
-var display6 = d3.select("#test_difficulty");
-var display7 = d3.select("#ranger_difficulty");
+// var display6 = d3.select("#test_difficulty");
+// var display7 = d3.select("#ranger_difficulty");
 
-var N = 10; // Change N to the desired size of the grid
+var N = url_data["size"]; // Change N to the desired size of the grid
 
-motion4(array_elem3, N); // Pass the N value to the function
+// drawLengthGraph(array_elem3, N); 
+drawLengthGraph(N) // Pass the N value to the function
 
-function motion4(num, N) {
+function drawLengthGraph(N) {
   var box_data_2 = [];
 
   var gridWidth = chartWidth - margin.left - margin.right; // Width of the grid area
