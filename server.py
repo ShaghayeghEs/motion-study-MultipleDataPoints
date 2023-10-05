@@ -3,7 +3,7 @@ from flask import Flask, request
 from flask_cors import CORS
 # Run this on terminal to enable CORS 'npm install CORS'           
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins="http://127.0.0.1:5500")
 
 @app.route('/store_data/', methods=['POST'])
 def store_data():
