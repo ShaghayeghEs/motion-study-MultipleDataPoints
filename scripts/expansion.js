@@ -147,7 +147,7 @@ function motion4(num, N) {
     .enter()
     .append("rect")
     .attr("class", "rect clickable")
-    .style("fill", "none")
+    .style("fill", "transparent")
     .attr("stroke", "black")
     .attr("stroke-width", 0.5)
     .attr("x", function (d) {

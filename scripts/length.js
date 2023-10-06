@@ -155,7 +155,7 @@ function drawLengthGraph(N) {
       .attr("height", d.h)
       .attr("stroke", "black")
       .attr("stroke-width", 0.5)
-      .attr("fill", "none");
+      .attr("fill", "transparent");
   }
   
   // Create a cell for each item in box_data_2 with a vertical bar chart
