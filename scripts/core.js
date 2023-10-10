@@ -24,8 +24,8 @@ export function arrayToMatrix(arr, n) {
   }
 
 //function to randomize the array for the "compare" task, 
-    //keeping the two values at the same position
-    //Output will be a randomized array with fixed values at their original positions
+//keeping the two values at the same position
+//Output will be a randomized array with fixed values at their original positions
 export function randomizeArrayWithFixedIndices(arr, fixedIndex1, fixedIndex2) {
     // Create a copy of the input array to avoid modifying the original array
     const shuffledArray = arr.slice();

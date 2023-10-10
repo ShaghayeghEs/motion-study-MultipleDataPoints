@@ -10,8 +10,8 @@ var jCell2 = 0;
 
 //function to shuffle the original array based on task and ratio
 function shuffleArray(arr, task, ratio) {
-  console.log("arr is: ");
-  console.log (arr);
+  // console.log("arr is: ");
+  // console.log (arr);
   
   var shuffledArray =[];
   
@@ -30,7 +30,7 @@ function shuffleArray(arr, task, ratio) {
     if (N == 3) {
       pairs = findOuterPairsWithDistance(3,3);} //finding possible cells to be used in the "compare" task
     else if (N == 10) {
-      pairs = findOuterPairsWithDistance(10,5); //TODO Later
+      pairs = findOuterPairsWithDistance(10,6); //TODO Later
     }
 
     const randomElement = pairs[Math.floor(Math.random() * pairs.length)]; //randomly selecting one of the pairs
@@ -57,19 +57,14 @@ function shuffleArray(arr, task, ratio) {
     var indexValue;
     var indexRatio;
 
-    if (N == 3) {
-      if (dist == "uniform"){
-        indexValue = arr.indexOf(10);
-        indexRatio = arr.indexOf(10 * ratio);}
-      else {
-        indexValue = arr.indexOf(20);
-        indexRatio = arr.indexOf(20 * ratio);
-      }
-    } else if (N == 10) {
-        //TODO LATER
+    if (dist == "uniform"){
+      indexValue = arr.indexOf(10);
+      indexRatio = arr.indexOf(10 * ratio);}
+    else {
+      indexValue = arr.indexOf(20);
+      indexRatio = arr.indexOf(20 * ratio);
     }
     
-
     // TEST
     console.log(`index of value: ${indexValue}, ${indexRatio}`);
 
@@ -124,10 +119,10 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// var N = url_data["size"]; // size of the grid
+var N = url_data["size"]; // size of the grid
 var dist = url_data["dist"]; // distribution of data points
 var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
-var N = 3; // test
+// var N = 3; // test
 var task = url_data["task"]; // type of task
 
 //TEST
