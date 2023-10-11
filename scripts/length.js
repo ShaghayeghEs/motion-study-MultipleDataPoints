@@ -1,105 +1,10 @@
 // Import the functions from core.js
-import { mapValues, arrayToMatrix, randomizeArrayWithFixedIndices,
-  findOuterPairsWithDistance, selectDistArray } from './core.js';
-
+import { mapValues, arrayToMatrix, shuffleArray, selectDistArray } from './core.js';
 
 var iCell1 = 0;
 var jCell1 = 0;
 var iCell2 = 0;
 var jCell2 = 0;
-
-//function to shuffle the original array based on task and ratio
-function shuffleArray(arr, task, ratio) {
-  // console.log("arr is: ");
-  // console.log (arr);
-  
-  var shuffledArray =[];
-  
-  if (task == "max" || task == "min") {
-    // Create a copy of the input array to avoid modifying the original array
-    shuffledArray = arr.slice();
-
-    // Fisher-Yates shuffle algorithm
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-    } 
-  }
-  else if (task == "compare") {
-    var pairs = [];
-    if (N == 3) {
-      pairs = findOuterPairsWithDistance(3,3);} //finding possible cells to be used in the "compare" task
-    else if (N == 10) {
-      pairs = findOuterPairsWithDistance(10,6); //TODO Later
-    }
-
-    const randomElement = pairs[Math.floor(Math.random() * pairs.length)]; //randomly selecting one of the pairs
-    // Access the coordinates (i and j) of cell1 in the pair
-    // const iCell1 = randomElement.cell1[0];
-    // const jCell1 = randomElement.cell1[1];
-    iCell1 = randomElement.cell1[0];
-    jCell1 = randomElement.cell1[1];
-    const index1 = (iCell1 * N) + jCell1; //index in the 1D array
-
-    // Access the coordinates (i and j) of cell2 in the pair
-    // const iCell2 = randomElement.cell2[0];
-    // const jCell2 = randomElement.cell2[1];
-    iCell2 = randomElement.cell2[0];
-    jCell2 = randomElement.cell2[1];
-    const index2 = (iCell2 * N) + jCell2; //index in the 1D array
-
-
-    // TEST
-    console.log(`Cell 1: i=${iCell1}, j=${jCell1}`);
-    console.log(`Cell 2: i=${iCell2}, j=${jCell2}`);
-    console.log(`index1: ${index1}, index2:${index2}`);
-
-    var indexValue;
-    var indexRatio;
-
-    if (dist == "uniform"){
-      indexValue = arr.indexOf(10);
-      indexRatio = arr.indexOf(10 * ratio);}
-    else {
-      indexValue = arr.indexOf(20);
-      indexRatio = arr.indexOf(20 * ratio);
-    }
-    
-    // TEST
-    console.log(`index of value: ${indexValue}, ${indexRatio}`);
-
-    //TODO LATER BUG
-    //TEST arr = [20, 30, 35, 40, 45, 47, 48, 50, 50]
-    //TEST index1 = 5 index2 = 0
-    //TEST indexValue = 0 indexRatio = 7
-
-    //WRONG
-    // [arr[indexValue], arr[index1]] = [arr[index1], arr[indexValue]];
-    // [arr[indexRatio], arr[index2]] = [arr[index2], arr[indexRatio]];
-
-    //TODO LATER: make it a function
-    var temp;
-    temp = arr[indexValue];
-    arr[indexValue] = arr[index1];
-    arr[index1] = temp;
-
-    temp = arr[indexRatio];
-    arr[indexRatio] = arr[index2];
-    arr[index2] = temp;
-
-    //Test
-    console.log("swapped test array:")
-    console.log(arr);
-
-    shuffledArray = randomizeArrayWithFixedIndices(arr, index1, index2);
-
-    //TEST
-    console.log("shuffled after swap test array:")
-    console.log(shuffledArray);
-
-  }
-  return shuffledArray;
-}
 
 var margin = {
   top: 18,
@@ -149,7 +54,13 @@ function drawLengthGraph(N) {
   var cellHeights = selectDistArray(dist,N,ratio_value);
   console.log("original array"); //test
   console.log(cellHeights); //test
-  cellHeights = shuffleArray(cellHeights,task,ratio_value); //shuffling the data array based on the given task
+  
+  var outputs = shuffleArray(cellHeights,task,ratio_value,N,dist); //shuffling the data array based on the given task
+  cellHeights = outputs[0];
+  iCell1 = outputs[1];
+  jCell1 = outputs[2];
+  iCell2 = outputs[3];
+  jCell2 = outputs[4];
   console.log("shuffled array"); //test
   console.log(cellHeights); //test
   cellHeights = mapValues(cellHeights, Math.min(...cellHeights), //map the data array to the encoding max and min

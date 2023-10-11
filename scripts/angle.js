@@ -1,17 +1,4 @@
-var ID;
-var Value;
-var radio1;
-var radio2;
-var results_json = [];
-var current_elem = 0;
-var array_elem1 = 0;
-var array_elem2 = 0;
-var array_elem3 = 0;
-var motion_type = [1, 2, 3];
-var move_true;
-var count;
-var padding = 10;
-var timer_ret_val = false;
+import { selectDistArray, mapValues, shuffleArray } from "./core.js";
 
 var margin = {
   top: 18,
@@ -31,25 +18,19 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var display1 = d3.select("#chart");
-var display2 = d3.select("#test");
-var display3 = d3.select("#ranger");
-var display4 = d3.select("#last");
-var display5 = d3.select("#notice");
-// Added by Shae
-var display6 = d3.select("#test_difficulty");
-var display7 = d3.select("#ranger_difficulty");
+var cell1_i = 0;
+var cell1_j = 0;
+var cell2_i = 0;
+var cell2_j = 0;
 
-var N = 10; // Change N to the desired size of the grid
+var N = url_data["size"];
+var task = url_data["task"];
+var ratio_value = url_data["ratio"];
+var dist = url_data["dist"];
 
-motion4(array_elem3, N); // Pass the N value to the function
+drawAngleGraph(N); // Pass the N value to the function
 
-function motion4(num, N) {
-
-
-
-  count = 0;
-  move_true = false;
+function drawAngleGraph(N) {
 
   var gridWidth = chartWidth - margin.left - margin.right; // Width of the grid area
   var gridHeight = chartHeight - margin.top - margin.bottom; // Height of the grid area
@@ -68,14 +49,34 @@ function motion4(num, N) {
   var angle_data_2 = [];
   var box_data_2 = [];
 
+  var Values = [];
+  Values = selectDistArray(dist, N, ratio_value);
+  console.log(Values);
+  
+  var outputs = shuffleArray(Values,task,ratio_value,N,dist); //shuffling the data array based on the given task
+  console.log("outputs:");
+  console.log(outputs);
+
+  cell1_i = outputs[1];
+  cell1_j = outputs[2];
+  cell2_i = outputs[3];
+  cell2_j = outputs[4];
+
+  Values = outputs[0];
+  console.log("after shuffling");
+  console.log(Values);
+
+  Values = mapValues(Values, Math.min(...Values), //map the data array to the encoding max and min
+   Math.max(...Values),10,180);
+  console.log("after mapping");
+  console.log(Values);
+
   // Generate circle, angle, and box data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
-      var Values = [10,180,90,125,180,270,320,200,340,180,180,180,180,180]
       var value = Values[i * N + j]/20; // Get the value from the array based on the circle's index
-
 
       circle_data_2.push({
         x: cx,
@@ -85,8 +86,6 @@ function motion4(num, N) {
         radius: (cellSize / 2.5) , // Adjust the radius based on cell size
         move: 0,
       });
-
-
       
       angle_data_2.push({
         x: cx,
@@ -105,8 +104,6 @@ function motion4(num, N) {
     }
   }
 
-  
-
 // Create arrow markers
 svg
 .append("defs")
@@ -123,35 +120,35 @@ svg
 
 // Function to add an arrow to a specific cell
 function addArrow(row, col) {
-var cellSize = maxCellSize ;
-var cx = (col + 0.5) * cellSize;
-var cy = (row + 0.5) * cellSize;
-var circleRadius = circle_data_2[row * N + col].radius; // Get the circle's radius
+  var cellSize = maxCellSize ;
+  var cx = (col + 0.5) * cellSize;
+  var cy = (row + 0.5) * cellSize;
+  var circleRadius = circle_data_2[row * N + col].radius; // Get the circle's radius
 
-// Define the endpoint for the arrow (the middle of the outside border)
-var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
+  // Define the endpoint for the arrow (the middle of the outside border)
+  var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
 
-if (col === 0) {
-  arrowStartX = -cellSize / 2;
-  arrowEndX = cx - circleRadius - 20; // Adjusted to avoid overlap with circle
-} else if (col === N - 1) {
-  arrowStartX = totalGridWidth + cellSize / 2;
-  arrowEndX = cx + circleRadius + 20; // Adjusted to avoid overlap with circle
-} else {
-  arrowStartX = arrowEndX = cx;
-}
+  if (col === 0) {
+    arrowStartX = -cellSize / 2;
+    arrowEndX = cx - circleRadius - 20; // Adjusted to avoid overlap with circle
+  } else if (col === N - 1) {
+    arrowStartX = totalGridWidth + cellSize / 2;
+    arrowEndX = cx + circleRadius + 20; // Adjusted to avoid overlap with circle
+  } else {
+    arrowStartX = arrowEndX = cx;
+  }
 
-if (row === 0) {
-  arrowStartY = -cellSize / 2;
-  arrowEndY = cy - circleRadius - 20; // Adjusted to avoid overlap with circle
-} else if (row === N - 1) {
-  arrowStartY = totalGridHeight + cellSize / 2;
-  arrowEndY = cy + circleRadius + 20; // Adjusted to avoid overlap with circle
-} else {
-  arrowStartY = arrowEndY = cy;
-}
+  if (row === 0) {
+    arrowStartY = -cellSize / 2;
+    arrowEndY = cy - circleRadius - 20; // Adjusted to avoid overlap with circle
+  } else if (row === N - 1) {
+    arrowStartY = totalGridHeight + cellSize / 2;
+    arrowEndY = cy + circleRadius + 20; // Adjusted to avoid overlap with circle
+  } else {
+    arrowStartY = arrowEndY = cy;
+  }
 
-
+  //drawing cells with white background
   var box_2 = svg
     .selectAll(".rect")
     .data(box_data_2)
@@ -174,6 +171,7 @@ if (row === 0) {
       return d.w;
     });
 
+  //drawing the left line of each angle
   var angles_2 = svg
     .selectAll(".path")
     .data(angle_data_2)
@@ -195,7 +193,8 @@ if (row === 0) {
     .attr("fill", "none")
     .attr('stroke', 'black');
 
-    var angles_3 = svg
+  //drawing the right line of each angle
+  var angles_3 = svg
     .selectAll(".path")
     .data(angle_data_2)
     .enter()
@@ -213,19 +212,19 @@ if (row === 0) {
     .attr("fill", "none")
     .attr('stroke', 'black');
 
-    var selectedRect = null; // To keep track of the selected circle
+  var selectedRect = null; // To keep track of the selected circle
 
-    box_2.on("click", function(d, i) {
+  box_2.on("click", function(d, i) {
       handleHighlight(this);
     });
     
-    angles_3.on("click", function(d, i) {
+  angles_3.on("click", function(d, i) {
       var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
       var correspondingRect = box_2.nodes()[cellIndex];
       handleHighlight(correspondingRect);
     });
 
-    function handleHighlight(clickedElem) {
+  function handleHighlight(clickedElem) {
       if (selectedRect === clickedElem) {
         // If the same cell is clicked again, unselect it
         d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
@@ -239,35 +238,25 @@ if (row === 0) {
         d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
         selectedRect = clickedElem;
       }
-    }
-
-  // Add an arrow line
-  svg
-  .append("line")
-  .attr("x1", arrowStartX)
-  .attr("y1", arrowStartY)
-  .attr("x2", arrowEndX)
-  .attr("y2", arrowEndY)
-  .attr("stroke", "black")
-  .attr("stroke-width", 1.5)
-  .attr("marker-end", "url(#arrowhead)");
   }
 
-  // Add arrows to cells [0, 2] and [2, 2]
-  addArrow(2, 0);
-  addArrow(0, 1);
-
-
-
-  move_true = true;
-  console.log("angle");
-  console.log(chartWidth);
-  console.log(chartHeight);
-
+  // Add an arrow line
+  if(task == "compare") {
+    svg
+    .append("line")
+    .attr("x1", arrowStartX)
+    .attr("y1", arrowStartY)
+    .attr("x2", arrowEndX)
+    .attr("y2", arrowEndY)
+    .attr("stroke", "black")
+    .attr("stroke-width", 1.5)
+    .attr("marker-end", "url(#arrowhead)");
+  }
   
+  }
 
-
-  
-
-  
+  // Add arrows to cells
+  addArrow(cell1_i, cell1_j);
+  addArrow(cell2_i, cell2_j);
+ 
 }
