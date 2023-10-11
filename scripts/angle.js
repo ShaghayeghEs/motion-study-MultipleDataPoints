@@ -18,6 +18,7 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
 var cell1_i = 0;
 var cell1_j = 0;
 var cell2_i = 0;

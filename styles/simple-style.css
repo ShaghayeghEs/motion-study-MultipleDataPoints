@@ -128,12 +128,14 @@
 #mainContainer {
    display: flex;
    width: 100%;
-   height: 100vh;
+   height: calc(100vh - 60px); /* assuming header height is 60px */
 }
 
 #chartContainer {
    flex: 4;
    padding-top: 10px;
+   height: 100%; /* 100% of parent's height */
+   overflow: visible;
 }
 
 #controlContainer {
@@ -142,3 +144,20 @@
    padding-right: 15px;
 }
 
+#chartContainer {
+   width: 100%; /* Full width */
+   height: auto; /* Adjust height as needed */
+   overflow: visible;
+ }
+
+ #chart {
+   width: 100%; /* Full width */
+   height: auto; /* Adjust height as needed */
+   overflow: visible;
+ }
+
+ @media only screen and (max-width: 600px) {
+   /* Adjust styles for small screens here if needed */
+ }
+ 
+ 
