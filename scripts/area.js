@@ -1,18 +1,3 @@
-var ID;
-var Value;
-var radio1;
-var radio2;
-var results_json = [];
-var current_elem = 0;
-var array_elem1 = 0;
-var array_elem2 = 0;
-var array_elem3 = 0;
-var motion_type = [1, 2, 3];
-var move_true;
-var count;
-var padding = 10;
-var timer_ret_val = false;
-
 var margin = {
   top: 18,
   left: 18,
@@ -31,20 +16,11 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var display1 = d3.select("#chart");
-var display2 = d3.select("#test");
-var display3 = d3.select("#ranger");
-var display4 = d3.select("#last");
-var display5 = d3.select("#notice");
-// Added by Shae
-var display6 = d3.select("#test_difficulty");
-var display7 = d3.select("#ranger_difficulty");
-
 var N = 10; // Change N to the desired size of the grid
 
-motion4(array_elem3, N); // Pass the N value to the function
+drawAreaGraph(N); // Pass the N value to the function
 
-function motion4(num, N) {
+function drawAreaGraph(N) {
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -61,6 +37,8 @@ function motion4(num, N) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
+  console.log("cell size:");
+  console.log(cellSize);
   // Generate circle and box data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
@@ -68,8 +46,9 @@ function motion4(num, N) {
       var cy = (i + 0.5) * cellSize; // Y position of circle center
 
       var radius = cellSize * 1; // Adjust the radius based on cell size
-
-      var Values = [200,0.125,30,40,80,10,20,30,40,80,40,20,60,20,40,30,20,40,10,20,30,40,80,10,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4]; // Set a constant value of 5 for all circles
+// NOTE: max ===> ((cellSize/2) - 0.1)^2
+// NOTE: min ===> 1/1600 * max
+      var Values = [200,0.125,100,40,80,10,20,30,40,80,40,20,60,20,40,30,20,40,10,20,30,40,80,10,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4]; // Set a constant value of 5 for all circles
       var value = Values[i * N + j]; // Get the value from the array based on the circle's index
 
       circle_data_2.push({
@@ -78,6 +57,7 @@ function motion4(num, N) {
         id: i * N + j + 1,
         r_diff: 0.13,
         radius: Math.sqrt(value * 10),
+        // radius: Math.sqrt(value * 10),
         move: 0,
         value: value
       });
@@ -220,9 +200,4 @@ var circles_2 = svg
   // Add arrows to cells [0, 2] and [2, 2]
   addArrow(2, 0);
   addArrow(0, 1);
-
-  
-
-  move_true = true;
-  console.log("area");
 }
