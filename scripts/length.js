@@ -55,7 +55,7 @@ function drawLengthGraph(N) {
   console.log("original array"); //test
   console.log(cellHeights); //test
   
-  var outputs = shuffleArray(cellHeights,task,ratio_value,N,dist); //shuffling the data array based on the given task
+  var outputs = shuffleArray(cellHeights,task,ratio_value,N,dist,"gen"); //shuffling the data array based on the given task
   cellHeights = outputs[0];
   iCell1 = outputs[1];
   jCell1 = outputs[2];

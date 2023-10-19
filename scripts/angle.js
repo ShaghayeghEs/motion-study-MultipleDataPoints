@@ -51,10 +51,10 @@ function drawAngleGraph(N) {
   var box_data_2 = [];
 
   var Values = [];
-  Values = selectDistArray(dist, N, ratio_value);
+  Values = selectDistArray(dist, N, ratio_value,"angle");
   console.log(Values);
   
-  var outputs = shuffleArray(Values,task,ratio_value,N,dist); //shuffling the data array based on the given task
+  var outputs = shuffleArray(Values,task,ratio_value,N,dist,"angle"); //shuffling the data array based on the given task
   console.log("outputs:");
   console.log(outputs);
 
@@ -67,10 +67,10 @@ function drawAngleGraph(N) {
   console.log("after shuffling");
   console.log(Values);
 
-  Values = mapValues(Values, Math.min(...Values), //map the data array to the encoding max and min
-   Math.max(...Values),10,180);
-  console.log("after mapping");
-  console.log(Values);
+  // Values = mapValues(Values, Math.min(...Values), //map the data array to the encoding max and min
+  //  Math.max(...Values),10,180);
+  // console.log("after mapping");
+  // console.log(Values);
 
   // Generate circle, angle, and box data based on grid size N
   for (var i = 0; i < N; i++) {
