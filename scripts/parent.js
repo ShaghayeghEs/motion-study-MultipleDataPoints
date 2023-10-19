@@ -15,7 +15,8 @@ function getId() {
 
 
 var dists = ["uniform", "left-skewed", "right-skewed"]; //data distributions //TBD: normal distribution might be added
-var tasks = ["compare", "max", "min"];   //TBD: "match" might be added
+// var tasks = ["compare", "max", "min"];   //TBD: "match" might be added
+var tasks = ["compare", "match", "search"];
 var ratios = [1.5, 2, 2.5, 3, 3.5, 4];
 var values = [1.5, 2, 2.5, 3, 3.5, 4];   //TODO: mix and min values
 var sizes = [3, 10]; //grid size
@@ -31,7 +32,7 @@ var pages = [
     "./area.html",
     "./angle.html"
 ];
-var pages_max = [
+var pages_search = [
     "./position.html",
     "./length.html",
     "./color.html",
@@ -42,7 +43,7 @@ var pages_max = [
     "./area.html",
     "./angle.html"
 ];
-var pages_min = [
+var pages_match = [
     "./position.html",
     "./length.html",
     "./color.html",
@@ -56,44 +57,60 @@ var pages_min = [
 
 var items = [];
 for (const trial of trials) {
-    for (const dist of dists) {
+    // for (const dist of dists) {
         for (const size of sizes) {
             for (const task of tasks) {
-               if (task == "compare") {
-                for (const page of pages) {
+               if (task == "compare"){
+                pages = pages;
+               } else if (task == "match") {
+                pages = pages_match;
+               } else if (task == "search") {
+                pages = pages_search;
+               }
+               for (const page of pages) {
                     for (const ratio of ratios) {
-                        items.push([task, page, dist, size, ratio, trial]);
+                        if (ratio == 1.5 || ratio == 2){
+                            items.push([task, page, "uniform", size, ratio, trial]);   
+                        }
+                        if (ratio == 2.5 || ratio == 3) {
+                            items.push([task, page, "right-skewed", size, ratio, trial]);
+                        }
+                        if (ratio == 3.5 || ratio == 4) {
+                            items.push([task, page, "left-skewed", size, ratio, trial]);
+                        }    
                     }
                 }
-               } else if (task == "max") {
-                for (const page of pages_max) {
-                    for (const value of values) {
-                        items.push([task, page, dist, size, value, trial]);
-                    }
-                }
-               } else if (task == "min") {
-                for (const page of pages_min) {
-                    for (const value of values) {
-                        items.push([task, page, dist, size, value, trial]);
-                    }
-                }
-               }  
+               
+            //    else if (task == "search") {
+            //     for (const page of pages_search) {
+            //         for (const ratio of ratios) {
+            //             items.push([task, page, dist, size, value, trial]);
+            //         }
+            //     }
+            //    } 
+            //    else if (task == "match") {
+            //     for (const page of pages_match) {
+            //         for (const ratio of ratios) {
+            //             items.push([task, page, dist, size, value, trial]);
+            //         }
+            //     }
+            //    }  
             }
         }
-    }
+    // }
 }
 
 //Debugging-start
 
-//printing the items on console
+// //printing the items on console
 
 // for (const item of items) {
 //     console.log(item);
 // }
 
-//downloading a csv file containing all the items
+// //downloading a csv file containing all the items
 
-// Join the array elements with line breaks to create a CSV string
+// // Join the array elements with line breaks to create a CSV string
 // const csvString = items.join('\n');
 
 // // Create a Blob (binary large object) containing the CSV data
@@ -138,7 +155,7 @@ function load_page() {
         page_to_name[rand_item[0][1]] //changed by Shae
     }`;
     
-    rand_item[0][1] = "./area.html"; //for debugging purposes
+    rand_item[0][1] = "./length.html"; //for debugging purposes
     document
         .getElementById("content")
         .setAttribute(

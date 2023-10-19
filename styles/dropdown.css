@@ -46,7 +46,7 @@ html,body {
 .show {display:block;}
 
 
-/* Modified by Shae */
+/* Modified by Shae */   /* reversed to original to debug */ 
 .button {
   display: inline-block;
   /* display: flex; */
@@ -70,7 +70,7 @@ html,body {
 
 .button:active {
   background-color:  #00b8e6;
-  /*box-shadow: 0 5px #666;*/
+  /* box-shadow: 0 5px #666; */
   transform: translateY(4px);
 }
 
@@ -135,7 +135,7 @@ html,body {
 
 }*/
 
-/*#submit{
+/* #submit{
 
   padding: 6px 10px;
   font-size: 15px;
@@ -149,7 +149,7 @@ html,body {
   border-radius: 20%;
 
   
-}*/
+} */
 
 .slider {
     -webkit-appearance: none;

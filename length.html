@@ -69,6 +69,25 @@
       slider.oninput = function() {
         output.innerHTML = this.value;
       };
+
+      //For debug purposes
+      // function hello() {
+      //   alert('Hello');
+      // }
+      // document.getElementById("submit").addEventListener("click", hello);
+
+      var btn = document.getElementById("submit");
+      // console.log("btn");  //TEST
+      // console.log(btn);    //TEST
+      btn.onclick = function() {
+        alert("Button clicked!");
+        // console.log("in the click function");  //TEST
+        btn.disabled = true;
+        // btn.style.background = "#e8e7d8";
+        var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+        postMessage(timeSpentOnPage);
+      };
+
       function postMessage(timeSpentOnPage) {
         var xhr = new XMLHttpRequest();
         xhr.open(
@@ -100,13 +119,6 @@
           postMessage();
         }
       }
-      var btn = document.getElementById("submit");
-      btn.onclick = function() {
-        btn.disabled = true;
-        // btn.style.background = "#e8e7d8";
-        var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
-        postMessage(timeSpentOnPage);
-      };
     </script>
   </body>
 </html>

@@ -151,7 +151,7 @@
  }
 
  #chart {
-   width: 100%; /* Full width */
+   width: 85%; /* Full width */
    height: auto; /* Adjust height as needed */
    overflow: visible;
  }

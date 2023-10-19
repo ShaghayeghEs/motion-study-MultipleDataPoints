@@ -1,5 +1,5 @@
 // Import the functions from core.js
-import { mapValues, arrayToMatrix, shuffleArray, selectDistArray } from './core.js';
+import { mapValues, arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
 
 var iCell1 = 0;
 var jCell1 = 0;
@@ -51,7 +51,7 @@ function drawLengthGraph(N) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
-  var cellHeights = selectDistArray(dist,N,ratio_value);
+  var cellHeights = selectDistArray(dist,N,ratio_value,"gen");
   console.log("original array"); //test
   console.log(cellHeights); //test
   
@@ -63,10 +63,12 @@ function drawLengthGraph(N) {
   jCell2 = outputs[4];
   console.log("shuffled array"); //test
   console.log(cellHeights); //test
-  cellHeights = mapValues(cellHeights, Math.min(...cellHeights), //map the data array to the encoding max and min
-   Math.max(...cellHeights),5,(maxCellSize - 4.7));
+  // cellHeights = mapValues(cellHeights, Math.min(...cellHeights), Math.max(...cellHeights),5,(maxCellSize - 4.7)); //map the data array to the encoding max and min
+  //console.log("max cell size" + (maxCellSize));
+  // cellHeights = mapValues(cellHeights, 5, (maxCellSize - 4.7));
+  // console.log("mapped array is: " + cellHeights);
   cellHeights = arrayToMatrix(cellHeights, N); //convert the data 1D array to a matrix
-  console.log("mapped array in a matrix"); //test
+  console.log("array in a matrix"); //test
   console.log(cellHeights); //test
   
   // Specify the height values for each bar chart in the format [h1, h2, h3, ...]
