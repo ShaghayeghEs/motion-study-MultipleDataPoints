@@ -1,4 +1,4 @@
-import { selectDistArray, mapValues, shuffleArray } from "./core.js";
+import { selectDistArray, shuffleArray } from "./core.js";
 
 var margin = {
   top: 18,
@@ -17,8 +17,7 @@ var svg = d3
   .attr("height", chartHeight)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
+  
 var cell1_i = 0;
 var cell1_j = 0;
 var cell2_i = 0;

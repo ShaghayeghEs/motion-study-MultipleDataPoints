@@ -1,3 +1,5 @@
+import { selectDistArray, shuffleArray } from "./core.js";
+
 var margin = {
   top: 18,
   left: 18,
@@ -16,7 +18,16 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var N = 10; // Change N to the desired size of the grid
+var cell1_i = 0;
+var cell1_j = 0;
+var cell2_i = 0;
+var cell2_j = 0;
+
+// var N = 10; // Change N to the desired size of the grid
+var N = url_data["size"];
+var task = url_data["task"];
+var ratio_value = url_data["ratio"];
+var dist = url_data["dist"];
 
 drawAreaGraph(N); // Pass the N value to the function
 
@@ -39,16 +50,35 @@ function drawAreaGraph(N) {
 
   console.log("cell size:");
   console.log(cellSize);
+  console.log("max number of the area data: " + ((Math.pow((cellSize/2) - 0.1, 2)))/10);
+  console.log("min number of the area data: " + (1/1600 * ((Math.pow((cellSize/2) - 0.1, 2)))));
+  
+  var Values = [];
+  Values = selectDistArray(dist, N, ratio_value,"area");
+  console.log(Values);
+  
+  var outputs = shuffleArray(Values,task,ratio_value,N,dist,"area"); //shuffling the data array based on the given task
+  console.log("outputs:");
+  console.log(outputs);
+
+  cell1_i = outputs[1];
+  cell1_j = outputs[2];
+  cell2_i = outputs[3];
+  cell2_j = outputs[4];
+
+  Values = outputs[0];
+  console.log("after shuffling");
+  console.log(Values);
+  
   // Generate circle and box data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
 
-      var radius = cellSize * 1; // Adjust the radius based on cell size
-// NOTE: max ===> ((cellSize/2) - 0.1)^2
-// NOTE: min ===> 1/1600 * max
-      var Values = [200,0.125,100,40,80,10,20,30,40,80,40,20,60,20,40,30,20,40,10,20,30,40,80,10,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4]; // Set a constant value of 5 for all circles
+      // var radius = cellSize * 1; // Adjust the radius based on cell size
+
+      // var Values = [165,1,20,40,80,160,20,30,40,80,40,20,60,20,40,30,20,40,10,20,30,40,80,10,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4]; // Set a constant value of 5 for all circles
       var value = Values[i * N + j]; // Get the value from the array based on the circle's index
 
       circle_data_2.push({
@@ -56,8 +86,7 @@ function drawAreaGraph(N) {
         y: cy,
         id: i * N + j + 1,
         r_diff: 0.13,
-        radius: Math.sqrt(value * 10),
-        // radius: Math.sqrt(value * 10),
+        radius: Math.sqrt(value * 10), //sqrt to make sure that the "area" is "ratio"-times bigger, not the radius.
         move: 0,
         value: value
       });
@@ -185,19 +214,21 @@ var circles_2 = svg
     }
   }
 
-    // Add an arrow line
-    svg
-        .append("line")
-        .attr("x1", arrowStartX)
-        .attr("y1", arrowStartY)
-        .attr("x2", arrowEndX)
-        .attr("y2", arrowEndY)
-        .attr("stroke", "black")
-        .attr("stroke-width", 1.5)
-        .attr("marker-end", "url(#arrowhead)");
+  // Add an arrow line
+  if (task == "compare") {
+  svg
+      .append("line")
+      .attr("x1", arrowStartX)
+      .attr("y1", arrowStartY)
+      .attr("x2", arrowEndX)
+      .attr("y2", arrowEndY)
+      .attr("stroke", "black")
+      .attr("stroke-width", 1.5)
+      .attr("marker-end", "url(#arrowhead)");
+  }
 }
 
-  // Add arrows to cells [0, 2] and [2, 2]
-  addArrow(2, 0);
-  addArrow(0, 1);
+  // Add arrows to cells
+  addArrow(cell1_i, cell1_j);
+  addArrow(cell2_i, cell2_j);
 }
