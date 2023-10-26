@@ -155,7 +155,7 @@ function load_page() {
         page_to_name[rand_item[0][1]] //changed by Shae
     }`;
     
-    rand_item[0][1] = "./area.html"; //for debugging purposes
+    rand_item[0][1] = "./expansion.html"; //for debugging purposes
     document
         .getElementById("content")
         .setAttribute(

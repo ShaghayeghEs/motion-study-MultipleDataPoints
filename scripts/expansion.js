@@ -1,19 +1,7 @@
-var ID;
-var Value;
-var radio1;
-var radio2;
-var results_json = [];
-var current_elem = 0;
-var array_elem1 = 0;
-var array_elem2 = 0;
-var array_elem3 = 0;
-var motion_type = [1, 2, 3];
-var move_true;
-var count;
-var padding = 10;
-var timer_ret_val = false;
+import { selectDistArray, shuffleArray } from "./core.js";
 
-var speeds = [50, 1]; // Define the speeds array (you can adjust these values)
+// var speeds = [50, 25, 1]; // Define the speeds array (you can adjust these values)
+var speeds;
 
 var margin = {
   top: 18,
@@ -34,67 +22,22 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var display1 = d3.select("#chart");
-var display2 = d3.select("#test");
-var display3 = d3.select("#ranger");
-var display4 = d3.select("#last");
-var display5 = d3.select("#notice");
-// Added by Shae
-var display6 = d3.select("#test_difficulty");
-var display7 = d3.select("#ranger_difficulty");
+var cell1_i = 0;
+var cell1_j = 0;
+var cell2_i = 0;
+var cell2_j = 0;
 
-var N = 10; // Change N to the desired size of the grid
-
-motion4(array_elem3, N); // Pass the N value to the function
+var N = url_data["size"];
+var task = url_data["task"];
+var ratio_value = url_data["ratio"];
+var dist = url_data["dist"];
 
 var circles_2; // Declare circles_2 as a global variable
 var borders; // Declare borders as a global variable to maintain cell borders
 
-// Function to animate the circles
-function animate() {
-  var maxSpeed = Math.max(...speeds); // Find the maximum speed in the array
+drawExpansionGraph(N); // Pass the N value to the function
 
-  var circleData = circles_2.data();
-
-  var timer = d3.timer(function (elapsed) {
-    if (animationStopped) {
-      timer.stop(); // Stop the animation timer
-      return;
-    }
-
-    circles_2.each(function (d) {
-      var circle = d3.select(this);
-      var speedFactor = d.speed; // Use the speed from the circle's data
-
-      // Calculate the adjusted duration based on speedFactor and the maximum speed
-      var adjustedDuration = 1000 / (speedFactor / maxSpeed);
-
-      var progress = (elapsed % adjustedDuration) / adjustedDuration;
-
-      if (progress <= 0.5) {
-        circle.attr("r", d.currentRadius * (1 + progress * 2));
-      } else {
-        circle.attr("r", d.currentRadius * (3 - progress * 2));
-      }
-    });
-  });
-}
-
-// Start the animation when your visualization is ready
-animate();
-
-// Function to stop the animation
-function stopAnimation() {
-  animationStopped = true;
-}
-
-// Handle the stop button click event
-var stopButton = document.getElementById("stop");
-stopButton.onclick = function () {
-  stopAnimation();
-};
-
-function motion4(num, N) {
+function drawExpansionGraph(N) {
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -110,6 +53,23 @@ function motion4(num, N) {
   var translateX = (chartWidth - totalGridWidth) / 2;
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
+  
+  speeds = selectDistArray(dist, N, ratio_value, "expansion");
+  console.log(speeds);
+
+  speeds = shuffleArray(speeds, task, ratio_value, N, dist, "expansion");
+  console.log("speeds");
+  console.log(speeds);
+
+  cell1_i = speeds[1];
+  cell1_j = speeds[2];
+  cell2_i = speeds[3];
+  cell2_j = speeds[4];
+  
+  speeds = speeds[0];
+  console.log("after shuffling");
+  console.log(speeds);
+
   // Flag to control animation
   // Generate circle data based on grid size N
   for (var i = 0; i < N; i++) {
@@ -179,7 +139,6 @@ function motion4(num, N) {
     .attr("cy", function (d) {
       return d.y;
     });
-
 
     var selectedRect = null; // To keep track of the selected circle
 
@@ -254,6 +213,7 @@ function motion4(num, N) {
     }
 
     // Add an arrow line
+  if (task == "compare") {  
     svg
       .append("line")
       .attr("x1", arrowStartX)
@@ -264,16 +224,11 @@ function motion4(num, N) {
       .attr("stroke-width", 1.5)
       .attr("marker-end", "url(#arrowhead)");
   }
-
-
-
+}
   
-  // Add arrows to cells [0, 2] and [2, 0]
-  addArrow(0, 2);
-  addArrow(1, 0);
-
-  move_true = true;
-  console.log("area");
+  // Add arrows to cells
+  addArrow(cell1_i, cell1_j);
+  addArrow(cell2_i, cell2_j);
 
   // Initialize the "expanding" property for circles
   circles_2.each(function (d) {
@@ -281,7 +236,51 @@ function motion4(num, N) {
   });
 
   // Start the animation
-  animate();
-
-  
+  animate();  
 }
+
+// Function to animate the circles
+function animate() {
+  // console.log("in animate function");
+  var maxSpeed = Math.max(...speeds); // Find the maximum speed in the array
+
+  var circleData = circles_2.data();
+
+  var timer = d3.timer(function (elapsed) {
+    if (animationStopped) {
+      timer.stop(); // Stop the animation timer
+      return;
+    }
+
+    circles_2.each(function (d) {
+      var circle = d3.select(this);
+      var speedFactor = d.speed; // Use the speed from the circle's data
+
+      // Calculate the adjusted duration based on speedFactor and the maximum speed
+      var adjustedDuration = 1000 / (speedFactor / maxSpeed);
+
+      var progress = (elapsed % adjustedDuration) / adjustedDuration;
+
+      if (progress <= 0.5) {
+        circle.attr("r", d.currentRadius * (1 + progress * 2));
+      } else {
+        circle.attr("r", d.currentRadius * (3 - progress * 2));
+      }
+    });
+  });
+}
+
+// // Start the animation when your visualization is ready
+// animate(); //Commented by Shae since this function has already been called
+  //in the drowExpansionGraph function
+
+// Function to stop the animation
+function stopAnimation() {
+  animationStopped = true;
+}
+
+// Handle the stop button click event
+var stopButton = document.getElementById("stop");
+stopButton.onclick = function () {
+  stopAnimation();
+};
