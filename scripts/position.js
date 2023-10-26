@@ -1,17 +1,25 @@
-var ID;
-var Value;
-var radio1;
-var radio2;
-var results_json = [];
-var current_elem = 0;
-var array_elem1 = 0;
-var array_elem2 = 0;
-var array_elem3 = 0;
-var motion_type = [1, 2, 3];
-var move_true;
-var count;
-var padding = 10;
-var timer_ret_val = false;
+// Import the functions from core.js
+import { arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
+
+// var ID;
+// var Value;
+// var radio1;
+// var radio2;
+// var results_json = [];
+// var current_elem = 0;
+// var array_elem1 = 0;
+// var array_elem2 = 0;
+// var array_elem3 = 0;
+// var motion_type = [1, 2, 3];
+// var move_true;
+// var count;
+// var padding = 10;
+// var timer_ret_val = false;
+
+var iCell1 = 0;
+var jCell1 = 0;
+var iCell2 = 0;
+var jCell2 = 0;
 
 var margin = {
   top: 18,
@@ -31,20 +39,24 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var display1 = d3.select("#chart");
-var display2 = d3.select("#test");
-var display3 = d3.select("#ranger");
-var display4 = d3.select("#last");
-var display5 = d3.select("#notice");
-// Added by Shae
-var display6 = d3.select("#test_difficulty");
-var display7 = d3.select("#ranger_difficulty");
+// var display1 = d3.select("#chart");
+// var display2 = d3.select("#test");
+// var display3 = d3.select("#ranger");
+// var display4 = d3.select("#last");
+// var display5 = d3.select("#notice");
+// // Added by Shae
+// var display6 = d3.select("#test_difficulty");
+// var display7 = d3.select("#ranger_difficulty");
 
 var N = 10; // Change N to the desired size of the grid
+// var N = url_data["size"]; // size of the grid
+var dist = url_data["dist"]; // distribution of data points
+var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
+var task = url_data["task"]; // type of task
 
-motion4(array_elem3, N); // Pass the N value to the function
+drawPositionGraph(N); // Pass the N value to the function
 
-function motion4(num, N) {
+function drawPositionGraph(N) {
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -53,6 +65,9 @@ function motion4(num, N) {
 
   var maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
   var cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
+
+  //TEST
+  console.log("cell size is: " + cellSize);
 
   var totalGridWidth = cellSize * N;
   var totalGridHeight = cellSize * N;
@@ -63,7 +78,7 @@ function motion4(num, N) {
 
   // Define an array of arrays to store x positions for each row of cells
   var xPositions = [
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 1
+    [0, 10, 20, 73.7, 15, 60, 10, 10, 10, 10], // Row 1
     [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 2
     [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 3
     [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 4
@@ -74,6 +89,23 @@ function motion4(num, N) {
     [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 9
     [0, 0, 0, 0, 0, 10, 10, 10, 10, 10]  // Row 10
   ];
+
+  var xPositions = selectDistArray(dist,N,ratio_value,"position");
+  console.log("original array"); //test
+  console.log(xPositions); //test
+  
+  var outputs = shuffleArray(xPositions,task,ratio_value,N,dist,"position"); //shuffling the data array based on the given task
+  xPositions = outputs[0];
+  iCell1 = outputs[1];
+  jCell1 = outputs[2];
+  iCell2 = outputs[3];
+  jCell2 = outputs[4];
+  console.log("shuffled array"); //test
+  console.log(xPositions); //test
+
+  xPositions = arrayToMatrix(xPositions, N); //convert the data 1D array to a matrix
+  console.log("array in a matrix"); //test
+  console.log(xPositions); //test
 
   // Generate circle and box data based on grid size N
   for (var i = 0; i < N; i++) {
@@ -107,6 +139,7 @@ function motion4(num, N) {
   
 
   // Create arrow markers
+  if(task == "compare") {
   svg
     .append("defs")
     .append("marker")
@@ -119,7 +152,7 @@ function motion4(num, N) {
     .append("path")
     .attr("d", "M 0,0 V 6 L9,3 Z")
     .attr("fill", "black");
-
+}
     
   // Function to add an arrow to a specific cell
   function addArrow(row, col) {
@@ -232,12 +265,12 @@ var circles_2 = svg
         .attr("marker-end", "url(#arrowhead)");
 }
 
-  // Add arrows to cells [0, 2] and [2, 2]
-  addArrow(2, 0);
-  addArrow(0, 1);
+  // Add arrows to cells
+  addArrow(iCell1, jCell1);
+  addArrow(iCell2, jCell2);
 
   
 
-  move_true = true;
-  console.log("area");
+  // move_true = true;
+  // console.log("area");
 }

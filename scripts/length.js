@@ -1,5 +1,5 @@
 // Import the functions from core.js
-import { mapValues, arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
+import { arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
 
 var iCell1 = 0;
 var jCell1 = 0;
