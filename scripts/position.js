@@ -253,6 +253,7 @@ var circles_2 = svg
     }
   }
 
+  if (task == "compare") {  
     // Add an arrow line
     svg
         .append("line")
@@ -263,6 +264,7 @@ var circles_2 = svg
         .attr("stroke", "black")
         .attr("stroke-width", 1.5)
         .attr("marker-end", "url(#arrowhead)");
+  }
 }
 
   // Add arrows to cells
