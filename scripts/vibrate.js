@@ -1,19 +1,20 @@
-var ID;
-var Value;
-var radio1;
-var radio2;
-var results_json = [];
-var current_elem = 0;
-var array_elem1 = 0;
-var array_elem2 = 0;
-var array_elem3 = 0;
-var motion_type = [1, 2, 3];
-var move_true;
-var count;
-var padding = 10;
-var timer_ret_val = false;
+import { selectDistArray, shuffleArray } from "./core.js";
 
-var speeds = [100,200,300,400,1000,100,200,300,400,1000,100,200,300,400,1000,100,200,300,400,1000,100,200,300,400,1000,100,200,300,400,1000 ]; // Define the speeds array (you can adjust these values)
+// var ID;
+// var Value;
+// var radio1;
+// var radio2;
+// var results_json = [];
+// var current_elem = 0;
+// var array_elem1 = 0;
+// var array_elem2 = 0;
+// var array_elem3 = 0;
+// var motion_type = [1, 2, 3];
+// var move_true;
+// var count;
+// var padding = 10;
+// var timer_ret_val = false;
+
 
 var margin = {
   top: 18,
@@ -34,18 +35,27 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var display1 = d3.select("#chart");
-var display2 = d3.select("#test");
-var display3 = d3.select("#ranger");
-var display4 = d3.select("#last");
-var display5 = d3.select("#notice");
-// Added by Shae
-var display6 = d3.select("#test_difficulty");
-var display7 = d3.select("#ranger_difficulty");
+// var display1 = d3.select("#chart");
+// var display2 = d3.select("#test");
+// var display3 = d3.select("#ranger");
+// var display4 = d3.select("#last");
+// var display5 = d3.select("#notice");
+// // Added by Shae
+// var display6 = d3.select("#test_difficulty");
+// var display7 = d3.select("#ranger_difficulty");
+
+var cell1_i = 0;
+var cell1_j = 0;
+var cell2_i = 0;
+var cell2_j = 0;
 
 var N = 5; // Change N to the desired size of the grid
+// var N = url_data["size"];
+var task = url_data["task"];
+var ratio_value = url_data["ratio"];
+var dist = url_data["dist"];
 
-motion4(array_elem3, N); // Pass the N value to the function
+var speeds = [100,200,300,400,1000,100,200,300,400,1000,100,200,300,400,1000,100,200,300,400,1000,100,200,300,400,1000,100,200,300,400,1000]; // Define the speeds array (you can adjust these values) 
 
 var circles_2; // Declare circles_2 as a global variable
 var borders; // Declare borders as a global variable to maintain cell borders
@@ -54,8 +64,10 @@ var borders; // Declare borders as a global variable to maintain cell borders
 var animationStopped = false;
 var vibrateInterval;
 
+drawHorizontalMotionGraph(N); // Pass the N value to the function
 
-function motion4(num, N) {
+
+function drawHorizontalMotionGraph(N) {
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -72,6 +84,26 @@ function motion4(num, N) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
+  //UNCOMMENT below after the speeds functions are determined.
+  
+  // //speeds = selectDistArray(dist, N, ratio_value,"horizontal-motion");
+  // speeds = selectDistArray(dist, N, ratio_value,"angle");
+  // console.log(speeds);
+  
+  // // var outputs = shuffleArray(speeds,task,ratio_value,N,dist,"horizontal-motion"); //shuffling the data array based on the given task
+  // var outputs = shuffleArray(speeds,task,ratio_value,N,dist,"angle");
+  // console.log("outputs:");
+  // console.log(outputs);
+
+  // cell1_i = outputs[1];
+  // cell1_j = outputs[2];
+  // cell2_i = outputs[3];
+  // cell2_j = outputs[4];
+
+  // speeds = outputs[0];
+  // console.log("after shuffling");
+  // console.log(speeds);
+  
   // Generate circle data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
@@ -129,7 +161,7 @@ function motion4(num, N) {
     .enter()
     .append("circle")
     .attr("class", "circle")
-    .attr("r", 25) // Set the fixed radius value to 8
+    .attr("r", 10) // Set the fixed radius value to 8  //changed from 25 to 10
     .attr("fill", function (d) {
       return d.color; // Use the stored color value
     })
@@ -229,8 +261,8 @@ function motion4(num, N) {
   addArrow(0, 2);
   addArrow(1, 0);
 
-  move_true = true;
-  console.log("area");
+  // move_true = true;
+  // console.log("area");
 
   // Initialize the "expanding" property for circles
   circles_2.each(function (d) {
