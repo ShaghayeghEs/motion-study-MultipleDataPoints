@@ -1,19 +1,19 @@
 import { selectDistArray, shuffleArray } from "./core.js";
 
-// var ID;
-// var Value;
-// var radio1;
-// var radio2;
-// var results_json = [];
-// var current_elem = 0;
-// var array_elem1 = 0;
-// var array_elem2 = 0;
-// var array_elem3 = 0;
-// var motion_type = [1, 2, 3];
-// var move_true;
-// var count;
-// var padding = 10;
-// var timer_ret_val = false;
+var ID;
+var Value;
+var radio1;
+var radio2;
+var results_json = [];
+var current_elem = 0;
+var array_elem1 = 0;
+var array_elem2 = 0;
+var array_elem3 = 0;
+var motion_type = [1, 2, 3];
+var move_true;
+var count;
+var padding = 10;
+var timer_ret_val = false;
 
 var margin = {
   top: 18,
