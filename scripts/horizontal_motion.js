@@ -1,8 +1,5 @@
 import { selectDistArray, shuffleArray } from "./core.js";
 
-var timer_ret_val = false;
-var animationStopped = false;
-
 var margin = {
   top: 18,
   left: 18,
@@ -21,6 +18,9 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var timer_ret_val = false;
+var animationStopped = false;
+
 var cell1_i = 0;
 var cell1_j = 0;
 var cell2_i = 0;
@@ -31,11 +31,10 @@ var task = url_data["task"];
 var ratio_value = url_data["ratio"];
 var dist = url_data["dist"];
 
+// Call the drawHorizontalMotion function with the desired parameter (num)
+drawHorizontalMotion(0);
 
-// Call the drawVerticalMotionGraph function with the desired parameter (num)
-drawVerticalMotionGraph(0);
-
-function drawVerticalMotionGraph(num) {
+function drawHorizontalMotion(num) {
   var box_data_2 = [];
 
   var gridWidth = chartWidth - margin.left - margin.right; // Width of the grid area
@@ -50,26 +49,24 @@ function drawVerticalMotionGraph(num) {
   var translateX = (chartWidth - totalGridWidth) / 2;
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
-
-
+  
+  // Generate circle data based on grid size N
   var circle1 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   var m_s = circle1[num];
   var m_s1 = m_s / Math.max(...circle1); // Calculate the vertical movement factor dynamically
 
   var radius = 10;  //Changed from 18 to 10 by Shae
-
-  var speeds = [];
-  // Speed Min = 1
-  // Speed Max = 30
-  // var speeds = [1,2,4,8,16, 20 ,32,32,32,64,32,16,8,4,2,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; // Speeds array for each cell
-  // var speeds = [1, 2, 4, 8, 16, 30, 40, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-  speeds = selectDistArray(dist, N, ratio_value, "motion");
+  
+  var speeds;
+  // var speeds = [1,2,4,8,16,32,16,32,16,32,16,8,4,2,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; // Speeds array for each cell
+  
+  speeds = selectDistArray(dist, N, ratio_value,"motion");
   console.log(speeds);
-
-  var outputs = shuffleArray(speeds,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
+  
+  var outputs = shuffleArray(speeds,task,ratio_value,N,dist,"motion");
   console.log("outputs:");
   console.log(outputs);
-  
+
   cell1_i = outputs[1];
   cell1_j = outputs[2];
   cell2_i = outputs[3];
@@ -94,8 +91,8 @@ function drawVerticalMotionGraph(num) {
         cy: cy,
         id: id,
         dx: cellSize/2,
-        x_diff: 0, // No horizontal movement
-        y_diff: 1, // Vertical movement direction (always downward)
+        x_diff: 1,
+        y_diff: 0, 
         speed: speed,
         move: 0
       });
@@ -227,24 +224,24 @@ function drawVerticalMotionGraph(num) {
     // Add an arrow line
     if (task == "compare") {
       svg
-        .append("line")
-        .attr("x1", arrowStartX)
-        .attr("y1", arrowStartY)
-        .attr("x2", arrowEndX)
-        .attr("y2", arrowEndY)
-        .attr("stroke", "black")
-        .attr("stroke-width", 1.5)
-        .attr("marker-end", "url(#arrowhead)");
+          .append("line")
+          .attr("x1", arrowStartX)
+          .attr("y1", arrowStartY)
+          .attr("x2", arrowEndX)
+          .attr("y2", arrowEndY)
+          .attr("stroke", "black")
+          .attr("stroke-width", 1.5)
+          .attr("marker-end", "url(#arrowhead)");
     }
   }
-
+  
   // Add arrows to cells
   addArrow(cell1_i, cell1_j);
   addArrow(cell2_i, cell2_j);
 
   var t;
   t = d3.timer(animate);
-
+  
   svg.style("opacity", 1);
 
   function animate() {
@@ -252,18 +249,18 @@ function drawVerticalMotionGraph(num) {
       // Stop the animation if the flag is set to true
       return true; // Returning true stops the timer
     }
-    circles.attr("cy", function (d) {
-      d.cy = d.cy + d.speed * m_s1 * d.y_diff ;
+    circles.attr("cx", function (d) {
+      d.cx = d.cx + d.speed * m_s1 * d.x_diff ;
 
       // Adjust the condition for top and bottom boundary
-      var row = Math.floor(d.id / N); // Calculate the row index
-      var topBoundary = (row + 0.2) * cellSize; // Adjust these values for your desired range
-      var bottomBoundary = (row + 0.8) * cellSize; // Adjust these values for your desired range
+      var col = Math.floor(d.id % N); // Calculate the row index
+      var leftBoundary = (col + 0.2) * cellSize; // Adjust these values for your desired range
+      var rightBoundary = (col + 0.8) * cellSize; // Adjust these values for your desired range
 
-      if (d.cy <= topBoundary || d.cy >= bottomBoundary) {
-        d.y_diff = d.y_diff * -1;
+      if (d.cx <= leftBoundary || d.cx >= rightBoundary) {
+        d.x_diff = d.x_diff * -1;
       }
-      return d.cy;
+      return d.cx;
     });
 
     return timer_ret_val;
@@ -279,4 +276,5 @@ function drawVerticalMotionGraph(num) {
   function stopAnimation() {
     animationStopped = true;
   }
+
 }

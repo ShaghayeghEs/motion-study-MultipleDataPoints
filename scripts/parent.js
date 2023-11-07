@@ -25,7 +25,7 @@ var pages = [
     "./position.html",
     "./length.html",
     "./color.html",
-    "./vibration.html",
+    "./horizontal_motion.html",
     "./vertical_motion.html",
     "./flicker.html",
     "./expansion.html",
@@ -36,7 +36,7 @@ var pages_search = [
     "./position.html",
     "./length.html",
     "./color.html",
-    "./vibration.html",
+    "./horizontal_motion.html",
     "./vertical_motion.html",
     "./flicker.html",
     "./expansion.html",
@@ -47,7 +47,7 @@ var pages_match = [
     "./position.html",
     "./length.html",
     "./color.html",
-    "./vibration.html",
+    "./horizontal_motion.html",
     "./vertical_motion.html",
     "./flicker.html",
     "./expansion.html",
@@ -135,7 +135,7 @@ var page_to_name = {
     "./position.html": "Position",
     "./expansion.html": "Expansion",
     "./flicker.html": "Flicker",
-    "./vibration.html": "Horizontal Motion", //changed by shae, previously "Vibration"
+    "./horizontal_motion.html": "Horizontal Motion", //changed by shae, previously "Vibration"
     "./vertical_motion.html": "Vertical Motion"
 };
 
