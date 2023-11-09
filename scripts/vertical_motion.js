@@ -31,7 +31,6 @@ var task = url_data["task"];
 var ratio_value = url_data["ratio"];
 var dist = url_data["dist"];
 
-
 // Call the drawVerticalMotionGraph function with the desired parameter (num)
 drawVerticalMotionGraph(0);
 

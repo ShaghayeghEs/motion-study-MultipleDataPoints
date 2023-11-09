@@ -1,19 +1,4 @@
-var ID;
-var Value;
-var radio1;
-var radio2;
-var results_json = [];
-var current_elem = 0;
-var array_elem1 = 0;
-var array_elem2 = 0;
-var array_elem3 = 0;
-var motion_type = [1, 2, 3];
-var move_true;
-var count;
-var padding = 10;
-var timer_ret_val = false;
-
-var speeds = [1,2,3,4,5,6,8,10,12,14,16]; // Define the speeds array (you can adjust these values)
+import { selectDistArray, shuffleArray } from "./core.js";
 
 var margin = {
   top: 18,
@@ -34,22 +19,19 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var display1 = d3.select("#chart");
-var display2 = d3.select("#test");
-var display3 = d3.select("#ranger");
-var display4 = d3.select("#last");
-var display5 = d3.select("#notice");
-// Added by Shae
-var display6 = d3.select("#test_difficulty");
-var display7 = d3.select("#ranger_difficulty");
+var cell1_i = 0;
+var cell1_j = 0;
+var cell2_i = 0;
+var cell2_j = 0;
 
-var speedArray = [1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000, 1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000]; // Array of speeds for each circle
-var box_data_2 = [];
+var N = url_data["size"];
+var task = url_data["task"];
+var ratio_value = url_data["ratio"];
+var dist = url_data["dist"];
 
-motion3(array_elem2);
+drawFlickerGraph();
 
-function motion3(num) {
-  var N = 10 ;
+function drawFlickerGraph() {
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -66,13 +48,32 @@ function motion3(num) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
+  var speedArray;
+  
+  // var speedArray = [1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000, 1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000]; // Array of speeds for each circle
+  speedArray = selectDistArray(dist, N, ratio_value, "motion");
+  console.log(speedArray);
+
+  var outputs = shuffleArray(speedArray,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
+  console.log("outputs:");
+  console.log(outputs);
+  
+  cell1_i = outputs[1];
+  cell1_j = outputs[2];
+  cell2_i = outputs[3];
+  cell2_j = outputs[4];
+
+  speedArray = outputs[0];
+  console.log("after shuffling");
+  console.log(speedArray);
+
   // Generate data for each cell in the grid
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
 
-      var speed = speedArray[i * N + j]; // Get the speed value from the speedArray
+      var speed = (1 / speedArray[i * N + j]) * 30 * 150; // Get the speed value from the speedArray
 
       circle_data_2.push({
         id: i * N + j,
@@ -135,37 +136,35 @@ function motion3(num) {
       return d.cy;
     });
 
+  var selectedRect = null; // To keep track of the selected circle
 
-
-    var selectedRect = null; // To keep track of the selected circle
-
-    box_2.on("click", function(d, i) {
-      handleHighlight(this);
-    });
+  box_2.on("click", function(d, i) {
+    handleHighlight(this);
+  });
     
-    circles.on("click", function(d, i) {
-      var cellIndex = d.id ; // Adjust the index to match the box_data_2 array
-      var correspondingRect = box_2.nodes()[cellIndex];
-      handleHighlight(correspondingRect);
-    });
+  circles.on("click", function(d, i) {
+    var cellIndex = d.id ; // Adjust the index to match the box_data_2 array
+    var correspondingRect = box_2.nodes()[cellIndex];
+    handleHighlight(correspondingRect);
+  });
 
-    function handleHighlight(clickedElem) {
-      if (selectedRect === clickedElem) {
-        // If the same cell is clicked again, unselect it
-        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
-        selectedRect = null;
-      } else {
-        // Unselect the previously selected cell (if any)
-        if (selectedRect) {
-          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
-        }
-        // Highlight the corresponding cell border
-        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
-        selectedRect = clickedElem;
+  function handleHighlight(clickedElem) {
+    if (selectedRect === clickedElem) {
+      // If the same cell is clicked again, unselect it
+      d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+      selectedRect = null;
+    } else {
+      // Unselect the previously selected cell (if any)
+      if (selectedRect) {
+        d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
       }
+      // Highlight the corresponding cell border
+      d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+      selectedRect = clickedElem;
     }
+  }
 
-    // Create arrow markers
+  // Create arrow markers
   svg
   .append("defs")
   .append("marker")
@@ -179,51 +178,55 @@ function motion3(num) {
   .attr("d", "M 0,0 V 6 L9,3 Z")
   .attr("fill", "black");
 
-// Function to add an arrow to a specific cell
-function addArrow(row, col) {
-  var cellSize = maxCellSize;
-  var cx = (col + 0.5) * cellSize;
-  var cy = (row + 0.5) * cellSize;
-  var circleRadius = circle_data_2[row * N + col].currentRadius; // Get the circle's current radius
+  // Function to add an arrow to a specific cell
+  function addArrow(row, col) {
+    var cellSize = maxCellSize;
+    var cx = (col + 0.5) * cellSize;
+    var cy = (row + 0.5) * cellSize;
+    var circleRadius = circle_data_2[row * N + col].radius; // Get the circle's current radius
 
-  // Define the endpoint for the arrow (the middle of the outside border)
-  var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
+    // Define the endpoint for the arrow (the middle of the outside border)
+    var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
 
-  if (col === 0) {
-    arrowStartX = -cellSize / 2;
-    arrowEndX = cx - circleRadius - 15; // Adjusted to avoid overlap with circle
-  } else if (col === N - 1) {
-    arrowStartX = totalGridWidth + cellSize / 2;
-    arrowEndX = cx + circleRadius + 15; // Adjusted to avoid overlap with circle
-  } else {
-    arrowStartX = arrowEndX = cx;
+    if (col === 0) {
+      arrowStartX = -cellSize / 2;
+      // console.log("cx is: " + cx);
+      // console.log("circleRadius is: " + circleRadius);
+      arrowEndX = cx - circleRadius - 15; // Adjusted to avoid overlap with circle
+    } else if (col === N - 1) {
+      arrowStartX = totalGridWidth + cellSize / 2;
+      arrowEndX = cx + circleRadius + 15; // Adjusted to avoid overlap with circle
+    } else {
+      arrowStartX = arrowEndX = cx;
+    }
+
+    if (row === 0) {
+      arrowStartY = -cellSize / 2;
+      arrowEndY = cy - circleRadius - 15; // Adjusted to avoid overlap with circle
+    } else if (row === N - 1) {
+      arrowStartY = totalGridHeight + cellSize / 2;
+      arrowEndY = cy + circleRadius + 15; // Adjusted to avoid overlap with circle
+    } else {
+      arrowStartY = arrowEndY = cy;
+    }
+    
+    if (task == "compare") {
+      // Add an arrow line
+      svg
+        .append("line")
+        .attr("x1", arrowStartX)
+        .attr("y1", arrowStartY)
+        .attr("x2", arrowEndX)
+        .attr("y2", arrowEndY)
+        .attr("stroke", "black")
+        .attr("stroke-width", 1.5)
+        .attr("marker-end", "url(#arrowhead)");
+    }
   }
 
-  if (row === 0) {
-    arrowStartY = -cellSize / 2;
-    arrowEndY = cy - circleRadius - 15; // Adjusted to avoid overlap with circle
-  } else if (row === N - 1) {
-    arrowStartY = totalGridHeight + cellSize / 2;
-    arrowEndY = cy + circleRadius + 15; // Adjusted to avoid overlap with circle
-  } else {
-    arrowStartY = arrowEndY = cy;
-  }
-
-  // Add an arrow line
-  svg
-    .append("line")
-    .attr("x1", arrowStartX)
-    .attr("y1", arrowStartY)
-    .attr("x2", arrowEndX)
-    .attr("y2", arrowEndY)
-    .attr("stroke", "black")
-    .attr("stroke-width", 1.5)
-    .attr("marker-end", "url(#arrowhead)");
-}
-
-// Add arrows to cells [0, 2] and [2, 0]
-addArrow(0, 2);
-addArrow(2, 0);
+  // Add arrows to cells
+  addArrow(cell1_i, cell1_j);
+  addArrow(cell2_i, cell2_j);
 
   animate();
 
@@ -246,7 +249,7 @@ addArrow(2, 0);
   
     document.getElementById("stop").addEventListener("click", function() {
       isAnimating = false;  // Set the flag to false to stop animation
-  });
+    });
 
     // Recursive call after a delay based on the speed of each circle
     circles.each(function(d) {
@@ -279,6 +282,4 @@ addArrow(2, 0);
     }, speed);
   
   }
-  }
-
-
+}
