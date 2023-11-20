@@ -67,6 +67,9 @@ function drawFlickerGraph() {
   console.log("after shuffling");
   console.log(speedArray);
 
+  // N = 3;
+  // speedArray = [10000, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55];
+
   // Generate data for each cell in the grid
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {

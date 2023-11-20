@@ -1,4 +1,3 @@
-// Import the functions from core.js
 import { arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
 
 var iCell1 = 0;

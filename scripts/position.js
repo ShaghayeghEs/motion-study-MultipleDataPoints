@@ -1,25 +1,4 @@
-// Import the functions from core.js
 import { arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
-
-// var ID;
-// var Value;
-// var radio1;
-// var radio2;
-// var results_json = [];
-// var current_elem = 0;
-// var array_elem1 = 0;
-// var array_elem2 = 0;
-// var array_elem3 = 0;
-// var motion_type = [1, 2, 3];
-// var move_true;
-// var count;
-// var padding = 10;
-// var timer_ret_val = false;
-
-var iCell1 = 0;
-var jCell1 = 0;
-var iCell2 = 0;
-var jCell2 = 0;
 
 var margin = {
   top: 18,
@@ -39,20 +18,17 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// var display1 = d3.select("#chart");
-// var display2 = d3.select("#test");
-// var display3 = d3.select("#ranger");
-// var display4 = d3.select("#last");
-// var display5 = d3.select("#notice");
-// // Added by Shae
-// var display6 = d3.select("#test_difficulty");
-// var display7 = d3.select("#ranger_difficulty");
-
-var N = 10; // Change N to the desired size of the grid
-// var N = url_data["size"]; // size of the grid
+// var N = 10; // Change N to the desired size of the grid
+var N = url_data["size"]; // size of the grid
 var dist = url_data["dist"]; // distribution of data points
 var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
-var task = url_data["task"]; // type of task
+// var task = url_data["task"]; // type of task
+var task = "compare";
+
+var iCell1 = 0;
+var jCell1 = 0;
+var iCell2 = 0;
+var jCell2 = 0;
 
 drawPositionGraph(N); // Pass the N value to the function
 
@@ -67,7 +43,7 @@ function drawPositionGraph(N) {
   var cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
 
   //TEST
-  console.log("cell size is: " + cellSize);
+  // console.log("cell size is: " + cellSize);
 
   var totalGridWidth = cellSize * N;
   var totalGridHeight = cellSize * N;
@@ -77,31 +53,33 @@ function drawPositionGraph(N) {
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
   // Define an array of arrays to store x positions for each row of cells
-  var xPositions = [
-    [0, 10, 20, 73.7, 15, 60, 10, 10, 10, 10], // Row 1
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 2
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 3
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 4
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 5
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 6
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 7
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 8
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 9
-    [0, 0, 0, 0, 0, 10, 10, 10, 10, 10]  // Row 10
-  ];
+  // var xPositions = [
+  //   [0, 10, 20, 73.7, 15, 60, 10, 10, 10, 10], // Row 1
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 2
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 3
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 4
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 5
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 6
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 7
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 8
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 9
+  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10]  // Row 10
+  // ];
 
-  var xPositions = selectDistArray(dist,N,ratio_value,"position");
+  var xPositions =[];
+  xPositions = selectDistArray(dist,N,ratio_value,"position");
+  // xPositions = [10, 10.1244140625, 10.9953125, 13.3591796875, 15, 25.5517578125, 37.5, 52.674023437500004, 73.7];
   console.log("original array"); //test
   console.log(xPositions); //test
   
-  var outputs = shuffleArray(xPositions,task,ratio_value,N,dist,"position"); //shuffling the data array based on the given task
-  xPositions = outputs[0];
-  iCell1 = outputs[1];
-  jCell1 = outputs[2];
-  iCell2 = outputs[3];
-  jCell2 = outputs[4];
-  console.log("shuffled array"); //test
-  console.log(xPositions); //test
+  // var outputs = shuffleArray(xPositions,task,ratio_value,N,dist,"position"); //shuffling the data array based on the given task
+  // xPositions = outputs[0];
+  // iCell1 = outputs[1];
+  // jCell1 = outputs[2];
+  // iCell2 = outputs[3];
+  // jCell2 = outputs[4];
+  // console.log("shuffled array"); //test
+  // console.log(xPositions); //test
 
   xPositions = arrayToMatrix(xPositions, N); //convert the data 1D array to a matrix
   console.log("array in a matrix"); //test
@@ -140,19 +118,19 @@ function drawPositionGraph(N) {
 
   // Create arrow markers
   if(task == "compare") {
-  svg
-    .append("defs")
-    .append("marker")
-    .attr("id", "arrowhead")
-    .attr("refX", 0) // Set refX to half of the cell size
-    .attr("refY", 3)
-    .attr("markerWidth", 30)
-    .attr("markerHeight", 30)
-    .attr("orient", "auto")
-    .append("path")
-    .attr("d", "M 0,0 V 6 L9,3 Z")
-    .attr("fill", "black");
-}
+    svg
+      .append("defs")
+      .append("marker")
+      .attr("id", "arrowhead")
+      .attr("refX", 0) // Set refX to half of the cell size
+      .attr("refY", 3)
+      .attr("markerWidth", 30)
+      .attr("markerHeight", 30)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M 0,0 V 6 L9,3 Z")
+      .attr("fill", "black");
+  }
     
   // Function to add an arrow to a specific cell
   function addArrow(row, col) {
@@ -167,95 +145,95 @@ function drawPositionGraph(N) {
     if (col === 0) {
       arrowStartX = -cellSize / 2;
       arrowEndX = cx - circleRadius - 20; // Adjusted to avoid overlap with circle
-  } else if (col === N - 1) {
-      arrowStartX = totalGridWidth + cellSize / 2;
-      arrowEndX = cx + circleRadius + 20; // Adjusted to avoid overlap with circle
-  } else {
-      arrowStartX = arrowEndX = cx;
-  }
-
-  if (row === 0) {
-      arrowStartY = -cellSize / 2;
-      arrowEndY = cy - circleRadius - 20; // Adjusted to avoid overlap with circle
-  } else if (row === N - 1) {
-      arrowStartY = totalGridHeight + cellSize / 2;
-      arrowEndY = cy + circleRadius + 20; // Adjusted to avoid overlap with circle
-  } else {
-      arrowStartY = arrowEndY = cy;
-  }
-
-  var box_2 = svg
-  .selectAll(".rect")
-  .data(box_data_2)
-  .enter()
-  .append("rect")
-  .attr("class", "rect clickable") // Add 'clickable' class
-  .style("fill", "white")
-  .attr("stroke", "black")
-  .attr("stroke-width", 0.5)
-  .attr("x", function(d) {
-    return d.x;
-  })
-  .attr("y", function(d) {
-    return d.y;
-  })
-  .attr("height", function(d) {
-    return d.h;
-  })
-  .attr("width", function(d) {
-    return d.w;
-  });
-
-
-// Add a class to the circles to make them clickable
-var circles_2 = svg
-  .selectAll(".circle")
-  .data(circle_data_2)
-  .enter()
-  .append("circle")
-  .attr("class", "circle clickable") // Add 'clickable' class
-  .attr("r", function(d) {
-    return d.radius; // Use the adjusted radius
-  })
-  .attr("fill", "#008fb3")
-  .attr("cx", function(d) {
-    return d.x;
-  })
-  .attr("cy", function(d) {
-    return d.y;
-  });
-
-  var selectedRect = null; // To keep track of the selected circle
-
-  box_2.on("click", function(d, i) {
-    handleHighlight(this);
-  });
-  
-  circles_2.on("click", function(d, i) {
-    var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
-    var correspondingRect = box_2.nodes()[cellIndex];
-    handleHighlight(correspondingRect);
-  });
-
-  function handleHighlight(clickedElem) {
-    if (selectedRect === clickedElem) {
-      // If the same cell is clicked again, unselect it
-      d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
-      selectedRect = null;
+    } else if (col === N - 1) {
+        arrowStartX = totalGridWidth + cellSize / 2;
+        arrowEndX = cx + circleRadius + 20; // Adjusted to avoid overlap with circle
     } else {
-      // Unselect the previously selected cell (if any)
-      if (selectedRect) {
-        d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
-      }
-      // Highlight the corresponding cell border
-      d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
-      selectedRect = clickedElem;
+        arrowStartX = arrowEndX = cx;
     }
-  }
 
-  if (task == "compare") {  
-    // Add an arrow line
-    svg
+    if (row === 0) {
+        arrowStartY = -cellSize / 2;
+        arrowEndY = cy - circleRadius - 20; // Adjusted to avoid overlap with circle
+    } else if (row === N - 1) {
+        arrowStartY = totalGridHeight + cellSize / 2;
+        arrowEndY = cy + circleRadius + 20; // Adjusted to avoid overlap with circle
+    } else {
+        arrowStartY = arrowEndY = cy;
+    }
+
+    var box_2 = svg
+    .selectAll(".rect")
+    .data(box_data_2)
+    .enter()
+    .append("rect")
+    .attr("class", "rect clickable") // Add 'clickable' class
+    .style("fill", "white")
+    .attr("stroke", "black")
+    .attr("stroke-width", 0.5)
+    .attr("x", function(d) {
+      return d.x;
+    })
+    .attr("y", function(d) {
+      return d.y;
+    })
+    .attr("height", function(d) {
+      return d.h;
+    })
+    .attr("width", function(d) {
+      return d.w;
+    });
+
+
+    // Add a class to the circles to make them clickable
+    var circles_2 = svg
+      .selectAll(".circle")
+      .data(circle_data_2)
+      .enter()
+      .append("circle")
+      .attr("class", "circle clickable") // Add 'clickable' class
+      .attr("r", function(d) {
+        return d.radius; // Use the adjusted radius
+      })
+      .attr("fill", "#008fb3")
+      .attr("cx", function(d) {
+        return d.x;
+      })
+      .attr("cy", function(d) {
+        return d.y;
+      });
+
+    var selectedRect = null; // To keep track of the selected circle
+
+    box_2.on("click", function(d, i) {
+      handleHighlight(this);
+    });
+  
+    circles_2.on("click", function(d, i) {
+      var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
+      var correspondingRect = box_2.nodes()[cellIndex];
+      handleHighlight(correspondingRect);
+    });
+
+    function handleHighlight(clickedElem) {
+      if (selectedRect === clickedElem) {
+        // If the same cell is clicked again, unselect it
+        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+        selectedRect = null;
+      } else {
+        // Unselect the previously selected cell (if any)
+        if (selectedRect) {
+          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+        }
+        // Highlight the corresponding cell border
+        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+        selectedRect = clickedElem;
+      }
+    }
+
+    if (task == "compare") {  
+      // Add an arrow line
+      svg
         .append("line")
         .attr("x1", arrowStartX)
         .attr("y1", arrowStartY)
@@ -264,15 +242,10 @@ var circles_2 = svg
         .attr("stroke", "black")
         .attr("stroke-width", 1.5)
         .attr("marker-end", "url(#arrowhead)");
+    }
   }
-}
 
   // Add arrows to cells
   addArrow(iCell1, jCell1);
   addArrow(iCell2, jCell2);
-
-  
-
-  // move_true = true;
-  // console.log("area");
 }
