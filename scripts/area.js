@@ -52,21 +52,21 @@ function drawAreaGraph(N) {
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
   //DEBUG
-  console.log("cell size:" + cellSize);
-  console.log("max number of the area data: " + ((Math.pow((cellSize/2) - 0.1, 2)))/10);
-  console.log("min number of the area data: " + (1/1600 * ((Math.pow((cellSize/2) - 0.1, 2)))));
+  console.log("DEBUG: cell size:" + cellSize);
+  console.log("DEBUG: max number of the area data: " + ((Math.pow((cellSize/2) - 0.1, 2)))/10);
+  console.log("DEBUG: min number of the area data: " + (1/1600 * ((Math.pow((cellSize/2) - 0.1, 2)))));
   
   let Values = selectDistArray(dist, N, ratio_value,"area");
   
   //DEBUG
-  console.log("length of array is: " + Values.length);
-  console.log("selectDistArray: " + Values);
+  console.log("DEBUG: length of array is: " + Values.length);
+  console.log("DEBUG: selectDistArray: " + Values);
   console.log(Values);
   
   const outputs = shuffleArray(Values,task,ratio_value,N,dist,"area"); //shuffling the data array based on the given task
   
   //DEBUG
-  console.log("outputs:");
+  console.log("DEBUG: outputs:");
   console.log(outputs);
 
   cell1_i = outputs[1];
@@ -77,7 +77,7 @@ function drawAreaGraph(N) {
   Values = outputs[0];
 
   //DEBUG
-  console.log("after shuffling");
+  console.log("DEBUG: after shuffling");
   console.log(Values);
   
   // Generate circle and box data based on grid size N
@@ -170,64 +170,64 @@ function drawAreaGraph(N) {
       return d.w;
     });
 
-  // Add a class to the circles to make them clickable
-  var circles_2 = svg
-    .selectAll(".circle")
-    .data(circle_data_2)
-    .enter()
-    .append("circle")
-    .attr("class", "circle clickable") // Add 'clickable' class
-    .attr("r", function(d) {
-      return d.radius; // Use the adjusted radius
-    })
-    .attr("fill", "#008fb3")
-    .attr("cx", function(d) {
-      return d.x;
-    })
-    .attr("cy", function(d) {
-      return d.y;
+    // Add a class to the circles to make them clickable
+    var circles_2 = svg
+      .selectAll(".circle")
+      .data(circle_data_2)
+      .enter()
+      .append("circle")
+      .attr("class", "circle clickable") // Add 'clickable' class
+      .attr("r", function(d) {
+        return d.radius; // Use the adjusted radius
+      })
+      .attr("fill", "#008fb3")
+      .attr("cx", function(d) {
+        return d.x;
+      })
+      .attr("cy", function(d) {
+        return d.y;
+      });
+  
+    var selectedRect = null; // To keep track of the selected circle
+
+    box_2.on("click", function(d, i) {
+      handleHighlight(this);
     });
   
-  var selectedRect = null; // To keep track of the selected circle
+    circles_2.on("click", function(d, i) {
+      var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
+      var correspondingRect = box_2.nodes()[cellIndex];
+      handleHighlight(correspondingRect);
+    });
 
-  box_2.on("click", function(d, i) {
-    handleHighlight(this);
-  });
-  
-  circles_2.on("click", function(d, i) {
-    var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
-    var correspondingRect = box_2.nodes()[cellIndex];
-    handleHighlight(correspondingRect);
-  });
-
-  function handleHighlight(clickedElem) {
-    if (selectedRect === clickedElem) {
-      // If the same cell is clicked again, unselect it
-      d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
-      selectedRect = null;
-    } else {
-      // Unselect the previously selected cell (if any)
-      if (selectedRect) {
-        d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+    function handleHighlight(clickedElem) {
+      if (selectedRect === clickedElem) {
+        // If the same cell is clicked again, unselect it
+        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+        selectedRect = null;
+      } else {
+        // Unselect the previously selected cell (if any)
+        if (selectedRect) {
+          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+        }
+        // Highlight the corresponding cell border
+        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+        selectedRect = clickedElem;
       }
-      // Highlight the corresponding cell border
-      d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
-      selectedRect = clickedElem;
     }
-  }
 
-  // Add an arrow line
-  if (task == "compare") {
-    svg
-      .append("line")
-      .attr("x1", arrowStartX)
-      .attr("y1", arrowStartY)
-      .attr("x2", arrowEndX)
-      .attr("y2", arrowEndY)
-      .attr("stroke", "black")
-      .attr("stroke-width", 1.5)
-      .attr("marker-end", "url(#arrowhead)");
-  }
+    // Add an arrow line
+    if (task == "compare") {
+      svg
+        .append("line")
+        .attr("x1", arrowStartX)
+        .attr("y1", arrowStartY)
+        .attr("x2", arrowEndX)
+        .attr("y2", arrowEndY)
+        .attr("stroke", "black")
+        .attr("stroke-width", 1.5)
+        .attr("marker-end", "url(#arrowhead)");
+    }
   }
 
   // Add arrows to cells

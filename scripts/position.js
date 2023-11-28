@@ -18,17 +18,19 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// var N = 10; // Change N to the desired size of the grid
-var N = url_data["size"]; // size of the grid
-var dist = url_data["dist"]; // distribution of data points
-var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
-// var task = url_data["task"]; // type of task
-var task = "compare";
-
 var iCell1 = 0;
 var jCell1 = 0;
 var iCell2 = 0;
 var jCell2 = 0;
+
+// const N = 3; // Change N to the desired size of the grid
+const N = url_data["size"]; // size of the grid
+// const task = "compare";
+const task = url_data["task"]; // type of task
+// const ratio_value = 3;
+const ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
+// const dist = "right-skewed";
+const dist = url_data["dist"]; // distribution of data points
 
 drawPositionGraph(N); // Pass the N value to the function
 
@@ -42,8 +44,8 @@ function drawPositionGraph(N) {
   var maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
   var cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
 
-  //TEST
-  // console.log("cell size is: " + cellSize);
+  //DEBUG
+  console.log("DEBUG: cell size is: " + cellSize);
 
   var totalGridWidth = cellSize * N;
   var totalGridHeight = cellSize * N;
@@ -53,42 +55,35 @@ function drawPositionGraph(N) {
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
   // Define an array of arrays to store x positions for each row of cells
-  // var xPositions = [
-  //   [0, 10, 20, 73.7, 15, 60, 10, 10, 10, 10], // Row 1
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 2
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 3
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 4
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 5
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 6
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 7
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 8
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10], // Row 9
-  //   [0, 0, 0, 0, 0, 10, 10, 10, 10, 10]  // Row 10
-  // ];
-
-  var xPositions =[];
-  xPositions = selectDistArray(dist,N,ratio_value,"position");
-  // xPositions = [10, 10.1244140625, 10.9953125, 13.3591796875, 15, 25.5517578125, 37.5, 52.674023437500004, 73.7];
-  console.log("original array"); //test
-  console.log(xPositions); //test
+  let xPositions = selectDistArray(dist,N,ratio_value,"position");
   
-  // var outputs = shuffleArray(xPositions,task,ratio_value,N,dist,"position"); //shuffling the data array based on the given task
-  // xPositions = outputs[0];
-  // iCell1 = outputs[1];
-  // jCell1 = outputs[2];
-  // iCell2 = outputs[3];
-  // jCell2 = outputs[4];
-  // console.log("shuffled array"); //test
-  // console.log(xPositions); //test
+  //DEBUG
+  console.log("DEBUG: original array");
+  console.log(xPositions);
+  
+  const outputs = shuffleArray(xPositions,task,ratio_value,N,dist,"position"); //shuffling the data array based on the given task
+  
+  iCell1 = outputs[1];
+  jCell1 = outputs[2];
+  iCell2 = outputs[3];
+  jCell2 = outputs[4];
+
+  xPositions = outputs[0];
+
+  //DEBUG
+  console.log("DEBUG: shuffled array");
+  console.log(xPositions);
 
   xPositions = arrayToMatrix(xPositions, N); //convert the data 1D array to a matrix
-  console.log("array in a matrix"); //test
-  console.log(xPositions); //test
+  
+  //DEBUG
+  console.log("DEBUG: array in a matrix");
+  console.log(xPositions);
 
   // Generate circle and box data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
-      var cx = xPositions[i][j] + (cellSize*j)
+      var cx = xPositions[i][j] + (cellSize * j)
       var cy = (i + 0.5) * cellSize; // Y position of circle center
 
       var radius = cellSize * 0.1; // Adjust the radius based on cell size
@@ -100,9 +95,7 @@ function drawPositionGraph(N) {
         x: cx, // Use the specified x position
         y: cy,
         id: i * N + j + 1,
-        r_diff: 0.13,
         radius: radius,
-        move: 0,
         value: value
       });
 
@@ -114,23 +107,20 @@ function drawPositionGraph(N) {
       });
     }
   }
-  
 
   // Create arrow markers
-  if(task == "compare") {
-    svg
-      .append("defs")
-      .append("marker")
-      .attr("id", "arrowhead")
-      .attr("refX", 0) // Set refX to half of the cell size
-      .attr("refY", 3)
-      .attr("markerWidth", 30)
-      .attr("markerHeight", 30)
-      .attr("orient", "auto")
-      .append("path")
-      .attr("d", "M 0,0 V 6 L9,3 Z")
-      .attr("fill", "black");
-  }
+  svg
+    .append("defs")
+    .append("marker")
+    .attr("id", "arrowhead")
+    .attr("refX", 0) // Set refX to half of the cell size
+    .attr("refY", 3)
+    .attr("markerWidth", 30)
+    .attr("markerHeight", 30)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M 0,0 V 6 L9,3 Z")
+    .attr("fill", "black");
     
   // Function to add an arrow to a specific cell
   function addArrow(row, col) {
@@ -163,26 +153,26 @@ function drawPositionGraph(N) {
     }
 
     var box_2 = svg
-    .selectAll(".rect")
-    .data(box_data_2)
-    .enter()
-    .append("rect")
-    .attr("class", "rect clickable") // Add 'clickable' class
-    .style("fill", "white")
-    .attr("stroke", "black")
-    .attr("stroke-width", 0.5)
-    .attr("x", function(d) {
-      return d.x;
-    })
-    .attr("y", function(d) {
-      return d.y;
-    })
-    .attr("height", function(d) {
-      return d.h;
-    })
-    .attr("width", function(d) {
-      return d.w;
-    });
+      .selectAll(".rect")
+      .data(box_data_2)
+      .enter()
+      .append("rect")
+      .attr("class", "rect clickable") // Add 'clickable' class
+      .style("fill", "white")
+      .attr("stroke", "black")
+      .attr("stroke-width", 0.5)
+      .attr("x", function(d) {
+        return d.x;
+      })
+      .attr("y", function(d) {
+        return d.y;
+      })
+      .attr("height", function(d) {
+        return d.h;
+      })
+      .attr("width", function(d) {
+        return d.w;
+      });
 
 
     // Add a class to the circles to make them clickable
