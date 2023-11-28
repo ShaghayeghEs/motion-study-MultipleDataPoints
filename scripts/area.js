@@ -51,20 +51,21 @@ function drawAreaGraph(N) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
+  //DEBUG
   console.log("cell size:" + cellSize);
   console.log("max number of the area data: " + ((Math.pow((cellSize/2) - 0.1, 2)))/10);
   console.log("min number of the area data: " + (1/1600 * ((Math.pow((cellSize/2) - 0.1, 2)))));
   
-  // var Values = [];
   let Values = selectDistArray(dist, N, ratio_value,"area");
+  
+  //DEBUG
   console.log("length of array is: " + Values.length);
   console.log("selectDistArray: " + Values);
-  // Values = [1, 20, 40, 60, 80, 100, 120, 140, 165];
   console.log(Values);
   
-  // shuffleArray(Values, task, ratio_value, N, dist, "area");
-  
   const outputs = shuffleArray(Values,task,ratio_value,N,dist,"area"); //shuffling the data array based on the given task
+  
+  //DEBUG
   console.log("outputs:");
   console.log(outputs);
 
@@ -74,6 +75,8 @@ function drawAreaGraph(N) {
   cell2_j = outputs[4];
 
   Values = outputs[0];
+
+  //DEBUG
   console.log("after shuffling");
   console.log(Values);
   
@@ -82,20 +85,13 @@ function drawAreaGraph(N) {
     for (let j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
-
-      // var radius = cellSize * 1; // Adjust the radius based on cell size
-      
-      // var Values = [165,1,20,40,80,160,20,30,40,80,40,20,60,20,40,30,20,40,10,20,30,40,80,10,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4,1,2,3,4,8,1,2,3,4,8,4,2,6,2,4,3,2,4]; // Set a constant value of 5 for all circles
       var value = Values[i * N + j]; // Get the value from the array based on the circle's index
-      // console.log(value);
 
       circle_data_2.push({
         x: cx,
         y: cy,
         id: i * N + j + 1,
-        r_diff: 0.13,
         radius: Math.sqrt(value * 10), //sqrt to make sure that the "area" is "ratio"-times bigger, not the radius.
-        move: 0,
         value: value
       });
 
@@ -135,64 +131,62 @@ function drawAreaGraph(N) {
     if (col === 0) {
       arrowStartX = -cellSize / 2;
       arrowEndX = cx - circleRadius - 20; // Adjusted to avoid overlap with circle
-  } else if (col === N - 1) {
+    } else if (col === N - 1) {
       arrowStartX = totalGridWidth + cellSize / 2;
       arrowEndX = cx + circleRadius + 20; // Adjusted to avoid overlap with circle
-  } else {
+    } else {
       arrowStartX = arrowEndX = cx;
-  }
+    }
 
-  if (row === 0) {
-      arrowStartY = -cellSize / 2;
-      arrowEndY = cy - circleRadius - 20; // Adjusted to avoid overlap with circle
-  } else if (row === N - 1) {
-      arrowStartY = totalGridHeight + cellSize / 2;
-      arrowEndY = cy + circleRadius + 20; // Adjusted to avoid overlap with circle
-  } else {
-      arrowStartY = arrowEndY = cy;
-  }
+    if (row === 0) {
+        arrowStartY = -cellSize / 2;
+        arrowEndY = cy - circleRadius - 20; // Adjusted to avoid overlap with circle
+    } else if (row === N - 1) {
+        arrowStartY = totalGridHeight + cellSize / 2;
+        arrowEndY = cy + circleRadius + 20; // Adjusted to avoid overlap with circle
+    } else {
+        arrowStartY = arrowEndY = cy;
+    }
 
-  var box_2 = svg
-  .selectAll(".rect")
-  .data(box_data_2)
-  .enter()
-  .append("rect")
-  .attr("class", "rect clickable") // Add 'clickable' class
-  .style("fill", "white")
-  .attr("stroke", "black")
-  .attr("stroke-width", 0.5)
-  .attr("x", function(d) {
-    return d.x;
-  })
-  .attr("y", function(d) {
-    return d.y;
-  })
-  .attr("height", function(d) {
-    return d.h;
-  })
-  .attr("width", function(d) {
-    return d.w;
-  });
+    var box_2 = svg
+      .selectAll(".rect")
+      .data(box_data_2)
+      .enter()
+      .append("rect")
+      .attr("class", "rect clickable") // Add 'clickable' class
+      .style("fill", "white")
+      .attr("stroke", "black")
+      .attr("stroke-width", 0.5)
+      .attr("x", function(d) {
+        return d.x;
+    })
+    .attr("y", function(d) {
+      return d.y;
+    })
+    .attr("height", function(d) {
+      return d.h;
+    })
+    .attr("width", function(d) {
+      return d.w;
+    });
 
-// Add a class to the circles to make them clickable
-var circles_2 = svg
-  .selectAll(".circle")
-  .data(circle_data_2)
-  .enter()
-  .append("circle")
-  .attr("class", "circle clickable") // Add 'clickable' class
-  .attr("r", function(d) {
-    return d.radius; // Use the adjusted radius
-  })
-  .attr("fill", "#008fb3")
-  .attr("cx", function(d) {
-    return d.x;
-  })
-  .attr("cy", function(d) {
-    return d.y;
-  });
-
-
+  // Add a class to the circles to make them clickable
+  var circles_2 = svg
+    .selectAll(".circle")
+    .data(circle_data_2)
+    .enter()
+    .append("circle")
+    .attr("class", "circle clickable") // Add 'clickable' class
+    .attr("r", function(d) {
+      return d.radius; // Use the adjusted radius
+    })
+    .attr("fill", "#008fb3")
+    .attr("cx", function(d) {
+      return d.x;
+    })
+    .attr("cy", function(d) {
+      return d.y;
+    });
   
   var selectedRect = null; // To keep track of the selected circle
 
@@ -224,7 +218,7 @@ var circles_2 = svg
 
   // Add an arrow line
   if (task == "compare") {
-  svg
+    svg
       .append("line")
       .attr("x1", arrowStartX)
       .attr("y1", arrowStartY)
@@ -234,7 +228,7 @@ var circles_2 = svg
       .attr("stroke-width", 1.5)
       .attr("marker-end", "url(#arrowhead)");
   }
-}
+  }
 
   // Add arrows to cells
   addArrow(cell1_i, cell1_j);
