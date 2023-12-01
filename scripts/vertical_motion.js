@@ -224,7 +224,7 @@ function drawVerticalMotionGraph(num) {
     }
 
     // Add an arrow line
-    if (task == "compare") {
+    if (task == "compare" || task == "match") {
       svg
         .append("line")
         .attr("x1", arrowStartX)
@@ -239,7 +239,10 @@ function drawVerticalMotionGraph(num) {
 
   // Add arrows to cells
   addArrow(cell1_i, cell1_j);
-  addArrow(cell2_i, cell2_j);
+  if (task == "compare") {
+    console.log("DEBUG: in the if that should not be");
+    addArrow(cell2_i, cell2_j);
+  }
 
   var t;
   t = d3.timer(animate);

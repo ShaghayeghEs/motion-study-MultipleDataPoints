@@ -104,159 +104,163 @@ function drawAngleGraph(N) {
     }
   }
 
-// Create arrow markers
-svg
-.append("defs")
-.append("marker")
-.attr("id", "arrowhead")
-.attr("refX", 0) // Set refX to half of the cell size
-.attr("refY", 3)
-.attr("markerWidth", 30)
-.attr("markerHeight", 30)
-.attr("orient", "auto")
-.append("path")
-.attr("d", "M 0,0 V 6 L9,3 Z")
-.attr("fill", "black");
+  // Create arrow markers
+  svg
+  .append("defs")
+  .append("marker")
+  .attr("id", "arrowhead")
+  .attr("refX", 0) // Set refX to half of the cell size
+  .attr("refY", 3)
+  .attr("markerWidth", 30)
+  .attr("markerHeight", 30)
+  .attr("orient", "auto")
+  .append("path")
+  .attr("d", "M 0,0 V 6 L9,3 Z")
+  .attr("fill", "black");
 
-// Function to add an arrow to a specific cell
-function addArrow(row, col) {
-  var cellSize = maxCellSize ;
-  var cx = (col + 0.5) * cellSize;
-  var cy = (row + 0.5) * cellSize;
-  var circleRadius = circle_data_2[row * N + col].radius; // Get the circle's radius
+  // Function to add an arrow to a specific cell
+  function addArrow(row, col) {
+    var cellSize = maxCellSize ;
+    var cx = (col + 0.5) * cellSize;
+    var cy = (row + 0.5) * cellSize;
+    var circleRadius = circle_data_2[row * N + col].radius; // Get the circle's radius
 
-  // Define the endpoint for the arrow (the middle of the outside border)
-  var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
+    // Define the endpoint for the arrow (the middle of the outside border)
+    var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
 
-  if (col === 0) {
-    arrowStartX = -cellSize / 2;
-    arrowEndX = cx - circleRadius - 20; // Adjusted to avoid overlap with circle
-  } else if (col === N - 1) {
-    arrowStartX = totalGridWidth + cellSize / 2;
-    arrowEndX = cx + circleRadius + 20; // Adjusted to avoid overlap with circle
-  } else {
-    arrowStartX = arrowEndX = cx;
-  }
+    if (col === 0) {
+      arrowStartX = -cellSize / 2;
+      arrowEndX = cx - circleRadius - 20; // Adjusted to avoid overlap with circle
+    } else if (col === N - 1) {
+      arrowStartX = totalGridWidth + cellSize / 2;
+      arrowEndX = cx + circleRadius + 20; // Adjusted to avoid overlap with circle
+    } else {
+      arrowStartX = arrowEndX = cx;
+    }
 
-  if (row === 0) {
-    arrowStartY = -cellSize / 2;
-    arrowEndY = cy - circleRadius - 20; // Adjusted to avoid overlap with circle
-  } else if (row === N - 1) {
-    arrowStartY = totalGridHeight + cellSize / 2;
-    arrowEndY = cy + circleRadius + 20; // Adjusted to avoid overlap with circle
-  } else {
-    arrowStartY = arrowEndY = cy;
-  }
+    if (row === 0) {
+      arrowStartY = -cellSize / 2;
+      arrowEndY = cy - circleRadius - 20; // Adjusted to avoid overlap with circle
+    } else if (row === N - 1) {
+      arrowStartY = totalGridHeight + cellSize / 2;
+      arrowEndY = cy + circleRadius + 20; // Adjusted to avoid overlap with circle
+    } else {
+      arrowStartY = arrowEndY = cy;
+    }
 
-  //drawing cells with white background
-  var box_2 = svg
-    .selectAll(".rect")
-    .data(box_data_2)
-    .enter()
-    .append("rect")
-    .attr("class", "rect")
-    .style("fill", "white")
-    .attr("stroke", "black")
-    .attr("stroke-width", 0.5)
-    .attr("x", function(d) {
-      return d.x;
-    })
-    .attr("y", function(d) {
-      return d.y;
-    })
-    .attr("height", function(d) {
-      return d.h;
-    })
-    .attr("width", function(d) {
-      return d.w;
-    });
-
-  //drawing the left line of each angle
-  var angles_2 = svg
-    .selectAll(".path")
-    .data(angle_data_2)
-    .enter()
-    .append("path")
-    .attr("transform", function(d) {
-      return "translate(" + d.x + "," + d.y + ")";
-    })
-    .attr("d", d3.arc()
-      .innerRadius(0)
-      .outerRadius(cellSize / 2 - 10) // Adjust the outerRadius based on cell size
-      .startAngle(function(d) {
-        return d.startAngle;
+    //drawing cells with white background
+    var box_2 = svg
+      .selectAll(".rect")
+      .data(box_data_2)
+      .enter()
+      .append("rect")
+      .attr("class", "rect")
+      .style("fill", "white")
+      .attr("stroke", "black")
+      .attr("stroke-width", 0.5)
+      .attr("x", function(d) {
+        return d.x;
       })
-      .endAngle(function(d) {
-        return d.startAngle;
+      .attr("y", function(d) {
+        return d.y;
       })
-    )
-    .attr("fill", "none")
-    .attr('stroke', 'black');
+      .attr("height", function(d) {
+        return d.h;
+      })
+      .attr("width", function(d) {
+        return d.w;
+      });
 
-  //drawing the right line of each angle
-  var angles_3 = svg
-    .selectAll(".path")
-    .data(angle_data_2)
-    .enter()
-    .append("path")
-    .attr("transform", function(d) {
-      return "translate(" + d.x + "," + d.y + ")";
-    })
-    .attr("d", d3.arc()
-      .innerRadius(0)
-      .outerRadius(cellSize / 2 - 10) // Adjust the outerRadius based on cell size
-      .startAngle(1.5708) 
+    //drawing the left line of each angle
+    var angles_2 = svg
+      .selectAll(".path")
+      .data(angle_data_2)
+      .enter()
+      .append("path")
+      .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      })
+      .attr("d", d3.arc()
+        .innerRadius(0)
+        .outerRadius(cellSize / 2 - 10) // Adjust the outerRadius based on cell size
+        .startAngle(function(d) {
+          return d.startAngle;
+        })
+        .endAngle(function(d) {
+          return d.startAngle;
+        })
+      )
+      .attr("fill", "none")
+      .attr('stroke', 'black');
+
+    //drawing the right line of each angle
+    var angles_3 = svg
+      .selectAll(".path")
+      .data(angle_data_2)
+      .enter()
+      .append("path")
+      .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      })
+      .attr("d", d3.arc()
+        .innerRadius(0)
+        .outerRadius(cellSize / 2 - 10) // Adjust the outerRadius based on cell size
+        .startAngle(1.5708) 
+        
+        .endAngle(1.5708)
+      )
+      .attr("fill", "none")
+      .attr('stroke', 'black');
+
+    var selectedRect = null; // To keep track of the selected circle
+
+    box_2.on("click", function(d, i) {
+        handleHighlight(this);
+      });
       
-      .endAngle(1.5708)
-    )
-    .attr("fill", "none")
-    .attr('stroke', 'black');
+    angles_3.on("click", function(d, i) {
+        var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
+        var correspondingRect = box_2.nodes()[cellIndex];
+        handleHighlight(correspondingRect);
+      });
 
-  var selectedRect = null; // To keep track of the selected circle
-
-  box_2.on("click", function(d, i) {
-      handleHighlight(this);
-    });
-    
-  angles_3.on("click", function(d, i) {
-      var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
-      var correspondingRect = box_2.nodes()[cellIndex];
-      handleHighlight(correspondingRect);
-    });
-
-  function handleHighlight(clickedElem) {
-      if (selectedRect === clickedElem) {
-        // If the same cell is clicked again, unselect it
-        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
-        selectedRect = null;
-      } else {
-        // Unselect the previously selected cell (if any)
-        if (selectedRect) {
-          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+    function handleHighlight(clickedElem) {
+        if (selectedRect === clickedElem) {
+          // If the same cell is clicked again, unselect it
+          d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+          selectedRect = null;
+        } else {
+          // Unselect the previously selected cell (if any)
+          if (selectedRect) {
+            d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+          }
+          // Highlight the corresponding cell border
+          d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+          selectedRect = clickedElem;
         }
-        // Highlight the corresponding cell border
-        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
-        selectedRect = clickedElem;
-      }
-  }
+    }
 
-  // Add an arrow line
-  if(task == "compare") {
-    svg
-    .append("line")
-    .attr("x1", arrowStartX)
-    .attr("y1", arrowStartY)
-    .attr("x2", arrowEndX)
-    .attr("y2", arrowEndY)
-    .attr("stroke", "black")
-    .attr("stroke-width", 1.5)
-    .attr("marker-end", "url(#arrowhead)");
-  }
-  
+    // Add an arrow line
+    if(task == "compare" || task == "match") {
+      svg
+      .append("line")
+      .attr("x1", arrowStartX)
+      .attr("y1", arrowStartY)
+      .attr("x2", arrowEndX)
+      .attr("y2", arrowEndY)
+      .attr("stroke", "black")
+      .attr("stroke-width", 1.5)
+      .attr("marker-end", "url(#arrowhead)");
+    }
+    
   }
 
   // Add arrows to cells
   addArrow(cell1_i, cell1_j);
-  addArrow(cell2_i, cell2_j);
+  if (task == "compare") {
+    console.log("DEBUG: in the if that should not be");
+    addArrow(cell2_i, cell2_j);
+  }
+  
  
 }

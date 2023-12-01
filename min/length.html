@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8" />
+  <head>
+    <title>Length</title>
+    <style>
+      .bar {
+        fill: steelblue;
+      }
+    </style>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" href="/./styles/dropdown.css" />
+    <link rel="stylesheet" href="/./styles/simple-style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="/./libraries/timeme.js"></script>
+    <script type="text/javascript">
+      var params = location.href.split("?")[1].split("&");
+      // console.log("params") //debugging
+      //console.log(params); //debugging  //['ratio=3','trial=2','id=334']
+      url_data = {};
+      for (ele of params) {
+        ele = ele.split("=");
+        url_data[ele[0]] = ele[1];
+      }
+      // console.log("url_data"); //debugging
+      console.log(url_data); //debugging //{task: 'compare', dist: 'uniform', size: '10', ratio: '2', trial: '2', id: '334'}
+      TimeMe.initialize({
+        currentPageName: "length", // page name
+        idleTimeoutInSeconds: 15 // time before user considered idle
+      });
+      // console.log(`child domain: ${document.domain}`); //commented by Shae
+    </script>
+  </head>
+
+  <body>
+    <div id="mainContainer">
+        <div id="chartContainer">
+            <div id="chart"></div>
+        </div>
+        <div id="controlContainer">
+            <div id="test">
+                <!-- How many times larger is the <b>bigger angle </b> compared to the <b>smaller angle</b> (pointed by the arrows)? -->
+                Click on the cell that has the <b>minimum length </b>.
+            </div>
+            <!-- <div id="ranger">
+                <input type="range" class="slider" min="1" max="20" step="0.1" name="speed" id="value2" value="1" />
+                <br /><br />
+                &nbsp;&nbsp;Value: <span id="demo"></span>
+            </div> -->
+            <div id="last">
+                <br />
+                <button class="button" id="submit">Submit</button>
+                <br /><br /><br />
+            </div>
+        </div>
+    </div>
+
+    <script src="/./libraries/d3.v5.min.js"></script>
+    <script src="/./scripts/length.js" type="module"></script>
+    <script>
+      // var slider = document.getElementById("value2");
+      // var output = document.getElementById("demo");
+      // output.innerHTML = slider.value;
+
+      // slider.oninput = function() {
+      //   output.innerHTML = this.value;
+      // };
+
+      //For debug purposes
+      // function hello() {
+      //   alert('Hello');
+      // }
+      // document.getElementById("submit").addEventListener("click", hello);
+
+      var btn = document.getElementById("submit");
+      // console.log("btn");  //TEST
+      // console.log(btn);    //TEST
+      btn.onclick = function() {
+        alert("Button clicked!");
+        // console.log("in the click function");  //TEST
+        btn.disabled = true;
+        // btn.style.background = "#e8e7d8";
+        var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+        postMessage(timeSpentOnPage);
+      };
+
+      function postMessage(timeSpentOnPage) {
+        var xhr = new XMLHttpRequest();
+        xhr.open(
+          "POST",
+          "http://localhost:5000/store_data/",
+          false
+        );
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(
+          JSON.stringify({
+            participant_id: url_data["id"],
+            ratio: parseFloat(url_data["ratio"]),
+            trial_number: parseInt(url_data["trial"]),
+            time_spent: timeSpentOnPage,
+            // participant_answer: slider.value,
+            // correct_answer: 10,
+            type_of_encoding: "length",
+            // difference: 10 - slider.value
+            task: url_data["task"],
+            distribution: url_data["dist"],
+            grid_size: parseInt(url_data["size"])
+          })
+        );
+        if (xhr.status == 200) {
+          console.log("made request");
+          window.top.load_page();
+        } else {
+          console.log("Error sending msg to the server...retrying");
+          postMessage();
+        }
+      }
+    </script>
+  </body>
+</html>

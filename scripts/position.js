@@ -221,7 +221,7 @@ function drawPositionGraph(N) {
       }
     }
 
-    if (task == "compare") {  
+    if (task == "compare" || task == "match") {  
       // Add an arrow line
       svg
         .append("line")
@@ -237,5 +237,8 @@ function drawPositionGraph(N) {
 
   // Add arrows to cells
   addArrow(iCell1, jCell1);
-  addArrow(iCell2, jCell2);
+  if (task == "compare") {
+    console.log("DEBUG: in the if that should not be");
+    addArrow(iCell2, jCell2);
+  }
 }

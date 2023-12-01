@@ -213,7 +213,7 @@ function drawFlickerGraph() {
       arrowStartY = arrowEndY = cy;
     }
     
-    if (task == "compare") {
+    if (task == "compare" || task == "match") {
       // Add an arrow line
       svg
         .append("line")
@@ -229,7 +229,10 @@ function drawFlickerGraph() {
 
   // Add arrows to cells
   addArrow(cell1_i, cell1_j);
-  addArrow(cell2_i, cell2_j);
+  if (task == "compare") {
+    console.log("DEBUG: in the if that should not be");
+    addArrow(cell2_i, cell2_j);
+  }
 
   animate();
 

@@ -14,87 +14,126 @@ function getId() {
 }
 
 
-var dists = ["uniform", "left-skewed", "right-skewed"]; //data distributions //TBD: normal distribution might be added
+const dists = ["uniform", "left-skewed", "right-skewed"]; //data distributions //TBD: normal distribution might be added
 // var tasks = ["compare", "max", "min"];   //TBD: "match" might be added
-var tasks = ["compare", "match", "search"];
-var ratios = [1.5, 2, 2.5, 3, 3.5, 4];
-var values = [1.5, 2, 2.5, 3, 3.5, 4];   //TODO: mix and min values
-var sizes = [3, 10]; //grid size
-var trials = [1, 2];
-var pages = [
-    "./position.html",
-    "./length.html",
-    "./color.html",
-    "./horizontal_motion.html",
-    "./vertical_motion.html",
-    "./flicker.html",
-    "./expansion.html",
-    "./area.html",
-    "./angle.html"
+const tasks = ["compare", "match", "max", "min"];
+const ratios = [1.5, 2, 2.5, 3, 3.5, 4];
+// const values = [1.5, 2, 2.5, 3, 3.5, 4];   //TODO: mix and min values
+const sizes = [3, 10]; //grid size
+const trials = [1, 2];
+const pages_compare = [
+    "compare/position.html",
+    "compare/length.html",
+    "compare/color.html",
+    "compare/horizontal_motion.html",
+    "compare/vertical_motion.html",
+    "compare/flicker.html",
+    "compare/expansion.html",
+    "compare/area.html",
+    "compare/angle.html"
 ];
-var pages_search = [
-    "./position.html",
-    "./length.html",
-    "./color.html",
-    "./horizontal_motion.html",
-    "./vertical_motion.html",
-    "./flicker.html",
-    "./expansion.html",
-    "./area.html",
-    "./angle.html"
+const pages_max = [
+    "max/position.html",
+    "max/length.html",
+    "max/color.html",
+    "max/horizontal_motion.html",
+    "max/vertical_motion.html",
+    "max/flicker.html",
+    "max/expansion.html",
+    "max/area.html",
+    "max/angle.html"
 ];
-var pages_match = [
-    "./position.html",
-    "./length.html",
-    "./color.html",
-    "./horizontal_motion.html",
-    "./vertical_motion.html",
-    "./flicker.html",
-    "./expansion.html",
-    "./area.html",
-    "./angle.html"
+
+const pages_min = [
+    "min/position.html",
+    "min/length.html",
+    "min/color.html",
+    "min/horizontal_motion.html",
+    "min/vertical_motion.html",
+    "min/flicker.html",
+    "min/expansion.html",
+    "min/area.html",
+    "min/angle.html"
+];
+
+const pages_match = [
+    "match/position.html",
+    "match/length.html",
+    "match/color.html",
+    "match/horizontal_motion.html",
+    "match/vertical_motion.html",
+    "match/flicker.html",
+    "match/expansion.html",
+    "match/area.html",
+    "match/angle.html"
     ];
 
-var items = [];
+let items = [];
+let pages = [];
 for (const trial of trials) {
     // for (const dist of dists) {
         for (const size of sizes) {
             for (const task of tasks) {
                if (task == "compare"){
-                pages = pages;
+                // console.log("1");
+                pages = pages_compare;
                } else if (task == "match") {
+                // console.log("2");
                 pages = pages_match;
-               } else if (task == "search") {
-                pages = pages_search;
+               } else if (task == "max") {
+                // console.log("3");
+                pages = pages_max;
+               } else if (task == "min") {
+                // console.log("4");
+                pages = pages_min;
                }
                for (const page of pages) {
-                    for (const ratio of ratios) {
-                        if (ratio == 1.5 || ratio == 2){
-                            items.push([task, page, "uniform", size, ratio, trial]);   
+                    if (task == "compare") {
+                        for (const ratio of ratios) {
+                            if (ratio == 1.5 || ratio == 2){
+                                items.push([task, page, "uniform", size, ratio, trial]);   
+                            }
+                            if (ratio == 2.5 || ratio == 3) {
+                                items.push([task, page, "right-skewed", size, ratio, trial]);
+                            }
+                            if (ratio == 3.5 || ratio == 4) {
+                                items.push([task, page, "left-skewed", size, ratio, trial]);
+                            }    
                         }
-                        if (ratio == 2.5 || ratio == 3) {
-                            items.push([task, page, "right-skewed", size, ratio, trial]);
+                    } else if (task == "max") {
+                        for (const ratio of ratios) {
+                            if (ratio == 1.5) {
+                                items.push([task, page, "uniform", size, ratio, trial]);
+                            } else if (ratio == 2.5) {
+                                items.push([task, page, "right-skewed", size, ratio, trial]);
+                            } else if (ratio == 3.5) {
+                                items.push([task, page, "left-skewed", size, ratio, trial]);
+                            } 
                         }
-                        if (ratio == 3.5 || ratio == 4) {
-                            items.push([task, page, "left-skewed", size, ratio, trial]);
-                        }    
-                    }
-                }
-               
-            //    else if (task == "search") {
-            //     for (const page of pages_search) {
-            //         for (const ratio of ratios) {
-            //             items.push([task, page, dist, size, value, trial]);
-            //         }
-            //     }
-            //    } 
-            //    else if (task == "match") {
-            //     for (const page of pages_match) {
-            //         for (const ratio of ratios) {
-            //             items.push([task, page, dist, size, value, trial]);
-            //         }
-            //     }
-            //    }  
+                    } else if (task == "min") {
+                        for (const ratio of ratios) {
+                            if (ratio == 2) {
+                                items.push([task, page, "uniform", size, ratio, trial]);
+                            } else if (ratio == 3) {
+                                items.push([task, page, "right-skewed", size, ratio, trial]);
+                            } else if (ratio == 4) {
+                                items.push([task, page, "left-skewed", size, ratio, trial]);
+                            } 
+                        }
+                    } else if (task == "match") {     //TODO: change based on the values selected for matching
+                        for (const ratio of ratios) {
+                            if (ratio == 1.5 || ratio == 2){
+                                items.push([task, page, "uniform", size, ratio, trial]);   
+                            }
+                            if (ratio == 2.5 || ratio == 3) {
+                                items.push([task, page, "right-skewed", size, ratio, trial]);
+                            }
+                            if (ratio == 3.5 || ratio == 4) {
+                                items.push([task, page, "left-skewed", size, ratio, trial]);
+                            }
+                        }
+                    }   
+                }  
             }
         }
     // }
@@ -127,16 +166,50 @@ for (const trial of trials) {
 //Debugging-finish
 
 
-var page_to_name = {
-    "./area.html": "Area",
-    "./angle.html": "Angle",
-    "./color.html": "Color",
-    "./length.html": "Length",
-    "./position.html": "Position",
-    "./expansion.html": "Expansion",
-    "./flicker.html": "Flicker",
-    "./horizontal_motion.html": "Horizontal Motion", //changed by shae, previously "Vibration"
-    "./vertical_motion.html": "Vertical Motion"
+//TODO
+const page_to_name = {
+    // "./area.html": "Area",
+    // "./angle.html": "Angle",
+    // "./color.html": "Color",
+    // "./length.html": "Length",
+    // "./position.html": "Position",
+    // "./expansion.html": "Expansion",
+    // "./flicker.html": "Flicker",
+    // "./horizontal_motion.html": "Horizontal Motion", //changed by shae, previously "Vibration"
+    // "./vertical_motion.html": "Vertical Motion"
+    "compare/area.html": "Area",
+    "match/area.html": "Area",
+    "max/area.html": "Area",
+    "min/area.html": "Area",
+    "compare/angle.html": "Angle",
+    "match/angle.html": "Angle",
+    "max/angle.html": "Angle",
+    "min/angle.html": "Angle",
+    "compare/color.html": "Color",
+    "compare/length.html": "Length",
+    "match/length.html": "Length",
+    "max/length.html": "Length",
+    "min/length.html": "Length",
+    "compare/position.html": "Position",
+    "match/position.html": "Position",
+    "max/position.html": "Position",
+    "min/position.html": "Position",
+    "compare/expansion.html": "Expansion",
+    "match/expansion.html": "Expansion",
+    "max/expansion.html": "Expansion",
+    "min/expansion.html": "Expansion",
+    "compare/flicker.html": "Flicker",
+    "match/flicker.html": "Flicker",
+    "max/flicker.html": "Flicker",
+    "min/flicker.html": "Flicker",
+    "compare/horizontal_motion.html": "Horizontal Motion", //changed by shae, previously "Vibration"
+    "match/horizontal_motion.html": "Horizontal Motion",
+    "max/horizontal_motion.html": "Horizontal Motion",
+    "min/horizontal_motion.html": "Horizontal Motion",
+    "compare/vertical_motion.html": "Vertical Motion",
+    "match/vertical_motion.html": "Vertical Motion",
+    "max/vertical_motion.html": "Vertical Motion",
+    "min/vertical_motion.html": "Vertical Motion"
 };
 
 function load_page() {
@@ -155,7 +228,8 @@ function load_page() {
         page_to_name[rand_item[0][1]] //changed by Shae
     }`;
     
-    rand_item[0][1] = "./position.html"; //for debugging purposes
+    // rand_item[0][1] = "./min/vertical_motion.html"; //for debugging purposes
+    // rand_item[0][0] = "max";
     document
         .getElementById("content")
         .setAttribute(

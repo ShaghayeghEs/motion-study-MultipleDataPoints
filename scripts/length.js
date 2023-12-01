@@ -140,7 +140,7 @@ function drawLengthGraph(N) {
     .each(drawCellWithBarChart);
     
   // Create arrow markers
-  if (task == "compare") {
+  // if (task == "compare") {
   svg
     .append("defs")
     .append("marker")
@@ -153,7 +153,7 @@ function drawLengthGraph(N) {
     .append("path")
     .attr("d", "M 0,0 V 6 L9,3 Z")
     .attr("fill", "black");
-  }
+  // }
 
     var selectedRect = null; // To keep track of the selected circle
 
@@ -213,6 +213,7 @@ function drawLengthGraph(N) {
       arrowStartY = arrowEndY = cy;
     }
   
+  if (task == "compare" || task == "match") {  
     // Add an arrow line
     svg
       .append("line")
@@ -223,11 +224,13 @@ function drawLengthGraph(N) {
       .attr("stroke", "black")
       .attr("stroke-width", 1.5)
       .attr("marker-end", "url(#arrowhead)");
+  
+    }
   }
-
   // Create arrows for specific cells
+  addArrow(iCell1, jCell1);
   if (task == "compare") {
-    addArrow(iCell1, jCell1);
+    console.log("DEBUG: in the if that should not be");
     addArrow(iCell2, jCell2);
   }
 }

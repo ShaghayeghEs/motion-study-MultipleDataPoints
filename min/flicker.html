@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Angle</title>
+    <title>Flicker</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <link rel="stylesheet" href="./styles/dropdown.css" />
-    <link rel="stylesheet" href="./styles/simple-style.css" />
+    <link rel="stylesheet" href="/./styles/dropdown.css" />
+    <link rel="stylesheet" href="/./styles/simple-style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <script src="./libraries/d3.js"></script>
-    <script src="./libraries/jquery-3.2.1.min.js"></script>
-    <script src="./libraries/timeme.js"></script>
+    <script src="/./libraries/d3.js"></script>
+    <script src="/./libraries/jquery-3.2.1.min.js"></script>
+    <script src="/./libraries/timeme.js"></script>
     <script type="text/javascript">
       var params = location.href.split("?")[1].split("&");
       url_data = {};
@@ -21,7 +22,7 @@
         url_data[ele[0]] = ele[1];
       }
       TimeMe.initialize({
-        currentPageName: "angle", // page name
+        currentPageName: "flicker", // page name
         idleTimeoutInSeconds: 15 // time before user considered idle
       });
     </script>
@@ -34,32 +35,31 @@
         </div>
         <div id="controlContainer">
             <div id="test">
-                How many times larger is the <b>Largest angle </b> compared to the <b>Smallest angle</b>?
+                <!-- How many times larger is the <b>biggest circle </b> compared to the <b>smallest circle</b>? -->
+                Click on the cell that has the <b>minimum flickering speed</b>.
             </div>
-            <div id="ranger">
+            <!-- <div id="ranger">
                 <input type="range" class="slider" min="1" max="20" step="0.1" name="speed" id="value2" value="1" />
                 <br /><br />
                 &nbsp;&nbsp;Value: <span id="demo"></span>
-            </div>
+            </div> -->
             <div id="last">
                 <br />
+                <button class="button" id="stop">Stop</button>                
                 <button class="button" id="submit">Submit</button>
                 <br /><br /><br />
             </div>
         </div>
     </div>
-
-  
-    <script src="./scripts/angle.js" type="module"></script>
+    <script src="/./scripts/flicker.js" type="module"></script>
     <script>
-      var slider = document.getElementById("value2");
-      var output = document.getElementById("demo");
-      output.innerHTML = slider.value;
+      // var slider = document.getElementById("value2");
+      // var output = document.getElementById("demo");
+      // output.innerHTML = slider.value;
 
-      slider.oninput = function() {
-        output.innerHTML = this.value;
-      };
-      var btn = document.getElementById("submit");
+      // slider.oninput = function() {
+      //   output.innerHTML = this.value;
+      // };
       function postMessage(timeSpentOnPage) {
         var xhr = new XMLHttpRequest();
         xhr.open(
@@ -72,11 +72,12 @@
           JSON.stringify({
             participant_id: url_data["id"],
             ratio: parseFloat(url_data["ratio"]),
-            trial_number: parseInt(url_data["trial"]),
+            trial_number: parseInt(url_data["trail"]),
             time_spent: timeSpentOnPage,
-            participant_answer: slider.value,
-            // correct_answer: 10,
-            type_of_encoding: "angle",
+            // participant_answer: slider.value,
+            correct_answer: 10,
+            trial_number: 1,
+            type_of_encoding: "flicker",
             // difference: 10 - slider.value
           })
         );
@@ -88,9 +89,10 @@
           postMessage();
         }
       }
+      var btn = document.getElementById("submit");
       btn.onclick = function() {
         btn.disabled = true;
-        // btn.style.background = "#e8e7d8";
+        //  btn.style.background = "#e8e7d8";
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
         postMessage(timeSpentOnPage);
       };

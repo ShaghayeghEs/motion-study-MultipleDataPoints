@@ -36,12 +36,10 @@
     border-color: #d3d3d3;
  }
 #test{
-
 	position:relative;
-    background-color: #f2f2f2;
-    margin-bottom: 20px;
-    margin-top: 40px;
-
+   background-color: #f2f2f2;
+   margin-bottom: 20px;
+   margin-top: 40px;
 }
 
 #test2{
@@ -129,6 +127,8 @@
    display: flex;
    width: 100%;
    height: calc(100vh - 60px); /* assuming header height is 60px */
+   font-family: "Gill Sans", sans-serif;
+   font-size: 20px;
 }
 
 #chartContainer {
@@ -159,5 +159,3 @@
  @media only screen and (max-width: 600px) {
    /* Adjust styles for small screens here if needed */
  }
- 
- 

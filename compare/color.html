@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
+  <meta charset="utf-8" />
   <head>
-    <title>Vertical Motion</title>
+    <title>Color</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <link rel="stylesheet" href="./styles/dropdown.css" />
-    <link rel="stylesheet" href="./styles/simple-style.css" />
+    <link rel="stylesheet" href="/./styles/simple-style.css" />
+    <link rel="stylesheet" href="/./styles/dropdown.css" />
+    <link rel="stylesheet" href="/./styles/simple-style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <script src="./libraries/d3.js"></script>
-    <script src="./libraries/jquery-3.2.1.min.js"></script>
-    <script src="./libraries/timeme.js"></script>
+    <script src="/./libraries/timeme.js"></script>
     <script type="text/javascript">
       var params = location.href.split("?")[1].split("&");
       url_data = {};
@@ -22,7 +22,7 @@
         url_data[ele[0]] = ele[1];
       }
       TimeMe.initialize({
-        currentPageName: "vertical motion", // page name
+        currentPageName: "color", // page name
         idleTimeoutInSeconds: 15 // time before user considered idle
       });
     </script>
@@ -44,21 +44,15 @@
             </div>
             <div id="last">
                 <br />
-                <button class="button" id="stop">Stop</button>                
                 <button class="button" id="submit">Submit</button>
                 <br /><br /><br />
             </div>
         </div>
     </div>
-    <script src="./scripts/vertical_motion.js" type="module"></script>
     <script>
       var slider = document.getElementById("value2");
       var output = document.getElementById("demo");
       output.innerHTML = slider.value;
-
-      slider.oninput = function() {
-        output.innerHTML = this.value;
-      };
       function postMessage(timeSpentOnPage) {
         var xhr = new XMLHttpRequest();
         xhr.open(
@@ -75,7 +69,8 @@
             time_spent: timeSpentOnPage,
             participant_answer: slider.value,
             correct_answer: 10,
-            type_of_encoding: "vertical motion",
+            trial_number: 1,
+            type_of_encoding: "color",
             difference: 10 - slider.value
           })
         );
@@ -87,13 +82,18 @@
           postMessage();
         }
       }
+      slider.oninput = function() {
+        output.innerHTML = this.value;
+      };
       var btn = document.getElementById("submit");
       btn.onclick = function() {
         btn.disabled = true;
-        // btn.style.background = "#e8e7d8";
+        //  btn.style.background = "#e8e7d8";
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
         postMessage(timeSpentOnPage);
       };
     </script>
+    <script src="/./libraries/d3.v5.min.js"></script>
+    <script src="/./scripts/color.js"></script>
   </body>
 </html>
