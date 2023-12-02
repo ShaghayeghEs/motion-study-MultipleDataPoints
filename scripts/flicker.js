@@ -49,7 +49,7 @@ function drawFlickerGraph() {
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
   var speedArray;
-  
+
   // var speedArray = [1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000, 1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000]; // Array of speeds for each circle
   speedArray = selectDistArray(dist, N, ratio_value, "motion");
   console.log(speedArray);
@@ -57,7 +57,7 @@ function drawFlickerGraph() {
   var outputs = shuffleArray(speedArray,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
   console.log("outputs:");
   console.log(outputs);
-  
+
   cell1_i = outputs[1];
   cell1_j = outputs[2];
   cell2_i = outputs[3];
@@ -76,7 +76,7 @@ function drawFlickerGraph() {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
 
-      var speed = (1 / speedArray[i * N + j]) * 30 * 150; // Get the speed value from the speedArray
+      var speed = (1 / speedArray[i * N + j]) * 50 * 150; // Get the speed value from the speedArray
 
       circle_data_2.push({
         id: i * N + j,
@@ -144,7 +144,7 @@ function drawFlickerGraph() {
   box_2.on("click", function(d, i) {
     handleHighlight(this);
   });
-    
+
   circles.on("click", function(d, i) {
     var cellIndex = d.id ; // Adjust the index to match the box_data_2 array
     var correspondingRect = box_2.nodes()[cellIndex];
@@ -212,7 +212,7 @@ function drawFlickerGraph() {
     } else {
       arrowStartY = arrowEndY = cy;
     }
-    
+
     if (task == "compare" || task == "match") {
       // Add an arrow line
       svg
@@ -241,7 +241,7 @@ function drawFlickerGraph() {
     circles.each(function(d) {
       var circle = d3.select(this);
       var flickering = d.flickering;
-  
+
       if (flickering) {
         // Circle is on, make it disappear
         circle.style("opacity", 0);
@@ -252,7 +252,7 @@ function drawFlickerGraph() {
         d.flickering = true;
       }
     });
-  
+
     document.getElementById("stop").addEventListener("click", function() {
       isAnimating = false;  // Set the flag to false to stop animation
     });
@@ -266,12 +266,12 @@ function drawFlickerGraph() {
       }, speed);
     });
   }
-  
+
   function animateCircle(circle, speed) {
     if (!isAnimating) return;  // If animation should not run, simply return
 
     var flickering = circle.datum().flickering;
-  
+
     if (flickering) {
       // Circle is on, make it disappear
       circle.style("opacity", 0);
@@ -281,11 +281,11 @@ function drawFlickerGraph() {
       circle.style("opacity", 1);
       circle.datum().flickering = true;
     }
-  
+
     // Recursive call after a delay based on the speed of the circle
     setTimeout(function() {
       animateCircle(circle, speed);
     }, speed);
-  
+
   }
 }

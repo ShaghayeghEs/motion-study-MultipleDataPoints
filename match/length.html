@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <meta charset="utf-8" />
+  <!-- <meta charset="utf-8" /> -->
   <head>
     <title>Length</title>
-    <style>
+    <!-- <style>
       .bar {
         fill: steelblue;
       }
-    </style>
+    </style> -->
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <link rel="stylesheet" href="/./styles/dropdown.css" />
-    <link rel="stylesheet" href="/./styles/simple-style.css" />
+    <link rel="stylesheet" href="../styles/dropdown.css" />
+    <link rel="stylesheet" href="../styles/simple-style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <script src="/./libraries/timeme.js"></script>
+    <script src="../libraries/d3.js"></script>
+    <script src="../libraries/jquery-3.2.1.min.js"></script>
+    <script src="../libraries/timeme.js"></script>
     <script type="text/javascript">
       var params = location.href.split("?")[1].split("&");
       // console.log("params") //debugging
@@ -28,7 +29,7 @@
         url_data[ele[0]] = ele[1];
       }
       // console.log("url_data"); //debugging
-      console.log(url_data); //debugging //{task: 'compare', dist: 'uniform', size: '10', ratio: '2', trial: '2', id: '334'}
+      // console.log(url_data); //debugging //{task: 'compare', dist: 'uniform', size: '10', ratio: '2', trial: '2', id: '334'}
       TimeMe.initialize({
         currentPageName: "length", // page name
         idleTimeoutInSeconds: 15 // time before user considered idle
@@ -60,8 +61,7 @@
         </div>
     </div>
 
-    <script src="/./libraries/d3.v5.min.js"></script>
-    <script src="/./scripts/length.js" type="module"></script>
+    <script src="../scripts/length.js" type="module"></script>
     <script>
       // var slider = document.getElementById("value2");
       // var output = document.getElementById("demo");
@@ -80,46 +80,40 @@
       var btn = document.getElementById("submit");
       // console.log("btn");  //TEST
       // console.log(btn);    //TEST
+
+      function postMessage(timeSpentOnPage) {
+        var dataToSend = {
+          participant_id: url_data["id"],
+          ratio: parseFloat(url_data["ratio"]),
+          trial_number: parseInt(url_data["trial"]),
+          time_spent: timeSpentOnPage,
+          // participant_answer: slider.value,
+          type_of_encoding: "length",
+        };
+
+        $.ajax({
+          type: "POST",
+          url: "../json.php",
+          data: JSON.stringify(dataToSend),
+          contentType: "application/json",
+          success: function(response) {
+            console.log("Data sent successfully:", response);
+            window.top.load_page();
+          },
+          error: function(error) {
+            console.error("Error sending data:", error);
+            // You may want to handle the error here, e.g., by displaying an error message to the user.
+          },
+        });
+      }
       btn.onclick = function() {
-        alert("Button clicked!");
+        // alert("Button clicked!");
         // console.log("in the click function");  //TEST
         btn.disabled = true;
         // btn.style.background = "#e8e7d8";
         var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
         postMessage(timeSpentOnPage);
       };
-
-      function postMessage(timeSpentOnPage) {
-        var xhr = new XMLHttpRequest();
-        xhr.open(
-          "POST",
-          "http://localhost:5000/store_data/",
-          false
-        );
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(
-          JSON.stringify({
-            participant_id: url_data["id"],
-            ratio: parseFloat(url_data["ratio"]),
-            trial_number: parseInt(url_data["trial"]),
-            time_spent: timeSpentOnPage,
-            // participant_answer: slider.value,
-            // correct_answer: 10,
-            type_of_encoding: "length",
-            // difference: 10 - slider.value
-            task: url_data["task"],
-            distribution: url_data["dist"],
-            grid_size: parseInt(url_data["size"])
-          })
-        );
-        if (xhr.status == 200) {
-          console.log("made request");
-          window.top.load_page();
-        } else {
-          console.log("Error sending msg to the server...retrying");
-          postMessage();
-        }
-      }
     </script>
   </body>
 </html>

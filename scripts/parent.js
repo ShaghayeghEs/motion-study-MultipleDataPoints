@@ -91,14 +91,14 @@ for (const trial of trials) {
                     if (task == "compare") {
                         for (const ratio of ratios) {
                             if (ratio == 1.5 || ratio == 2){
-                                items.push([task, page, "uniform", size, ratio, trial]);   
+                                items.push([task, page, "uniform", size, ratio, trial]);
                             }
                             if (ratio == 2.5 || ratio == 3) {
                                 items.push([task, page, "right-skewed", size, ratio, trial]);
                             }
                             if (ratio == 3.5 || ratio == 4) {
                                 items.push([task, page, "left-skewed", size, ratio, trial]);
-                            }    
+                            }
                         }
                     } else if (task == "max") {
                         for (const ratio of ratios) {
@@ -108,7 +108,7 @@ for (const trial of trials) {
                                 items.push([task, page, "right-skewed", size, ratio, trial]);
                             } else if (ratio == 3.5) {
                                 items.push([task, page, "left-skewed", size, ratio, trial]);
-                            } 
+                            }
                         }
                     } else if (task == "min") {
                         for (const ratio of ratios) {
@@ -118,12 +118,12 @@ for (const trial of trials) {
                                 items.push([task, page, "right-skewed", size, ratio, trial]);
                             } else if (ratio == 4) {
                                 items.push([task, page, "left-skewed", size, ratio, trial]);
-                            } 
+                            }
                         }
                     } else if (task == "match") {     //TODO: change based on the values selected for matching
                         for (const ratio of ratios) {
                             if (ratio == 1.5 || ratio == 2){
-                                items.push([task, page, "uniform", size, ratio, trial]);   
+                                items.push([task, page, "uniform", size, ratio, trial]);
                             }
                             if (ratio == 2.5 || ratio == 3) {
                                 items.push([task, page, "right-skewed", size, ratio, trial]);
@@ -132,8 +132,8 @@ for (const trial of trials) {
                                 items.push([task, page, "left-skewed", size, ratio, trial]);
                             }
                         }
-                    }   
-                }  
+                    }
+                }
             }
         }
     // }
@@ -227,9 +227,9 @@ function load_page() {
     document.getElementById("head").innerHTML = `${
         page_to_name[rand_item[0][1]] //changed by Shae
     }`;
-    
-    // rand_item[0][1] = "./min/vertical_motion.html"; //for debugging purposes
-    // rand_item[0][0] = "max";
+
+    // rand_item[0][1] = "./compare/flicker.html"; //for debugging purposes
+    // rand_item[0][0] = "min";
     document
         .getElementById("content")
         .setAttribute(
