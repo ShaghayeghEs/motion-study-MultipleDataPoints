@@ -14,9 +14,10 @@ var svg = d3
   .select("#chart")
   .append("svg")
   .attr("width", chartWidth)
-  .attr("height", chartHeight)
+  .attr("height", chartHeight + 10)  //modified by Shae
   .append("g")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  .attr("transform", "translate(" + margin.left + ")");
   
 var cell1_i = 0;
 var cell1_j = 0;
@@ -37,6 +38,7 @@ function drawAngleGraph(N) {
 
   var maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
   var cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
+  console.log("cell size: " + cellSize);
 
   var totalGridWidth = cellSize * N;
   var totalGridHeight = cellSize * N;
@@ -119,7 +121,7 @@ function drawAngleGraph(N) {
   .attr("fill", "black");
 
   // Function to add an arrow to a specific cell
-  function addArrow(row, col) {
+  function addArrow(row, col, label) {
     var cellSize = maxCellSize ;
     var cx = (col + 0.5) * cellSize;
     var cy = (row + 0.5) * cellSize;
@@ -240,8 +242,8 @@ function drawAngleGraph(N) {
         }
     }
 
-    // Add an arrow line
     if(task == "compare" || task == "match") {
+      // Add an arrow line
       svg
       .append("line")
       .attr("x1", arrowStartX)
@@ -251,16 +253,54 @@ function drawAngleGraph(N) {
       .attr("stroke", "black")
       .attr("stroke-width", 1.5)
       .attr("marker-end", "url(#arrowhead)");
+
+      // Determine text-anchor based on the value of row
+      console.log("row: " + row + ", col: " + col);
+      console.log("arrow Start X: " + arrowStartX);
+      console.log("arrow End X: " + arrowEndX);
+      console.log("arrow Start Y: " + arrowStartY);
+      console.log("arrow End Y: " + arrowEndY);
+      const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+      let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
+      if (col == N - 1 && (row == 0 || row == N -1)) {
+        console.log("wrong");
+        X = (arrowStartX + arrowEndX) / 2 + 12;
+      } else if (col == 0 && (row == 0 || row == N -1)) {
+        console.log("correct");
+        X = (arrowStartX + arrowEndX) / 2 + 8;        
+      }
+      let Y = row === 0 || row === N - 1 ? arrowEndY + 10 : (arrowStartY + arrowEndY) / 2 - 3;
+      // console.log("text anchor: " + textAnchor);
+      if (col == 0 && row == N - 1 ) {
+        Y = (arrowStartY + arrowEndY) / 2 - 10;
+      } else if (col == N - 1 && row == 0) {
+        Y = (arrowStartY + arrowEndY) / 2 + 23;
+      }
+      console.log ("X: " + X, "Y: " + Y);
+
+      // Add a label
+      svg
+      .append("text")
+      .attr("x", X)
+      // .attr("y", (arrowStartY + arrowEndY) / 2)
+      .attr("y", Y)
+      // .attr("x", arrowEndX)
+      // .attr("y", arrowEndY)
+      .attr("text-anchor", textAnchor)
+      // .attr("dominant-baseline", "auto")
+      .attr("fill", "black")
+      // .attr("font-size", "10px") // Adjust the font size here
+      .text(label);
     }
     
   }
 
   // Add arrows to cells
-  addArrow(cell1_i, cell1_j);
+  addArrow(cell1_i, cell1_j, "A");
+  // addArrow(0, N - 1, "A");
   if (task == "compare") {
     console.log("DEBUG: in the if that should not be");
-    addArrow(cell2_i, cell2_j);
+    addArrow(cell2_i, cell2_j, "B");
+    // addArrow(N - 1, 0, "B");
   }
-  
- 
 }

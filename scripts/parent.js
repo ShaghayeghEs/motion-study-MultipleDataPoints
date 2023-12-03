@@ -226,10 +226,11 @@ function load_page() {
 
     document.getElementById("head").innerHTML = `${
         page_to_name[rand_item[0][1]] //changed by Shae
+        // "Angle"
     }`;
 
-    // rand_item[0][1] = "./compare/flicker.html"; //for debugging purposes
-    // rand_item[0][0] = "min";
+    rand_item[0][1] = "./compare/angle.html"; //for debugging purposes
+    rand_item[0][0] = "compare";
     document
         .getElementById("content")
         .setAttribute(
