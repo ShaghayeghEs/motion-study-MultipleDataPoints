@@ -277,13 +277,28 @@ function animate() {
 // animate(); //Commented by Shae since this function has already been called
   //in the drowExpansionGraph function
 
-// Function to stop the animation
-function stopAnimation() {
-  animationStopped = true;
+
+var stopButton = document.getElementById("stop");
+
+// Function to stop or resume the animation
+function toggleAnimation() {
+  animationStopped = !animationStopped;
+  if (animationStopped) {
+    stopButton.textContent = "Resume";
+  } else {
+    stopButton.textContent = "Stop";
+    animate(); // Resume animation
+  }
 }
 
-// Handle the stop button click event
-var stopButton = document.getElementById("stop");
+// Handle the stop/resume button click event
 stopButton.onclick = function () {
-  stopAnimation();
+  toggleAnimation();
+  if (animationStopped) {
+    // If animation is stopped, remove all circles
+    circles_2.remove();
+  } else {
+    // If animation is resumed, recreate circles and start animation
+    drawExpansionGraph(N);
+  }
 };
