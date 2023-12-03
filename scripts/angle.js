@@ -14,10 +14,9 @@ var svg = d3
   .select("#chart")
   .append("svg")
   .attr("width", chartWidth)
-  .attr("height", chartHeight + 10)  //modified by Shae
+  .attr("height", chartHeight + 10)  //modified by Shae to solve the bottom arrow problem
   .append("g")
-  // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  .attr("transform", "translate(" + margin.left + ")");
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
   
 var cell1_i = 0;
 var cell1_j = 0;
@@ -255,41 +254,34 @@ function drawAngleGraph(N) {
       .attr("marker-end", "url(#arrowhead)");
 
       // Determine text-anchor based on the value of row
-      console.log("row: " + row + ", col: " + col);
-      console.log("arrow Start X: " + arrowStartX);
-      console.log("arrow End X: " + arrowEndX);
-      console.log("arrow Start Y: " + arrowStartY);
-      console.log("arrow End Y: " + arrowEndY);
+      // console.log("row: " + row + ", col: " + col);
+      // console.log("arrow Start X: " + arrowStartX);
+      // console.log("arrow End X: " + arrowEndX);
+      // console.log("arrow Start Y: " + arrowStartY);
+      // console.log("arrow End Y: " + arrowEndY);
       const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
       let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
       if (col == N - 1 && (row == 0 || row == N -1)) {
-        console.log("wrong");
         X = (arrowStartX + arrowEndX) / 2 + 12;
       } else if (col == 0 && (row == 0 || row == N -1)) {
-        console.log("correct");
         X = (arrowStartX + arrowEndX) / 2 + 8;        
       }
+
       let Y = row === 0 || row === N - 1 ? arrowEndY + 10 : (arrowStartY + arrowEndY) / 2 - 3;
-      // console.log("text anchor: " + textAnchor);
       if (col == 0 && row == N - 1 ) {
         Y = (arrowStartY + arrowEndY) / 2 - 10;
       } else if (col == N - 1 && row == 0) {
         Y = (arrowStartY + arrowEndY) / 2 + 23;
       }
-      console.log ("X: " + X, "Y: " + Y);
+      // console.log ("X: " + X, "Y: " + Y);
 
       // Add a label
       svg
       .append("text")
       .attr("x", X)
-      // .attr("y", (arrowStartY + arrowEndY) / 2)
       .attr("y", Y)
-      // .attr("x", arrowEndX)
-      // .attr("y", arrowEndY)
       .attr("text-anchor", textAnchor)
-      // .attr("dominant-baseline", "auto")
       .attr("fill", "black")
-      // .attr("font-size", "10px") // Adjust the font size here
       .text(label);
     }
     

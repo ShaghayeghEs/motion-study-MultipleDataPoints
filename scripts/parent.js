@@ -229,8 +229,8 @@ function load_page() {
         // "Angle"
     }`;
 
-    rand_item[0][1] = "./compare/angle.html"; //for debugging purposes
-    rand_item[0][0] = "compare";
+    rand_item[0][1] = "./match/angle.html"; //for debugging purposes
+    rand_item[0][0] = "match";
     document
         .getElementById("content")
         .setAttribute(
