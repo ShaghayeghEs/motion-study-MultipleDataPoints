@@ -224,13 +224,14 @@ function load_page() {
     // console.log(rand_item); //debugging
     console.log(rand_item[0][1], items.length);  //commented by Shae
 
-    document.getElementById("head").innerHTML = `${
-        page_to_name[rand_item[0][1]] //changed by Shae
-        // "Angle"
-    }`;
+    // document.getElementById("head").innerHTML = `${
+    //     page_to_name[rand_item[0][1]] //changed by Shae
+    //     // "Angle"
+    // }`;
 
-    rand_item[0][1] = "./match/angle.html"; //for debugging purposes
-    rand_item[0][0] = "match";
+    // rand_item[0][1] = "./compare/vertical_motion.html"; //for debugging purposes
+    // rand_item[0][0] = "compare";
+    
     document
         .getElementById("content")
         .setAttribute(

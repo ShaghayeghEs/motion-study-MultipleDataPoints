@@ -1,13 +1,22 @@
-import { selectDistArray, shuffleArray } from "./core.js";
+import { selectDistArray, shuffleArray, multiplyArrayElements } from "./core.js";
 
 // var speeds = [50, 25, 1]; // Define the speeds array (you can adjust these values)
-var speeds;
+let speeds;
 
+//Previous version measures (with header)
+// var margin = {
+//   top: 18,
+//   left: 18,
+//   bottom: 18,
+//   right: 18
+// };
+
+//Measures without header
 var margin = {
-  top: 18,
-  left: 18,
-  bottom: 18,
-  right: 18
+  top: 30,
+  left: 30,
+  bottom: 30,
+  right: 30
 };
 
 var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
@@ -27,10 +36,14 @@ var cell1_j = 0;
 var cell2_i = 0;
 var cell2_j = 0;
 
-var N = url_data["size"];
-var task = url_data["task"];
-var ratio_value = url_data["ratio"];
-var dist = url_data["dist"];
+let N = url_data["size"];
+// let N = 3;
+let task = url_data["task"];
+// let task = "max";
+let ratio_value = url_data["ratio"];
+// let ratio_value = 1.5;
+let dist = url_data["dist"];
+// let dist = "uniform";
 
 var circles_2; // Declare circles_2 as a global variable
 var borders; // Declare borders as a global variable to maintain cell borders
@@ -69,6 +82,11 @@ function drawExpansionGraph(N) {
   speeds = speeds[0];
   console.log("after shuffling");
   console.log(speeds);
+
+  // speeds = multiplyArrayElements(speeds, 4);
+
+  // console.log("after multiplying");
+  // console.log(speeds);
 
   // Flag to control animation
   // Generate circle data based on grid size N
@@ -183,7 +201,7 @@ function drawExpansionGraph(N) {
     .attr("fill", "black");
 
   // Function to add an arrow to a specific cell
-  function addArrow(row, col) {
+  function addArrow(row, col, label) {
     var cellSize = maxCellSize;
     var cx = (col + 0.5) * cellSize;
     var cy = (row + 0.5) * cellSize;
@@ -223,14 +241,41 @@ function drawExpansionGraph(N) {
       .attr("stroke", "black")
       .attr("stroke-width", 1.5)
       .attr("marker-end", "url(#arrowhead)");
+
+      // Determine text-anchor based on the value of row
+      const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+
+      let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
+      if (col == N - 1 && (row == 0 || row == N -1)) {
+        X = (arrowStartX + arrowEndX) / 2 + 12;
+      } else if (col == 0 && (row == 0 || row == N -1)) {
+        X = (arrowStartX + arrowEndX) / 2 + 8;        
+      }
+
+      let Y = row === 0 || row === N - 1 ? arrowEndY + 5 : (arrowStartY + arrowEndY) / 2 - 3;
+      if (col == 0 && row == N - 1 ) {
+        Y = (arrowStartY + arrowEndY) / 2 - 10;
+      } else if (col == N - 1 && row == 0) {
+        Y = (arrowStartY + arrowEndY) / 2 + 23;
+      }
+
+      // Add a label
+      svg
+      .append("text")
+      .attr("x", X)
+      .attr("y", Y)
+      .attr("text-anchor", textAnchor)
+      .attr("fill", "black")
+      .text(label);
   }
 }
   
   // Add arrows to cells
-  addArrow(cell1_i, cell1_j);
+  addArrow(cell1_i, cell1_j, "A");
+  // addArrow(0, N - 1, "A");
   if (task == "compare") {
-    console.log("DEBUG: in the if that should not be");
-    addArrow(cell2_i, cell2_j);
+    addArrow(cell2_i, cell2_j, "B");
+    // addArrow(N - 1, 0, "B");
   }
 
   // Initialize the "expanding" property for circles
@@ -246,6 +291,7 @@ function drawExpansionGraph(N) {
 function animate() {
   // console.log("in animate function");
   var maxSpeed = Math.max(...speeds); // Find the maximum speed in the array
+  console.log("max speed: " + maxSpeed);
 
   var circleData = circles_2.data();
 
@@ -258,9 +304,10 @@ function animate() {
     circles_2.each(function (d) {
       var circle = d3.select(this);
       var speedFactor = d.speed; // Use the speed from the circle's data
+      // console.log("speed factor: " + d.speed);
 
       // Calculate the adjusted duration based on speedFactor and the maximum speed
-      var adjustedDuration = 1000 / (speedFactor / maxSpeed);
+      var adjustedDuration = 500 / (speedFactor / maxSpeed); //By changing "500", we can control the overall speed of expansion, previpusly it was 1000.
 
       var progress = (elapsed % adjustedDuration) / adjustedDuration;
 

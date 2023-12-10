@@ -126,7 +126,8 @@
 #mainContainer {
    display: flex;
    width: 100%;
-   height: calc(100vh - 60px); /* assuming header height is 60px */
+   /*height: calc(100vh - 60px);  assuming header height is 60px */
+   height: calc(100vh );
    font-family: "Gill Sans", sans-serif;
    font-size: 20px;
 }
@@ -139,9 +140,9 @@
 }
 
 #controlContainer {
-   flex: 1;
+   flex: 1.3;
    box-sizing: border-box;
-   padding-right: 100px;
+   padding-right: 150px;
 }
 
 #chartContainer {

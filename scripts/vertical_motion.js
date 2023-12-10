@@ -1,19 +1,28 @@
 import { selectDistArray, shuffleArray } from "./core.js";
 
-var timer_ret_val = false;
-var animationStopped = false;
+let timer_ret_val = false;
+let animationStopped = false;
 
-var margin = {
-  top: 18,
-  left: 18,
-  bottom: 18,
-  right: 18
+//Previous version measures (with header)
+// var margin = {
+//   top: 18,
+//   left: 18,
+//   bottom: 18,
+//   right: 18
+// };
+
+//Measures without header
+const margin = {
+  top: 30,
+  left: 30,
+  bottom: 30,
+  right: 30
 };
 
-var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
-var chartHeight = document.getElementById("chartContainer").offsetHeight - margin.top - margin.bottom;
+const chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
+const chartHeight = document.getElementById("chartContainer").offsetHeight - margin.top - margin.bottom;
 
-var svg = d3
+let svg = d3
   .select("#chart")
   .append("svg")
   .attr("width", chartWidth)
@@ -21,33 +30,37 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var cell1_i = 0;
-var cell1_j = 0;
-var cell2_i = 0;
-var cell2_j = 0;
+let cell1_i = 0;
+let cell1_j = 0;
+let cell2_i = 0;
+let cell2_j = 0;
 
-var N = url_data["size"];
-var task = url_data["task"];
-var ratio_value = url_data["ratio"];
-var dist = url_data["dist"];
+const N = url_data["size"];
+// const N = 3;
+const task = url_data["task"];
+// const task = "compare";
+const ratio_value = url_data["ratio"];
+// const ratio_value = 3.5;
+const dist = url_data["dist"];
+// const dist = "left-skewed";
 
 // Call the drawVerticalMotionGraph function with the desired parameter (num)
 drawVerticalMotionGraph(0);
 
 function drawVerticalMotionGraph(num) {
-  var box_data_2 = [];
+  let box_data_2 = [];
 
-  var gridWidth = chartWidth - margin.left - margin.right; // Width of the grid area
-  var gridHeight = chartHeight - margin.top - margin.bottom; // Height of the grid area
+  const gridWidth = chartWidth - margin.left - margin.right; // Width of the grid area
+  const gridHeight = chartHeight - margin.top - margin.bottom; // Height of the grid area
 
-  var maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
-  var cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
+  const maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
+  let cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
 
-  var totalGridWidth = cellSize * N;
-  var totalGridHeight = cellSize * N;
+  const totalGridWidth = cellSize * N;
+  const totalGridHeight = cellSize * N;
 
-  var translateX = (chartWidth - totalGridWidth) / 2;
-  var translateY = (chartHeight - totalGridHeight) / 2;
+  const translateX = (chartWidth - totalGridWidth) / 2;
+  const translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
 
@@ -57,7 +70,7 @@ function drawVerticalMotionGraph(num) {
 
   var radius = 10;  //Changed from 18 to 10 by Shae
 
-  var speeds = [];
+  let speeds = [];
   // Speed Min = 1
   // Speed Max = 30
   // var speeds = [1,2,4,8,16, 20 ,32,32,32,64,32,16,8,4,2,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; // Speeds array for each cell
@@ -65,7 +78,7 @@ function drawVerticalMotionGraph(num) {
   speeds = selectDistArray(dist, N, ratio_value, "motion");
   console.log(speeds);
 
-  var outputs = shuffleArray(speeds,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
+  const outputs = shuffleArray(speeds,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
   console.log("outputs:");
   console.log(outputs);
   
@@ -78,7 +91,7 @@ function drawVerticalMotionGraph(num) {
   console.log("after shuffling");
   console.log(speeds);
 
-  var circle_data = [];
+  let circle_data = [];
 
   // Generate data for each cell in the grid
   for (var i = 0; i < N; i++) {
@@ -188,7 +201,7 @@ function drawVerticalMotionGraph(num) {
   .attr("fill", "black");
 
   // Function to add an arrow to a specific cell
-  function addArrow(row, col) {
+  function addArrow(row, col, label) {
     var cellSize = maxCellSize;
     var cx = (col + 0.5) * cellSize;
     var cy = (row + 0.5) * cellSize;
@@ -234,14 +247,42 @@ function drawVerticalMotionGraph(num) {
         .attr("stroke", "black")
         .attr("stroke-width", 1.5)
         .attr("marker-end", "url(#arrowhead)");
+
+      // Determine text-anchor based on the value of row
+      const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+
+      let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
+      if (col == N - 1 && (row == 0 || row == N -1)) {
+        X = (arrowStartX + arrowEndX) / 2 + 12;
+      } else if (col == 0 && (row == 0 || row == N -1)) {
+        X = (arrowStartX + arrowEndX) / 2 + 8;        
+      }
+
+      let Y = row === 0 || row === N - 1 ? arrowEndY + 5 : (arrowStartY + arrowEndY) / 2 - 3;
+      if (col == 0 && row == N - 1 ) {
+        Y = (arrowStartY + arrowEndY) / 2 - 10;
+      } else if (col == N - 1 && row == 0) {
+        Y = (arrowStartY + arrowEndY) / 2 + 23;
+      }
+      // console.log ("X: " + X, "Y: " + Y);
+
+      // Add a label
+      svg
+      .append("text")
+      .attr("x", X)
+      .attr("y", Y)
+      .attr("text-anchor", textAnchor)
+      .attr("fill", "black")
+      .text(label);
     }
   }
 
   // Add arrows to cells
-  addArrow(cell1_i, cell1_j);
+  addArrow(cell1_i, cell1_j, "A");
+  // addArrow(0, N - 1, "A");
   if (task == "compare") {
-    console.log("DEBUG: in the if that should not be");
-    addArrow(cell2_i, cell2_j);
+    addArrow(cell2_i, cell2_j, "B");
+    // addArrow(N - 1, 0, "B");
   }
 
   var t;

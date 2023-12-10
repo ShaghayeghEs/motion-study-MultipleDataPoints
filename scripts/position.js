@@ -1,10 +1,19 @@
 import { arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
 
+//Previous version measures (with header)
+// var margin = {
+//   top: 18,
+//   left: 18,
+//   bottom: 18,
+//   right: 18
+// };
+
+//Measures without header
 var margin = {
-  top: 18,
-  left: 18,
-  bottom: 18,
-  right: 18
+  top: 30,
+  left: 30,
+  bottom: 30,
+  right: 30
 };
 
 var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
@@ -123,7 +132,7 @@ function drawPositionGraph(N) {
     .attr("fill", "black");
     
   // Function to add an arrow to a specific cell
-  function addArrow(row, col) {
+  function addArrow(row, col, label) {
     var cellSize = maxCellSize ;
     var cx = (col + 0.5) * cellSize;
     var cy = (row + 0.5) * cellSize;
@@ -232,13 +241,41 @@ function drawPositionGraph(N) {
         .attr("stroke", "black")
         .attr("stroke-width", 1.5)
         .attr("marker-end", "url(#arrowhead)");
+
+      // Determine text-anchor based on the value of row
+      const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+
+      let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
+      if (col == N - 1 && (row == 0 || row == N -1)) {
+        X = (arrowStartX + arrowEndX) / 2 + 12;
+      } else if (col == 0 && (row == 0 || row == N -1)) {
+        X = (arrowStartX + arrowEndX) / 2 + 8;        
+      }
+
+      let Y = row === 0 || row === N - 1 ? arrowEndY + 5 : (arrowStartY + arrowEndY) / 2 - 3;
+      if (col == 0 && row == N - 1 ) {
+        Y = (arrowStartY + arrowEndY) / 2 - 10;
+      } else if (col == N - 1 && row == 0) {
+        Y = (arrowStartY + arrowEndY) / 2 + 23;
+      }
+      // console.log ("X: " + X, "Y: " + Y);
+
+      // Add a label
+      svg
+      .append("text")
+      .attr("x", X)
+      .attr("y", Y)
+      .attr("text-anchor", textAnchor)
+      .attr("fill", "black")
+      .text(label);
     }
   }
 
   // Add arrows to cells
-  addArrow(iCell1, jCell1);
+  addArrow(iCell1, jCell1, "A");
+  // addArrow(0, N - 1, "A");
   if (task == "compare") {
-    console.log("DEBUG: in the if that should not be");
-    addArrow(iCell2, jCell2);
+    addArrow(iCell2, jCell2, "B");
+    // addArrow(N - 1, 0, "B");
   }
 }

@@ -373,7 +373,7 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       console.log(iCell1);
       jCell1 = randomElement.cell1[1];
       console.log(jCell1);
-      const index1 = (iCell1 * N) + jCell1; //index in the 1D array
+      let index1 = (iCell1 * N) + jCell1; //index in the 1D array
       console.log(index1);
 
       // Access the coordinates (i and j) of cell2 in the pair
@@ -383,7 +383,7 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       console.log(iCell2);
       jCell2 = randomElement.cell2[1];
       console.log(jCell2);
-      const index2 = (iCell2 * N) + jCell2; //index in the 1D array
+      let index2 = (iCell2 * N) + jCell2; //index in the 1D array
       console.log(index2);
   
   
@@ -419,14 +419,22 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
         indexRatio = arr.indexOf(15 * ratio);
       } else if (encoding == "motion"){
         console.log("is it here? 4");
+        console.log("ratio is: " + ratio);
+        console.log("arr is: " + arr);
         indexValue = arr.indexOf(5);
+        console.log("indexValue is: " + indexValue);
         indexRatio = arr.indexOf(5 * ratio);
+        console.log("indexRatio is: " + indexRatio);
       } else {
         console.log("is it here?");
         indexValue = arr.indexOf(20);
         indexRatio = arr.indexOf(20 * ratio);
       }
       
+      // index1 = 6;
+      // index2 = 1;
+      // indexValue = 7;
+      // indexRatio = 6;
       // }
       
       // TEST
@@ -442,14 +450,40 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       // [arr[indexRatio], arr[index2]] = [arr[index2], arr[indexRatio]];
   
       //TODO LATER: make it a function
+      
+      
       let temp;
-      temp = arr[indexValue];
-      arr[indexValue] = arr[index1];
-      arr[index1] = temp;
-  
-      temp = arr[indexRatio];
-      arr[indexRatio] = arr[index2];
-      arr[index2] = temp;
+      if (indexValue == index2 && indexRatio == index1 ) {
+        console.log("all equal");
+        temp = arr[indexValue];
+        arr[indexValue] = arr[index1];
+        arr[index1] = temp;
+      } else if (indexRatio == index1) {
+        console.log("ratio = index1");
+        temp = arr[indexRatio];
+        arr[indexRatio] = arr[index2];
+        arr[index2] = temp;
+
+        temp = arr[indexValue];
+        arr[indexValue] = arr[index1];
+        arr[index1] = temp;
+      } else if (indexRatio == index2) {
+        console.log("ratio = index2");
+        temp = arr[indexValue];
+        arr[indexValue] = arr[index1];
+        arr[index1] = temp;
+      } else {
+        console.log("none equal");
+        temp = arr[indexValue];
+        arr[indexValue] = arr[index1];
+        arr[index1] = temp;
+    
+        temp = arr[indexRatio];
+        arr[indexRatio] = arr[index2];
+        arr[index2] = temp;
+      } 
+      
+      
   
       //Test
       console.log("swapped test array:")
@@ -617,4 +651,17 @@ function shuffleArrayKeepingIndex(array, index) {
   [shuffledArray[index], shuffledArray[array.length - 1]] = [shuffledArray[array.length - 1], shuffledArray[index]];
 
   return shuffledArray;
+}
+
+export function multiplyArrayElements(arr, multiplier) {
+  // Check if the input is an array and multiplier is a number
+  if (!Array.isArray(arr) || typeof multiplier !== 'number') {
+      console.error('Invalid input. Please provide an array and a number.');
+      return null;
+  }
+
+  // Multiply each element in the array by the multiplier
+  const multipliedArray = arr.map(element => element * multiplier);
+
+  return multipliedArray;
 }

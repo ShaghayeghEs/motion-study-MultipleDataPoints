@@ -1,10 +1,19 @@
 import { selectDistArray, shuffleArray } from "./core.js";
 
+//Previous version measures (with header)
+// var margin = {
+//   top: 18,
+//   left: 18,
+//   bottom: 18,
+//   right: 18
+// };
+
+//Measures without header
 var margin = {
-  top: 18,
-  left: 18,
-  bottom: 18,
-  right: 18
+  top: 30,
+  left: 30,
+  bottom: 30,
+  right: 30
 };
 
 var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
@@ -14,7 +23,7 @@ var svg = d3
   .select("#chart")
   .append("svg")
   .attr("width", chartWidth)
-  .attr("height", chartHeight + 10)  //modified by Shae to solve the bottom arrow problem
+  .attr("height", chartHeight)  //modified by Shae to solve the bottom arrow problem
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
   
@@ -260,6 +269,7 @@ function drawAngleGraph(N) {
       // console.log("arrow Start Y: " + arrowStartY);
       // console.log("arrow End Y: " + arrowEndY);
       const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+
       let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
       if (col == N - 1 && (row == 0 || row == N -1)) {
         X = (arrowStartX + arrowEndX) / 2 + 12;
@@ -267,7 +277,7 @@ function drawAngleGraph(N) {
         X = (arrowStartX + arrowEndX) / 2 + 8;        
       }
 
-      let Y = row === 0 || row === N - 1 ? arrowEndY + 10 : (arrowStartY + arrowEndY) / 2 - 3;
+      let Y = row === 0 || row === N - 1 ? arrowEndY + 5 : (arrowStartY + arrowEndY) / 2 - 3;
       if (col == 0 && row == N - 1 ) {
         Y = (arrowStartY + arrowEndY) / 2 - 10;
       } else if (col == N - 1 && row == 0) {
@@ -291,7 +301,6 @@ function drawAngleGraph(N) {
   addArrow(cell1_i, cell1_j, "A");
   // addArrow(0, N - 1, "A");
   if (task == "compare") {
-    console.log("DEBUG: in the if that should not be");
     addArrow(cell2_i, cell2_j, "B");
     // addArrow(N - 1, 0, "B");
   }
