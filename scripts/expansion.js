@@ -2,6 +2,7 @@ import { selectDistArray, shuffleArray, multiplyArrayElements } from "./core.js"
 
 // var speeds = [50, 25, 1]; // Define the speeds array (you can adjust these values)
 let speeds;
+let count = 0;
 
 //Previous version measures (with header)
 // var margin = {
@@ -48,9 +49,27 @@ let dist = url_data["dist"];
 var circles_2; // Declare circles_2 as a global variable
 var borders; // Declare borders as a global variable to maintain cell borders
 
-drawExpansionGraph(N); // Pass the N value to the function
+speeds = selectDistArray(dist, N, ratio_value, "expansion");
+console.log(speeds);
 
-function drawExpansionGraph(N) {
+speeds = shuffleArray(speeds, task, ratio_value, N, dist, "expansion");
+console.log("speeds");
+console.log(speeds);
+
+cell1_i = speeds[1];
+cell1_j = speeds[2];
+cell2_i = speeds[3];
+cell2_j = speeds[4];
+  
+speeds = speeds[0];
+console.log("after shuffling");
+console.log(speeds);
+
+drawExpansionGraph(N, speeds); // Pass the N value to the function
+
+
+function drawExpansionGraph(N, speeds) {
+  console.log("DEBUG: in drawExpansionGraph function:" + speeds);
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -67,21 +86,21 @@ function drawExpansionGraph(N) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
   
-  speeds = selectDistArray(dist, N, ratio_value, "expansion");
-  console.log(speeds);
+  // speeds = selectDistArray(dist, N, ratio_value, "expansion");
+  // console.log(speeds);
 
-  speeds = shuffleArray(speeds, task, ratio_value, N, dist, "expansion");
-  console.log("speeds");
-  console.log(speeds);
+  // speeds = shuffleArray(speeds, task, ratio_value, N, dist, "expansion");
+  // console.log("speeds");
+  // console.log(speeds);
 
-  cell1_i = speeds[1];
-  cell1_j = speeds[2];
-  cell2_i = speeds[3];
-  cell2_j = speeds[4];
+  // cell1_i = speeds[1];
+  // cell1_j = speeds[2];
+  // cell2_i = speeds[3];
+  // cell2_j = speeds[4];
   
-  speeds = speeds[0];
-  console.log("after shuffling");
-  console.log(speeds);
+  // speeds = speeds[0];
+  // console.log("after shuffling");
+  // console.log(speeds);
 
   // speeds = multiplyArrayElements(speeds, 4);
 
@@ -158,33 +177,33 @@ function drawExpansionGraph(N) {
       return d.y;
     });
 
-    var selectedRect = null; // To keep track of the selected circle
+  var selectedRect = null; // To keep track of the selected circle
 
-    borders.on("click", function(d, i) {
-      handleHighlight(this);
-    });
+  borders.on("click", function(d, i) {
+    handleHighlight(this);
+  });
     
-    circles_2.on("click", function(d, i) {
-      var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
-      var correspondingRect = borders.nodes()[cellIndex];
-      handleHighlight(correspondingRect);
-    });
+  circles_2.on("click", function(d, i) {
+    var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
+    var correspondingRect = borders.nodes()[cellIndex];
+    handleHighlight(correspondingRect);
+  });
 
-    function handleHighlight(clickedElem) {
-      if (selectedRect === clickedElem) {
-        // If the same cell is clicked again, unselect it
-        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
-        selectedRect = null;
-      } else {
-        // Unselect the previously selected cell (if any)
-        if (selectedRect) {
-          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
-        }
-        // Highlight the corresponding cell border
-        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
-        selectedRect = clickedElem;
+  function handleHighlight(clickedElem) {
+    if (selectedRect === clickedElem) {
+      // If the same cell is clicked again, unselect it
+      d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+      selectedRect = null;
+    } else {
+      // Unselect the previously selected cell (if any)
+      if (selectedRect) {
+        d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
       }
+      // Highlight the corresponding cell border
+      d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+      selectedRect = clickedElem;
     }
+  }
 
   // Create arrow markers
   svg
@@ -231,8 +250,8 @@ function drawExpansionGraph(N) {
     }
 
     // Add an arrow line
-  if (task == "compare" || task == "match") {  
-    svg
+    if (task == "compare" || task == "match") {  
+      svg
       .append("line")
       .attr("x1", arrowStartX)
       .attr("y1", arrowStartY)
@@ -267,17 +286,20 @@ function drawExpansionGraph(N) {
       .attr("text-anchor", textAnchor)
       .attr("fill", "black")
       .text(label);
+    }
   }
-}
   
-  // Add arrows to cells
-  addArrow(cell1_i, cell1_j, "A");
-  // addArrow(0, N - 1, "A");
-  if (task == "compare") {
-    addArrow(cell2_i, cell2_j, "B");
-    // addArrow(N - 1, 0, "B");
+  if (count == 0) {
+    console.log("in the KAZAEI IF");
+    // Add arrows to cells
+    addArrow(cell1_i, cell1_j, "A");
+    // addArrow(0, N - 1, "A");
+    if (task == "compare") {
+      addArrow(cell2_i, cell2_j, "B");
+      // addArrow(N - 1, 0, "B");
+    }
   }
-
+  
   // Initialize the "expanding" property for circles
   circles_2.each(function (d) {
     d.expanding = true;
@@ -346,6 +368,7 @@ stopButton.onclick = function () {
     circles_2.remove();
   } else {
     // If animation is resumed, recreate circles and start animation
-    drawExpansionGraph(N);
+    count++;
+    drawExpansionGraph(N, speeds);
   }
 };

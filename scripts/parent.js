@@ -229,8 +229,8 @@ function load_page() {
     //     // "Angle"
     // }`;
 
-    // rand_item[0][1] = "./min/color.html"; //for debugging purposes
-    // rand_item[0][0] = "min";
+    rand_item[0][1] = "./compare/expansion.html"; //for debugging purposes
+    rand_item[0][0] = "compare";
     
     document
         .getElementById("content")
