@@ -1,23 +1,11 @@
-var ID;
-var Value;
-var radio1;
-var radio2;
-var results_json = [];
-var current_elem = 0;
-var array_elem1 = 0;
-var array_elem2 = 0;
-var array_elem3 = 0;
-var motion_type = [1, 2, 3];
-var move_true;
-var count;
-var padding = 10;
-var timer_ret_val = false;
+import { selectDistArray, shuffleArray } from "./core.js";
 
+//Measures without header
 var margin = {
-  top: 18,
-  left: 18,
-  bottom: 18,
-  right: 18
+  top: 30,
+  left: 30,
+  bottom: 30,
+  right: 30
 };
 
 var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
@@ -31,20 +19,19 @@ var svg = d3
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var display1 = d3.select("#chart");
-var display2 = d3.select("#test");
-var display3 = d3.select("#ranger");
-var display4 = d3.select("#last");
-var display5 = d3.select("#notice");
-// Added by Shae
-var display6 = d3.select("#test_difficulty");
-var display7 = d3.select("#ranger_difficulty");
+var cell1_i = 0;
+var cell1_j = 0;
+var cell2_i = 0;
+var cell2_j = 0;
 
-var N = 10; // Change N to the desired size of the grid
+var N = url_data["size"];
+var task = url_data["task"];
+var ratio_value = url_data["ratio"];
+var dist = url_data["dist"];
 
-motion4(array_elem3, N); // Pass the N value to the function
+drawColorGraph(N); // Pass the N value to the function
 
-function motion4(num, N) {
+function drawColorGraph(N) {
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -61,6 +48,23 @@ function motion4(num, N) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
+  let Values = [];
+  Values = selectDistArray(dist, N, ratio_value, "color");
+  console.log(Values);
+
+  var outputs = shuffleArray(Values,task,ratio_value,N,dist,"color"); //shuffling the data array based on the given task
+  console.log("outputs:");
+  console.log(outputs);
+
+  cell1_i = outputs[1];
+  cell1_j = outputs[2];
+  cell2_i = outputs[3];
+  cell2_j = outputs[4];
+
+  Values = outputs[0];
+  console.log("after shuffling");
+  console.log(Values);
+  
   // Generate circle and box data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
@@ -68,10 +72,11 @@ function motion4(num, N) {
       var cy = (i + 0.5) * cellSize; // Y position of circle center
       
       // 5 shades
-      var colors = ["#fafafa", "#bfbfbf", "#7f7f7f", "#404040", "#000000"]; // Add more colors if needed
+      // var colors = ["#fafafa", "#bfbfbf", "#7f7f7f", "#404040", "#000000"]; // Add more colors if needed
 
-      var Values = []
       var value = Values[i * N + j]; // Get the value from the array based on the circle's index
+      let color = shadeColor("#ffffff", value * -1);
+      // console.log("color is: " + color);
 
       circle_data_2.push({
         x: cx,
@@ -80,7 +85,8 @@ function motion4(num, N) {
         r_diff: 0.13,
         radius: cellSize / 2,  // Set a constant value
         move: 0,
-        value: value
+        value: value,
+        color: color
       });
 
       box_data_2.push({
@@ -107,7 +113,7 @@ function motion4(num, N) {
     .attr("fill", "black");
 
   // Function to add an arrow to a specific cell
-  function addArrow(row, col) {
+  function addArrow(row, col, label) {
     var cellSize = maxCellSize ;
     var cx = (col + 0.5) * cellSize;
     var cy = (row + 0.5) * cellSize;
@@ -119,62 +125,62 @@ function motion4(num, N) {
     if (col === 0) {
       arrowStartX = -cellSize / 2;
       arrowEndX = cx - circleRadius - 5; // Adjusted to avoid overlap with circle
-  } else if (col === N - 1) {
-      arrowStartX = totalGridWidth + cellSize / 2;
-      arrowEndX = cx + circleRadius + 5; // Adjusted to avoid overlap with circle
-  } else {
-      arrowStartX = arrowEndX = cx;
-  }
+    } else if (col === N - 1) {
+        arrowStartX = totalGridWidth + cellSize / 2;
+        arrowEndX = cx + circleRadius + 5; // Adjusted to avoid overlap with circle
+    } else {
+        arrowStartX = arrowEndX = cx;
+    }
 
-  if (row === 0) {
-      arrowStartY = -cellSize / 2;
-      arrowEndY = cy - circleRadius - 5; // Adjusted to avoid overlap with circle
-  } else if (row === N - 1) {
-      arrowStartY = totalGridHeight + cellSize / 2;
-      arrowEndY = cy + circleRadius + 5; // Adjusted to avoid overlap with circle
-  } else {
-      arrowStartY = arrowEndY = cy;
-  }
+    if (row === 0) {
+        arrowStartY = -cellSize / 2;
+        arrowEndY = cy - circleRadius - 5; // Adjusted to avoid overlap with circle
+    } else if (row === N - 1) {
+        arrowStartY = totalGridHeight + cellSize / 2;
+        arrowEndY = cy + circleRadius + 5; // Adjusted to avoid overlap with circle
+    } else {
+        arrowStartY = arrowEndY = cy;
+    }
 
 
     var box_2 = svg
-    .selectAll(".rect")
-    .data(box_data_2)
-    .enter()
-    .append("rect")
-    .attr("class", "rect clickable")
-    .style("fill", "white")
-    .attr("stroke", "black")
-    .attr("stroke-width", 0.5)
-    .attr("x", function(d) {
-      return d.x;
-    })
-    .attr("y", function(d) {
-      return d.y;
-    })
-    .attr("height", function(d) {
-      return d.h;
-    })
-    .attr("width", function(d) {
-      return d.w;
-    });
+      .selectAll(".rect")
+      .data(box_data_2)
+      .enter()
+      .append("rect")
+      .attr("class", "rect clickable")
+      .style("fill", "white")
+      .attr("stroke", "black")
+      .attr("stroke-width", 0.5)
+      .attr("x", function(d) {
+        return d.x;
+      })
+      .attr("y", function(d) {
+        return d.y;
+      })
+      .attr("height", function(d) {
+        return d.h;
+      })
+      .attr("width", function(d) {
+        return d.w;
+      });
 
     var circles_2 = svg
-    .selectAll(".circle")
-    .data(circle_data_2)
-    .enter()
-    .append("circle")
-    .attr("class", "circle clickable")
-    .attr("r", 30) // Set the fixed radius value to 8
-    .attr("fill", function(d, i) {
-      return colors[i % colors.length];
-    })
-    .attr("cx", function(d) {
-      return d.x;
-    })
-    .attr("cy", function(d) {
-      return d.y;
-    });
+      .selectAll(".circle")
+      .data(circle_data_2)
+      .enter()
+      .append("circle")
+      .attr("class", "circle clickable")
+      .attr("r", 30) // Set the fixed radius value to 8
+      .attr("fill", function(d) {
+        return d.color; // Use the adjusted radius
+      })
+      .attr("cx", function(d) {
+        return d.x;
+      })
+      .attr("cy", function(d) {
+        return d.y;
+      });
 
     var selectedRect = null; // To keep track of the selected circle
 
@@ -204,8 +210,9 @@ function motion4(num, N) {
       }
     }
 
-    // Add an arrow line
-    svg
+    if(task == "compare" || task == "match") {
+      // Add an arrow line
+      svg
         .append("line")
         .attr("x1", arrowStartX)
         .attr("y1", arrowStartY)
@@ -214,14 +221,75 @@ function motion4(num, N) {
         .attr("stroke", "black")
         .attr("stroke-width", 1.5)
         .attr("marker-end", "url(#arrowhead)");
+        
+      const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+
+      let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
+      if (col == N - 1 && (row == 0 || row == N -1)) {
+        X = (arrowStartX + arrowEndX) / 2 + 12;
+      } else if (col == 0 && (row == 0 || row == N -1)) {
+        X = (arrowStartX + arrowEndX) / 2 + 8;        
+      }
+
+      let Y = row === 0 || row === N - 1 ? arrowEndY + 5 : (arrowStartY + arrowEndY) / 2 - 3;
+      if (col == 0 && row == N - 1 ) {
+        Y = (arrowStartY + arrowEndY) / 2 - 10;
+      } else if (col == N - 1 && row == 0) {
+        Y = (arrowStartY + arrowEndY) / 2 + 23;
+      }
+      // console.log ("X: " + X, "Y: " + Y);
+
+      // Add a label
+      svg
+      .append("text")
+      .attr("x", X)
+      .attr("y", Y)
+      .attr("text-anchor", textAnchor)
+      .attr("fill", "black")
+      .text(label);
+    }
+  }
+
+  // Add arrows to cells
+  addArrow(cell1_i, cell1_j, "A");
+  // addArrow(0, N - 1, "A");
+  if (task == "compare") {
+    addArrow(cell2_i, cell2_j, "B");
+    // addArrow(N - 1, 0, "B");
+  }
 }
 
-  // Add arrows to cells [0, 2] and [2, 2]
-  addArrow(0, 2);
-  addArrow(1, 0);
+function shadeColor(color, percent) {
 
+  var R = parseInt(color.substring(1, 3), 16);
+  var G = parseInt(color.substring(3, 5), 16);
+  var B = parseInt(color.substring(5, 7), 16);  
   
+  if (R == 0) {
+    R = 32;
+  }
+  if (G == 0) {
+    G = 32;   
+  }
+  if (B == 0) {
+    B = 32;
+  }
 
-  move_true = true;
-  console.log("area");
+  R = parseInt(R * (100 + percent) / 100);
+  G = parseInt(G * (100 + percent) / 100);
+  B = parseInt(B * (100 + percent) / 100);
+
+  R = (R<255)?R:255;  
+  G = (G<255)?G:255;  
+  B = (B<255)?B:255;  
+
+  R = Math.round(R)
+  G = Math.round(G)
+  B = Math.round(B)
+
+  var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
+  var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
+  var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+
+  return "#"+RR+GG+BB;
 }
