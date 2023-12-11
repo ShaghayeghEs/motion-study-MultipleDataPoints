@@ -335,8 +335,8 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
   // const encoding = encoding;
 
 
-  console.log("arr is: ");   //TEST
-  console.log (arr);
+  console.log("arr is: " + arr);   //TEST
+  // console.log (arr);
 
   console.log("task is: ");   //TEST
   console.log (task);
@@ -587,6 +587,18 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
             console.log(ratio);
           } else if (ratio == 2) {
             indexValue = arr.indexOf(5 * ratio);
+            console.log("DEBUG: index is: " + indexValue);
+            console.log("DEBUG: value is: " + arr[indexValue]);
+          }
+        } else if (encoding == "color"){
+          console.log("is it here? 5");
+          if (ratio == 1.5) {
+            indexValue = arr.indexOf(22.5);
+            console.log("DEBUG: index is: " + indexValue);
+            console.log("DEBUG: value is: " + arr[indexValue]);
+            console.log(ratio);
+          } else if (ratio == 2) {
+            indexValue = arr.indexOf(22.5 * ratio);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
           }
