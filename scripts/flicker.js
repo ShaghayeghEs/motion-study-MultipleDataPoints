@@ -1,12 +1,7 @@
 import { selectDistArray, shuffleArray, multiplyArrayElements } from "./core.js";
 
-//Previous version measures (with header)
-// var margin = {
-//   top: 18,
-//   left: 18,
-//   bottom: 18,
-//   right: 18
-// };
+let speedArray;
+let count = 0;
 
 //Measures without header
 var margin = {
@@ -33,14 +28,45 @@ var cell1_j = 0;
 var cell2_i = 0;
 var cell2_j = 0;
 
-var N = url_data["size"];
-var task = url_data["task"];
-var ratio_value = url_data["ratio"];
-var dist = url_data["dist"];
+let N = url_data["size"];
+let task = url_data["task"];
+let ratio_value = url_data["ratio"];
+let dist = url_data["dist"];
 
-drawFlickerGraph();
+let circles;
+let box_2;
 
-function drawFlickerGraph() {
+// Array of speeds for each circle
+speedArray = selectDistArray(dist, N, ratio_value, "motion");
+console.log(speedArray);
+
+var outputs = shuffleArray(speedArray,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
+console.log("outputs:");
+console.log(outputs);
+
+cell1_i = outputs[1];
+cell1_j = outputs[2];
+cell2_i = outputs[3];
+cell2_j = outputs[4];
+
+speedArray = outputs[0];
+console.log("after shuffling");
+console.log(speedArray);
+
+speedArray = multiplyArrayElements(speedArray, 4);
+console.log("after multiplying");
+console.log(speedArray);
+
+// N = 3;
+// speedArray = [10000, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55];
+// speedArray = [3.34, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55];
+// speedArray = [10.02, 15, 22.5, 36.75, 45.9, 55.98, 62.13, 77.01, 85.65];
+// speedArray = [13.36, 20, 30, 49, 61.2, 74.64, 82.84, 102.68, 114.2];
+
+drawFlickerGraph(N, speedArray);
+
+function drawFlickerGraph(N, speedArray) {
+  console.log("DEBUG: in drawFlickerGraph function:" + speedArray);
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -56,38 +82,6 @@ function drawFlickerGraph() {
   var translateX = (chartWidth - totalGridWidth) / 2;
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
-
-  var speedArray;
-
-  // var speedArray = [1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000, 1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000,1000, 2000,4000]; // Array of speeds for each circle
-  speedArray = selectDistArray(dist, N, ratio_value, "motion");
-  console.log(speedArray);
-
-  var outputs = shuffleArray(speedArray,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
-  console.log("outputs:");
-  console.log(outputs);
-
-  cell1_i = outputs[1];
-  cell1_j = outputs[2];
-  cell2_i = outputs[3];
-  cell2_j = outputs[4];
-
-  speedArray = outputs[0];
-  console.log("after shuffling");
-  console.log(speedArray);
-
-  // speedArray = [3.34, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55];
-
-  speedArray = multiplyArrayElements(speedArray, 4);
-  console.log("after multiplying");
-  console.log(speedArray);
-
-  // N = 3;
-  // speedArray = [10000, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55];
-  // speedArray = [3.34, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55];
-  // speedArray = [10.02, 15, 22.5, 36.75, 45.9, 55.98, 62.13, 77.01, 85.65];
-  // speedArray = [13.36, 20, 30, 49, 61.2, 74.64, 82.84, 102.68, 114.2];
-
 
   // Generate data for each cell in the grid
   for (var i = 0; i < N; i++) {
@@ -117,7 +111,7 @@ function drawFlickerGraph() {
     }
   }
 
-  var box_2 = svg
+  box_2 = svg
     .selectAll(".rect")
     .data(box_data_2)
     .enter()
@@ -139,7 +133,7 @@ function drawFlickerGraph() {
       return d.w;
     });
 
-  var circles = svg
+  circles = svg
     .selectAll(".circle")
     .data(circle_data_2)
     .enter()
@@ -273,66 +267,96 @@ function drawFlickerGraph() {
     }
   }
 
-  // Add arrows to cells
-  addArrow(cell1_i, cell1_j, "A");
-  // addArrow(0, N - 1, "A");
-  if (task == "compare") {
-    addArrow(cell2_i, cell2_j, "B");
-    // addArrow(N - 1, 0, "B");
+  if (count == 0) {
+    // Add arrows to cells
+    addArrow(cell1_i, cell1_j, "A");
+    if (task == "compare") {
+      addArrow(cell2_i, cell2_j, "B");
+    }
   }
 
   animate();
+}
 
-  function animate() {
-    if (!isAnimating) return;  // If animation should not run, simply return
-    circles.each(function(d) {
-      var circle = d3.select(this);
-      var flickering = d.flickering;
-
-      if (flickering) {
-        // Circle is on, make it disappear
-        circle.style("opacity", 0);
-        d.flickering = false;
-      } else {
-        // Circle is off, make it appear
-        circle.style("opacity", 1);
-        d.flickering = true;
-      }
-    });
-
-    document.getElementById("stop").addEventListener("click", function() {
-      isAnimating = false;  // Set the flag to false to stop animation
-    });
-
-    // Recursive call after a delay based on the speed of each circle
-    circles.each(function(d) {
-      var circle = d3.select(this);
-      var speed = d.speed;
-      setTimeout(function() {
-        animateCircle(circle, speed);
-      }, speed);
-    });
-  }
-
-  function animateCircle(circle, speed) {
-    if (!isAnimating) return;  // If animation should not run, simply return
-
-    var flickering = circle.datum().flickering;
+function animate() {
+  if (!isAnimating) return;  // If animation should not run, simply return
+  circles.each(function(d) {
+    var circle = d3.select(this);
+    var flickering = d.flickering;
 
     if (flickering) {
       // Circle is on, make it disappear
       circle.style("opacity", 0);
-      circle.datum().flickering = false;
+      d.flickering = false;
     } else {
       // Circle is off, make it appear
       circle.style("opacity", 1);
-      circle.datum().flickering = true;
+      d.flickering = true;
     }
+  });
 
-    // Recursive call after a delay based on the speed of the circle
+  // document.getElementById("stop").addEventListener("click", function() {
+  //   isAnimating = false;  // Set the flag to false to stop animation
+  // });
+
+  // Recursive call after a delay based on the speed of each circle
+  circles.each(function(d) {
+    var circle = d3.select(this);
+    var speed = d.speed;
     setTimeout(function() {
       animateCircle(circle, speed);
     }, speed);
+  });
+}
 
+function animateCircle(circle, speed) {
+  if (!isAnimating) return;  // If animation should not run, simply return
+
+  var flickering = circle.datum().flickering;
+
+  if (flickering) {
+    // Circle is on, make it disappear
+    circle.style("opacity", 0);
+    circle.datum().flickering = false;
+  } else {
+    // Circle is off, make it appear
+    circle.style("opacity", 1);
+    circle.datum().flickering = true;
+  }
+
+  // Recursive call after a delay based on the speed of the circle
+  setTimeout(function() {
+    animateCircle(circle, speed);
+  }, speed);
+
+}
+
+var stopButton = document.getElementById("stop");
+
+// Function to stop or resume the animation
+function toggleAnimation() {
+  console.log("DEBUG: in toggle: isAnimating: " + isAnimating);
+  isAnimating = !isAnimating;
+  if (!isAnimating) {
+    stopButton.textContent = "Resume";
+  } else {
+    stopButton.textContent = "Stop";
+    animate(); // Resume animation
   }
 }
+
+// Handle the stop/resume button click event
+stopButton.onclick = function () {
+  toggleAnimation();
+  console.log("after toggling: isAnimating: " + isAnimating);
+  if (!isAnimating) {
+    console.log("STOP clicked!!!!");
+    // If animation is stopped, remove all circles
+    circles.remove();
+  } else {
+    console.log("resume clicked!!!!");
+    // If animation is resumed, recreate circles and start animation
+    count++;
+    drawFlickerGraph(N, speedArray);
+  }
+};
