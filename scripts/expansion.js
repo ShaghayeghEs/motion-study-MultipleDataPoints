@@ -4,14 +4,6 @@ import { selectDistArray, shuffleArray, multiplyArrayElements } from "./core.js"
 let speeds;
 let count = 0;
 
-//Previous version measures (with header)
-// var margin = {
-//   top: 18,
-//   left: 18,
-//   bottom: 18,
-//   right: 18
-// };
-
 //Measures without header
 var margin = {
   top: 30,
@@ -66,7 +58,6 @@ console.log("after shuffling");
 console.log(speeds);
 
 drawExpansionGraph(N, speeds); // Pass the N value to the function
-
 
 function drawExpansionGraph(N, speeds) {
   console.log("DEBUG: in drawExpansionGraph function:" + speeds);

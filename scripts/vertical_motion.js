@@ -1,15 +1,7 @@
-import { selectDistArray, shuffleArray } from "./core.js";
+import { selectDistArray, shuffleArray, multiplyArrayElements } from "./core.js";
 
-let timer_ret_val = false;
-let animationStopped = false;
-
-//Previous version measures (with header)
-// var margin = {
-//   top: 18,
-//   left: 18,
-//   bottom: 18,
-//   right: 18
-// };
+let speeds = [];
+let count = 0;
 
 //Measures without header
 const margin = {
@@ -21,6 +13,8 @@ const margin = {
 
 const chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
 const chartHeight = document.getElementById("chartContainer").offsetHeight - margin.top - margin.bottom;
+// let timer_ret_val = false;
+let animationStopped = false;
 
 let svg = d3
   .select("#chart")
@@ -44,17 +38,47 @@ const ratio_value = url_data["ratio"];
 const dist = url_data["dist"];
 // const dist = "left-skewed";
 
+let circles;
+let box_2;
+
+const gridWidth = chartWidth - margin.left - margin.right; // Width of the grid area
+const gridHeight = chartHeight - margin.top - margin.bottom; // Height of the grid area
+
+const maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
+let cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
+
+let num = 0;
+let circle1 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+let m_s = circle1[num];
+let m_s1 = m_s / Math.max(...circle1); // Calculate the vertical movement factor dynamically
+console.log("m_s1: " + m_s1);
+
+// Speed Min = 1
+// Speed Max = 30
+// var speeds = [1,2,4,8,16, 20 ,32,32,32,64,32,16,8,4,2,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; // Speeds array for each cell
+// var speeds = [1, 2, 4, 8, 16, 30, 40, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+speeds = selectDistArray(dist, N, ratio_value, "motion");
+console.log(speeds);
+
+const outputs = shuffleArray(speeds,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
+console.log("outputs:");
+console.log(outputs);
+
+cell1_i = outputs[1];
+cell1_j = outputs[2];
+cell2_i = outputs[3];
+cell2_j = outputs[4];
+
+speeds = outputs[0];
+console.log("after shuffling");
+console.log(speeds);
+
 // Call the drawVerticalMotionGraph function with the desired parameter (num)
-drawVerticalMotionGraph(0);
+drawVerticalMotionGraph(0, N, speeds);
 
-function drawVerticalMotionGraph(num) {
+function drawVerticalMotionGraph(num, N, speeds) {
+  console.log("DEBUG: in drawVerticalGraph function:" + speeds);
   let box_data_2 = [];
-
-  const gridWidth = chartWidth - margin.left - margin.right; // Width of the grid area
-  const gridHeight = chartHeight - margin.top - margin.bottom; // Height of the grid area
-
-  const maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
-  let cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
 
   const totalGridWidth = cellSize * N;
   const totalGridHeight = cellSize * N;
@@ -64,32 +88,11 @@ function drawVerticalMotionGraph(num) {
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
 
-  var circle1 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  var m_s = circle1[num];
-  var m_s1 = m_s / Math.max(...circle1); // Calculate the vertical movement factor dynamically
+  // var circle1 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // var m_s = circle1[num];
+  // var m_s1 = m_s / Math.max(...circle1); // Calculate the vertical movement factor dynamically
 
   var radius = 10;  //Changed from 18 to 10 by Shae
-
-  let speeds = [];
-  // Speed Min = 1
-  // Speed Max = 30
-  // var speeds = [1,2,4,8,16, 20 ,32,32,32,64,32,16,8,4,2,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,64,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; // Speeds array for each cell
-  // var speeds = [1, 2, 4, 8, 16, 30, 40, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-  speeds = selectDistArray(dist, N, ratio_value, "motion");
-  console.log(speeds);
-
-  const outputs = shuffleArray(speeds,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
-  console.log("outputs:");
-  console.log(outputs);
-  
-  cell1_i = outputs[1];
-  cell1_j = outputs[2];
-  cell2_i = outputs[3];
-  cell2_j = outputs[4];
-
-  speeds = outputs[0];
-  console.log("after shuffling");
-  console.log(speeds);
 
   let circle_data = [];
 
@@ -121,7 +124,7 @@ function drawVerticalMotionGraph(num) {
     }
   }
   
-  var box_2 = svg
+  box_2 = svg
     .selectAll(".rect")
     .data(box_data_2)
     .enter()
@@ -143,7 +146,7 @@ function drawVerticalMotionGraph(num) {
       return d.w;
     });
 
-  var circles = svg
+  circles = svg
     .selectAll(".circle")
     .data(circle_data)
     .enter()
@@ -277,49 +280,78 @@ function drawVerticalMotionGraph(num) {
     }
   }
 
-  // Add arrows to cells
-  addArrow(cell1_i, cell1_j, "A");
-  // addArrow(0, N - 1, "A");
-  if (task == "compare") {
-    addArrow(cell2_i, cell2_j, "B");
-    // addArrow(N - 1, 0, "B");
+  if (count == 0) {
+    // Add arrows to cells
+    addArrow(cell1_i, cell1_j, "A");
+    if (task == "compare") {
+      addArrow(cell2_i, cell2_j, "B");
+    }
   }
 
   var t;
   t = d3.timer(animate);
 
-  svg.style("opacity", 1);
-
-  function animate() {
-    if (animationStopped) {
-      // Stop the animation if the flag is set to true
-      return true; // Returning true stops the timer
-    }
-    circles.attr("cy", function (d) {
-      d.cy = d.cy + d.speed * m_s1 * d.y_diff ;
-
-      // Adjust the condition for top and bottom boundary
-      var row = Math.floor(d.id / N); // Calculate the row index
-      var topBoundary = (row + 0.2) * cellSize; // Adjust these values for your desired range
-      var bottomBoundary = (row + 0.8) * cellSize; // Adjust these values for your desired range
-
-      if (d.cy <= topBoundary || d.cy >= bottomBoundary) {
-        d.y_diff = d.y_diff * -1;
-      }
-      return d.cy;
-    });
-
-    return timer_ret_val;
-  }
+  // svg.style("opacity", 1);
 
   // Add an event listener to the "STOP" button
-  var stopButton = document.getElementById("stop");
-  stopButton.onclick = function () {
-    stopAnimation();
-  };
+  // var stopButton = document.getElementById("stop");
+  // stopButton.onclick = function () {
+  //   stopAnimation();
+  // };
 
   // Function to stop the animation
-  function stopAnimation() {
-    animationStopped = true;
+  // function stopAnimation() {
+  //   animationStopped = true;
+  // }
+}
+
+function animate() {  
+  if (animationStopped) {
+    // Stop the animation if the flag is set to true
+    // console.log("animate output:" + true);
+    return true; // Returning true stops the timer
+  }
+  circles.attr("cy", function (d) {
+    d.cy = d.cy + d.speed * m_s1 * d.y_diff ;
+
+    // Adjust the condition for top and bottom boundary
+    var row = Math.floor(d.id / N); // Calculate the row index
+    var topBoundary = (row + 0.2) * cellSize; // Adjust these values for your desired range
+    var bottomBoundary = (row + 0.8) * cellSize; // Adjust these values for your desired range
+
+    if (d.cy <= topBoundary || d.cy >= bottomBoundary) {
+      d.y_diff = d.y_diff * -1;
+    }
+    // console.log("animate output: " + d.cy);
+    return d.cy;
+  });
+
+  // console.log("animate final output: " + timer_ret_val);
+  // return timer_ret_val;
+}
+
+var stopButton = document.getElementById("stop");
+
+// Function to stop or resume the animation
+function toggleAnimation() {
+  animationStopped = !animationStopped;
+  if (animationStopped) {
+    stopButton.textContent = "Resume";
+  } else {
+    stopButton.textContent = "Stop";
+    // animate(); // Resume animation
   }
 }
+
+// Handle the stop/resume button click event
+stopButton.onclick = function () {
+  toggleAnimation();
+  if (animationStopped) {
+    // If animation is stopped, remove all circles
+    circles.remove();
+  } else {
+    // If animation is resumed, recreate circles and start animation
+    count++;
+    drawVerticalMotionGraph(0, N, speeds);
+  }
+};
