@@ -321,23 +321,19 @@ function drawHorizontalMotion(num, N, speeds) {
     animationStopped = !animationStopped;
     if (animationStopped) {
       stopButton.textContent = "Resume";
+      // Hide circles
+      circles.style("visibility", "hidden");
     } else {
       stopButton.textContent = "Stop";
-      animate(); // Resume animation
+      // Show circles
+      circles.style("visibility", "visible");
+      // No need to call drawVerticalMotionGraph again
     }
   }
-
+  
   // Handle the stop/resume button click event
   stopButton.onclick = function () {
     toggleAnimation();
-    if (animationStopped) {
-      // If animation is stopped, remove all circles
-      circles.remove();
-    } else {
-      // If animation is resumed, recreate circles and start animation
-      count++;
-      drawHorizontalMotion(0, N, speeds);
-    }
   };
 
 }
