@@ -205,10 +205,18 @@ function drawPositionGraph(N) {
     var selectedRect = null; // To keep track of the selected circle
 
     box_2.on("click", function(d, i) {
+      // Check if the clicked cell is the one to be disabled (task: match)
+      if ((task == "match" && i === iCell1 * N + jCell1) || task == "compare") {
+        return; // Do nothing for the disabled cell
+      }
       handleHighlight(this);
     });
   
     circles_2.on("click", function(d, i) {
+      // Check if the clicked cell is the one to be disabled (task: match)
+      if ((task == "match" && i === iCell1 * N + jCell1) || task == "compare") {
+        return; // Do nothing for the disabled cell
+      }
       var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
       var correspondingRect = box_2.nodes()[cellIndex];
       handleHighlight(correspondingRect);

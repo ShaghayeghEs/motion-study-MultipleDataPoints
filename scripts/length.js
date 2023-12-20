@@ -167,6 +167,10 @@ function drawLengthGraph(N) {
     var selectedRect = null; // To keep track of the selected circle
 
     cells.on("click", function(d, i) {
+      // Check if the clicked cell is the one to be disabled (task: match)
+      if ((task == "match" && i === iCell1 * N + jCell1) || task == "compare") {
+        return; // Do nothing for the disabled cell
+      }
       var parentCellGroup = d3.select(this).node();
       var borderRect = d3.select(parentCellGroup).select(".cell-border").node();
       handleHighlight(borderRect);
