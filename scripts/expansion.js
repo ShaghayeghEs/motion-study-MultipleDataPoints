@@ -338,28 +338,44 @@ function animate() {
   //in the drowExpansionGraph function
 
 
-var stopButton = document.getElementById("stop");
+// var stopButton = document.getElementById("stop");
+
+document.addEventListener('keydown', (e) => {
+  if(e.code == "Space") {
+    console.log("PRESSED");
+    
+    toggleAnimation();
+    if (animationStopped) {
+      // If animation is stopped, remove all circles
+      circles_2.remove();
+    } else {
+      // If animation is resumed, recreate circles and start animation
+      count++;
+      drawExpansionGraph(N, speeds);
+    }    
+  }
+});
 
 // Function to stop or resume the animation
 function toggleAnimation() {
   animationStopped = !animationStopped;
   if (animationStopped) {
-    stopButton.textContent = "Resume";
+    // stopButton.textContent = "Resume";
   } else {
-    stopButton.textContent = "Stop";
+    // stopButton.textContent = "Stop";
     animate(); // Resume animation
   }
 }
 
 // Handle the stop/resume button click event
-stopButton.onclick = function () {
-  toggleAnimation();
-  if (animationStopped) {
-    // If animation is stopped, remove all circles
-    circles_2.remove();
-  } else {
-    // If animation is resumed, recreate circles and start animation
-    count++;
-    drawExpansionGraph(N, speeds);
-  }
-};
+// stopButton.onclick = function () {
+//   toggleAnimation();
+//   if (animationStopped) {
+//     // If animation is stopped, remove all circles
+//     circles_2.remove();
+//   } else {
+//     // If animation is resumed, recreate circles and start animation
+//     count++;
+//     drawExpansionGraph(N, speeds);
+//   }
+// };

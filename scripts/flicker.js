@@ -331,32 +331,51 @@ function animateCircle(circle, speed) {
 
 }
 
-var stopButton = document.getElementById("stop");
+// var stopButton = document.getElementById("stop");
 
 // Function to stop or resume the animation
 function toggleAnimation() {
   console.log("DEBUG: in toggle: isAnimating: " + isAnimating);
   isAnimating = !isAnimating;
   if (!isAnimating) {
-    stopButton.textContent = "Resume";
+    // stopButton.textContent = "Resume";
   } else {
-    stopButton.textContent = "Stop";
+    // stopButton.textContent = "Stop";
     animate(); // Resume animation
   }
 }
 
-// Handle the stop/resume button click event
-stopButton.onclick = function () {
-  toggleAnimation();
-  console.log("after toggling: isAnimating: " + isAnimating);
-  if (!isAnimating) {
-    console.log("STOP clicked!!!!");
-    // If animation is stopped, remove all circles
-    circles.remove();
-  } else {
-    console.log("resume clicked!!!!");
-    // If animation is resumed, recreate circles and start animation
-    count++;
-    drawFlickerGraph(N, speedArray);
+document.addEventListener('keydown', (e) => {
+  console.log("in LISTENER");
+  if (e.code == "Space") {
+    toggleAnimation();
+    console.log("after toggling: isAnimating: " + isAnimating);
+    if (!isAnimating) {
+      console.log("STOP clicked!!!!");
+      // If animation is stopped, remove all circles
+      circles.remove();
+    } else {
+      console.log("resume clicked!!!!");
+      // If animation is resumed, recreate circles and start animation
+      count++;
+      drawFlickerGraph(N, speedArray);
+    }
   }
-};
+});
+
+
+// Handle the stop/resume button click event
+// stopButton.onclick = function () {
+//   toggleAnimation();
+//   console.log("after toggling: isAnimating: " + isAnimating);
+//   if (!isAnimating) {
+//     console.log("STOP clicked!!!!");
+//     // If animation is stopped, remove all circles
+//     circles.remove();
+//   } else {
+//     console.log("resume clicked!!!!");
+//     // If animation is resumed, recreate circles and start animation
+//     count++;
+//     drawFlickerGraph(N, speedArray);
+//   }
+// };

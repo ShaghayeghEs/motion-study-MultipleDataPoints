@@ -229,8 +229,8 @@ function load_page() {
     //     // "Angle"
     // }`;
 
-    rand_item[0][1] = "./compare/horizontal_motion.html"; //for debugging purposes
-    rand_item[0][0] = "compare";
+    rand_item[0][1] = "./min/vertical_motion.html"; //for debugging purposes
+    rand_item[0][0] = "min";
     
     document
         .getElementById("content")

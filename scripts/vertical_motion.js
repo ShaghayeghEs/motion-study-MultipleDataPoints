@@ -330,23 +330,32 @@ function animate() {
   // return timer_ret_val;
 }
 
-var stopButton = document.getElementById("stop");
+// var stopButton = document.getElementById("stop");
 
 function toggleAnimation() {
   animationStopped = !animationStopped;
   if (animationStopped) {
-    stopButton.textContent = "Resume";
+    // stopButton.textContent = "Resume";
     // Hide circles
     circles.style("visibility", "hidden");
   } else {
-    stopButton.textContent = "Stop";
+    // stopButton.textContent = "Stop";
+    count++;
     // Show circles
     circles.style("visibility", "visible");
     // No need to call drawVerticalMotionGraph again
   }
 }
 
+document.addEventListener('keydown', (e) => {
+  if(e.code == "Space") {
+    console.log("PRESSED");
+    
+    toggleAnimation();    
+  }
+});
+
 // Handle the stop/resume button click event
-stopButton.onclick = function () {
-  toggleAnimation();
-};
+// stopButton.onclick = function () {
+//   toggleAnimation();
+// };
