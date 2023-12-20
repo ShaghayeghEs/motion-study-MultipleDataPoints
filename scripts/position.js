@@ -225,7 +225,8 @@ function drawPositionGraph(N) {
           d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
         }
         // Highlight the corresponding cell border
-        d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+        // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
+        d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
         selectedRect = clickedElem;
       }
     }
