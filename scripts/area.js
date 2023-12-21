@@ -163,9 +163,10 @@ function drawAreaGraph(N) {
       .enter()
       .append("rect")
       .attr("class", "rect clickable") // Add 'clickable' class
-      .style("fill", "white")
-      .attr("stroke", "black")
-      .attr("stroke-width", 0.5)
+      // .style("fill", "#f0f0f0")
+      .style("fill", "transparent")
+      .attr("stroke", "#f9f9f9")
+      .attr("stroke-width", 0)
       .attr("x", function(d) {
         return d.x;
     })
@@ -220,12 +221,14 @@ function drawAreaGraph(N) {
     function handleHighlight(clickedElem) {
       if (selectedRect === clickedElem) {
         // If the same cell is clicked again, unselect it
-        d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+        // d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+        d3.select(clickedElem).attr("stroke", "#f9f9f9").attr("stroke-width", 0);
         selectedRect = null;
       } else {
         // Unselect the previously selected cell (if any)
         if (selectedRect) {
-          d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+          // d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+          d3.select(selectedRect).attr("stroke", "#f9f9f9").attr("stroke-width", 0);
         }
         // Highlight the corresponding cell border
         // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);

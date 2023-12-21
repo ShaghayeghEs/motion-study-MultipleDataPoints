@@ -127,6 +127,7 @@ function drawLengthGraph(N) {
       .attr("width", barWidth)
       .attr("height", d.cellHeights) // Adjusted height
       .attr("fill", "#008fb3");
+      // .attr("fill", "#white");
   
     // Create a border rectangle for the cell
     cellGroup.append("rect")
@@ -137,6 +138,7 @@ function drawLengthGraph(N) {
       .attr("height", d.h)
       .attr("stroke", "black")
       .attr("stroke-width", 0.5)
+      // .attr("stroke-width", 0) //removing cell borders
       .attr("fill", "transparent");
   }
   

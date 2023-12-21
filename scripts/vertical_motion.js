@@ -130,9 +130,9 @@ function drawVerticalMotionGraph(num, N, speeds) {
     .enter()
     .append("rect")
     .attr("class", "rect clickable")
-    .style("fill", "white")
+    .style("fill", "transparent")
     .attr("stroke", "black")
-    .attr("stroke-width", 0.5)
+    .attr("stroke-width", 0)
     .attr("x", function(d) {
       return d.x;
     })
@@ -184,12 +184,12 @@ function drawVerticalMotionGraph(num, N, speeds) {
   function handleHighlight(clickedElem) {
     if (selectedRect === clickedElem) {
       // If the same cell is clicked again, unselect it
-      d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+      d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0);
       selectedRect = null;
     } else {
       // Unselect the previously selected cell (if any)
       if (selectedRect) {
-        d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+        d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0);
       }
       // Highlight the corresponding cell border
       // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
