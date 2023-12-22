@@ -325,3 +325,46 @@ function drawAngleGraph(N) {
     // addArrow(N - 1, 0, "B");
   }
 }
+
+var slider = document.getElementById("value2");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+};
+
+var btn = document.getElementById("submit");
+
+// Add an event listener to the submit button
+btn.addEventListener("click", function() {
+  btn.disabled = true;
+  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+  postMessage(timeSpentOnPage);
+});
+
+function postMessage(timeSpentOnPage) {
+  var dataToSend = {
+    // participant_id: url_data["id"],
+    // ratio: parseFloat(url_data["ratio"]),
+    // trial_number: parseInt(url_data["trial"]),
+    // time_spent: timeSpentOnPage,
+    // participant_answer: slider.value,
+    type_of_encoding: "angle",
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "../json.php",
+    data: JSON.stringify(dataToSend),
+    contentType: "application/json",
+    success: function(response) {
+      console.log("Data sent successfully:", response);
+      window.top.load_page();
+    },
+    error: function(error) {
+      console.error("Error sending data:", error);
+      // You may want to handle the error here, e.g., by displaying an error message to the user.
+    },
+  });
+}

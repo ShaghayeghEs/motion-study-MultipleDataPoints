@@ -1,23 +1,33 @@
 <?php
-   $json = $_POST['json'];
+   $json = file_get_contents('php://input');
 
-   /* sanity check */
-   if (json_decode($json) != null)
-   {
-     // Filename where the data will be stored
-     $filename = "json/log.json";
-
-     // Open the file in append mode
-     $file = fopen($filename, 'a');
-
-     // Write the JSON data followed by a newline for readability
-     fwrite($file, $json . PHP_EOL);
-
-     // Close the file
-     fclose($file);
+   // Check if any data is received
+   if (!$json) {
+       die("No data received");
    }
-   else
-   {
-     // user has posted invalid JSON, handle the error 
+
+   // Try to decode the JSON data
+   $data = json_decode($json);
+   if (!$data) {
+       die("Invalid JSON data");
    }
+
+   // Define the file path
+   $filename = "json/log.json";
+
+   // Try to open the file
+   if (!$file = fopen($filename, 'a')) {
+       die("Unable to open file");
+   }
+
+   // Try to write to the file
+   if (fwrite($file, $json . PHP_EOL) === FALSE) {
+       fclose($file);
+       die("Unable to write to file");
+   }
+
+   // Close the file
+   fclose($file);
+
+   echo "Data written successfully";
 ?>
