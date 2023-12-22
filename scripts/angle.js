@@ -342,14 +342,15 @@ btn.addEventListener("click", function() {
   var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
   postMessage(timeSpentOnPage);
 });
+const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
   var dataToSend = {
-    // participant_id: url_data["id"],
-    // ratio: parseFloat(url_data["ratio"]),
-    // trial_number: parseInt(url_data["trial"]),
-    // time_spent: timeSpentOnPage,
-    // participant_answer: slider.value,
+    participant_id: participantId,
+    ratio: parseFloat(url_data["ratio"]),
+    trial_number: parseInt(url_data["trial"]),
+    time_spent: timeSpentOnPage,
+    participant_answer: slider.value,
     type_of_encoding: "angle",
   };
 
