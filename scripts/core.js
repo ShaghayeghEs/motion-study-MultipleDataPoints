@@ -216,7 +216,7 @@ export function selectDistArray(value1, value2, value3, value4) {
     const arrays = {
       "uniform_3_1.5_gen": [5, 14, 20, 30, 40, 50, 60, 70, 80],
       "uniform_3_1.5_angle": [15.2, 30.7, 40, 60, 89.3, 110.2, 123.6, 140.4, 160.8],
-      "uniform_3_1.5_area": [1, 20, 40, 62, 80, 100, 120, 140, 165],
+      "uniform_3_1.5_area": [1, 22, 40, 60, 80, 100, 120, 140, 165],
       "uniform_3_1.5_expansion": [5.49, 7.31, 10, 15, 26.08, 31.37, 39.01, 42.67, 48.16],
       "uniform_3_1.5_position": [13.05, 15, 22.5, 33.32, 42.74, 46.11, 56.12, 61.42, 71.51],
       "uniform_3_1.5_motion": [3.34, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55],
@@ -416,11 +416,11 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       if (encoding == "angle" || encoding == "area") {
         console.log("is it here? 1");
         indexValue = arr.indexOf(40);
-        console.log(indexValue);
-        console.log(arr[indexValue]);
-        console.log(ratio);
+        console.log( "indexValue is: " + indexValue);
+        console.log("Value at the above index is: " + arr[indexValue]);
+        console.log("ratio is: " + ratio);
         indexRatio = arr.indexOf(40 * ratio);
-        console.log(indexRatio);
+        console.log("indexRatio is: " + indexRatio);
       } else if (encoding == "expansion") {
         console.log("is it here? 2");
         indexValue = arr.indexOf(10);
@@ -684,15 +684,15 @@ function shuffleArrayKeepingIndex(array, index) {
   // Perform Fisher-Yates shuffle
   for (let i = shuffledArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i));
-      console.log("i is: " + i);
-      console.log("j is: " + j);
+      // console.log("i is: " + i);
+      // console.log("j is: " + j);
 
       // Swap elements, excluding the element at the specified index
       if (i !== index && j !== index) {
         [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
     
-    console.log("array at the end of for loop: " + shuffledArray);
+    // console.log("array at the end of for loop: " + shuffledArray);
       // Swap elements
       // [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
   }
@@ -724,7 +724,7 @@ export function selectCorrectMatchAnswer(value1, value2, value3, value4) {
   const arrays = {
     "uniform_3_1.5_gen": 14,
     "uniform_3_1.5_angle": 30.7,
-    "uniform_3_1.5_area": 20,
+    "uniform_3_1.5_area": 22,
     "uniform_3_1.5_expansion": 7.31,
     "uniform_3_1.5_position": 13.05,
     "uniform_3_1.5_motion": 3.34,

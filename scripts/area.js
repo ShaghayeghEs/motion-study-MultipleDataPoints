@@ -1,14 +1,7 @@
-import { selectDistArray, shuffleArray } from "./core.js";
-
-//Previous version measures (with header)
-// var margin = {
-//   top: 18,
-//   left: 18,
-//   bottom: 18,
-//   right: 18
-// };
+import { selectDistArray, shuffleArray, selectCorrectMatchAnswer } from "./core.js";
 
 //Measures without header
+//pre: 18
 var margin = {
   top: 30,
   left: 30,
@@ -40,6 +33,11 @@ const task = url_data["task"];
 const ratio_value = url_data["ratio"];
 // const dist = "left-skewed";
 const dist = url_data["dist"];
+let Values = [];
+let participantAnswer;
+let correctAnswer;
+let error; // when error is 0, the correct answer has been selected
+let count = 0;
 
 drawAreaGraph(N); // Pass the N value to the function
 
@@ -61,22 +59,22 @@ function drawAreaGraph(N) {
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
   //DEBUG
-  console.log("DEBUG: cell size:" + cellSize);
-  console.log("DEBUG: max number of the area data: " + ((Math.pow((cellSize/2) - 0.1, 2)))/10);
-  console.log("DEBUG: min number of the area data: " + (1/1600 * ((Math.pow((cellSize/2) - 0.1, 2)))));
+  // console.log("DEBUG: cell size:" + cellSize);
+  // console.log("DEBUG: max number of the area data: " + ((Math.pow((cellSize/2) - 0.1, 2)))/10);
+  // console.log("DEBUG: min number of the area data: " + (1/1600 * ((Math.pow((cellSize/2) - 0.1, 2)))));
   
-  let Values = selectDistArray(dist, N, ratio_value,"area");
+  Values = selectDistArray(dist, N, ratio_value,"area");
   
   //DEBUG
-  console.log("DEBUG: length of array is: " + Values.length);
+  // console.log("DEBUG: length of array is: " + Values.length);
   console.log("DEBUG: selectDistArray: " + Values);
-  console.log(Values);
+  // console.log(Values);
   
   const outputs = shuffleArray(Values,task,ratio_value,N,dist,"area"); //shuffling the data array based on the given task
   
   //DEBUG
-  console.log("DEBUG: outputs:");
-  console.log(outputs);
+  // console.log("DEBUG: outputs:");
+  // console.log(outputs);
 
   cell1_i = outputs[1];
   cell1_j = outputs[2];
@@ -86,8 +84,7 @@ function drawAreaGraph(N) {
   Values = outputs[0];
 
   //DEBUG
-  console.log("DEBUG: after shuffling");
-  console.log(Values);
+  console.log("DEBUG: after shuffling: " + Values);
   
   // Generate circle and box data based on grid size N
   for (let i = 0; i < N; i++) {
@@ -95,20 +92,23 @@ function drawAreaGraph(N) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
       var value = Values[i * N + j]; // Get the value from the array based on the circle's index
+      var arrayValue = Values[i * N + j]; // Added by Shae
 
       circle_data_2.push({
         x: cx,
         y: cy,
         id: i * N + j + 1,
         radius: Math.sqrt(value * 10), //sqrt to make sure that the "area" is "ratio"-times bigger, not the radius.
-        value: value
+        value: value,
+        arrayValue: arrayValue //Added by Shae
       });
 
       box_data_2.push({
         x: j * cellSize,
         y: i * cellSize,
         h: cellSize,
-        w: cellSize
+        w: cellSize,
+        arrayValue: arrayValue //Added by Shae
       });
     }
   }
@@ -205,7 +205,10 @@ function drawAreaGraph(N) {
       if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare") {
         return; // Do nothing for the disabled cell
       }
-      handleHighlight(this);
+      
+      let correspondingRectValue = d.arrayValue;
+      console.log("clicking on the box: correspondingRectValue: " + correspondingRectValue);
+      handleHighlight(this, correspondingRectValue);
     });
   
     circles_2.on("click", function(d, i) {
@@ -215,10 +218,14 @@ function drawAreaGraph(N) {
       }
       var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
       var correspondingRect = box_2.nodes()[cellIndex];
-      handleHighlight(correspondingRect);
+      // let correspondingRectValue = box_2.nodes()[cellIndex].arrayValue;
+      let correspondingRectValue = d.arrayValue;
+      console.log("clicking on the circle: correspondingRectValue: " + correspondingRectValue);
+      handleHighlight(correspondingRect, correspondingRectValue);
     });
 
-    function handleHighlight(clickedElem) {
+    function handleHighlight(clickedElem, elemValue) {
+      console.log("elem value: " + elemValue);
       if (selectedRect === clickedElem) {
         // If the same cell is clicked again, unselect it
         // d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
@@ -234,6 +241,14 @@ function drawAreaGraph(N) {
         // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
         d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
         selectedRect = clickedElem;
+
+        //increasing the number of participant's click so far
+        count++;
+        // console.log("count: " + count);
+
+        //participant's answer (value)
+        participantAnswer = elemValue;
+        // console.log("participant's answer: " + participantAnswer);
       }
     }
 
@@ -283,4 +298,88 @@ function drawAreaGraph(N) {
     addArrow(cell2_i, cell2_j, "B");
     // addArrow(N - 1, 0, "B");
   }
+}
+
+if (task == "compare") {
+  var slider = document.getElementById("value2");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  };
+}
+
+var btn = document.getElementById("submit");
+
+// Add an event listener to the submit button
+btn.addEventListener("click", function() {
+  btn.disabled = true;
+  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+
+  //preparing participant answer before logging
+  if (task == "compare") {
+    console.log("in the if for calculating answer for compare");
+    // console.log("slider.value is: " + slider.value)
+    participantAnswer = slider.value;
+    correctAnswer = ratio_value; 
+  } 
+  else if (task == "match") {
+    console.log("in the if for calculating answer for match");
+    participantAnswer = participantAnswer;
+    console.log("participant answer: " + participantAnswer);
+    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"area");
+    console.log("correct answer: " + correctAnswer);
+  } else if (task == "max") {
+    console.log("in the if for calculating answer for max");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.max(...Values);
+  } else if (task == "min") {
+    console.log("in the if for calculating answer for min");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.min(...Values);
+  }
+
+  // console.log("participant's answer: " + participantAnswer);
+
+  error = correctAnswer - participantAnswer;
+  postMessage(timeSpentOnPage);
+});
+
+const participantId = localStorage.getItem('participantId');
+
+function postMessage(timeSpentOnPage) {
+  // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count
+  var selectionCountValue = task === "compare" ? "N/A" : count;
+
+  var dataToSend = {
+    participant_id: participantId,
+    type_of_encoding: "area",
+    grid_size: parseInt(N),
+    task: task,
+    distribution: dist,
+    ratio: parseFloat(ratio_value),
+    trial_number: parseInt(url_data["trial"]),
+    time_spent: timeSpentOnPage,
+    participant_answer: parseFloat(participantAnswer),
+    correct_answer: parseFloat(correctAnswer),
+    error: parseFloat(error),
+    selection_count: selectionCountValue,
+    spaceKey_count: "N/A"
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "../json.php",
+    data: JSON.stringify(dataToSend),
+    contentType: "application/json",
+    success: function(response) {
+      console.log("Data sent successfully:", response);
+      window.top.load_page();
+    },
+    error: function(error) {
+      console.error("Error sending data:", error);
+      // You may want to handle the error here, e.g., by displaying an error message to the user.
+    },
+  });
 }
