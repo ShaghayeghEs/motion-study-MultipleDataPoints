@@ -1,14 +1,7 @@
-import { arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
-
-//Previous version measures (with header)
-// var margin = {
-//   top: 18,
-//   left: 18,
-//   bottom: 18,
-//   right: 18
-// };
+import { arrayToMatrix, shuffleArray, selectDistArray, selectCorrectMatchAnswer} from './core.js';
 
 //Measures without header
+//pre: 18 (with header)
 var margin = {
   top: 30,
   left: 30,
@@ -40,6 +33,13 @@ const task = url_data["task"]; // type of task
 const ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
 // const dist = "right-skewed";
 const dist = url_data["dist"]; // distribution of data points
+let xPositions = [];
+let xPositions1D = [];
+let participantAnswer;
+let correctAnswer;
+let error; // when error is 0, the correct answer has been selected
+let count = 0;
+
 
 drawPositionGraph(N); // Pass the N value to the function
 
@@ -64,11 +64,10 @@ function drawPositionGraph(N) {
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
   // Define an array of arrays to store x positions for each row of cells
-  let xPositions = selectDistArray(dist,N,ratio_value,"position");
+  xPositions = selectDistArray(dist,N,ratio_value,"position");
   
   //DEBUG
-  console.log("DEBUG: original array");
-  console.log(xPositions);
+  console.log("DEBUG: original array: " + xPositions);
   
   const outputs = shuffleArray(xPositions,task,ratio_value,N,dist,"position"); //shuffling the data array based on the given task
   
@@ -78,10 +77,10 @@ function drawPositionGraph(N) {
   jCell2 = outputs[4];
 
   xPositions = outputs[0];
+  xPositions1D = xPositions;
 
   //DEBUG
-  console.log("DEBUG: shuffled array");
-  console.log(xPositions);
+  console.log("DEBUG: shuffled array: " + xPositions);
 
   xPositions = arrayToMatrix(xPositions, N); //convert the data 1D array to a matrix
   
@@ -93,8 +92,10 @@ function drawPositionGraph(N) {
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
       var cx = xPositions[i][j] + (cellSize * j)
+      // console.log("cx is: " + cx);
       var cy = (i + 0.5) * cellSize; // Y position of circle center
-
+      var arrayValue = xPositions[i][j]; // Added by Shae
+      // console.log("arrayValue is: " + arrayValue);
       var radius = cellSize * 0.1; // Adjust the radius based on cell size
 
       var Values = [1]; // Set a constant value of 1 for all circles
@@ -105,14 +106,16 @@ function drawPositionGraph(N) {
         y: cy,
         id: i * N + j + 1,
         radius: radius,
-        value: value
+        value: value,
+        arrayValue: arrayValue, //Added by Shae
       });
 
       box_data_2.push({
         x: j * cellSize,
         y: i * cellSize,
         h: cellSize,
-        w: cellSize
+        w: cellSize,
+        arrayValue: arrayValue, //Added by Shae
       });
     }
   }
@@ -209,7 +212,9 @@ function drawPositionGraph(N) {
       if ((task == "match" && i === iCell1 * N + jCell1) || task == "compare") {
         return; // Do nothing for the disabled cell
       }
-      handleHighlight(this);
+      let correspondingRectValue = d.arrayValue;
+      console.log("clicking on the box: correspondingRectValue: " + correspondingRectValue);
+      handleHighlight(this, correspondingRectValue);
     });
   
     circles_2.on("click", function(d, i) {
@@ -219,10 +224,13 @@ function drawPositionGraph(N) {
       }
       var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
       var correspondingRect = box_2.nodes()[cellIndex];
-      handleHighlight(correspondingRect);
+      let correspondingRectValue = d.arrayValue;
+      console.log("clicking on the circle: correspondingRectValue: " + correspondingRectValue);
+      handleHighlight(correspondingRect, correspondingRectValue);
     });
 
-    function handleHighlight(clickedElem) {
+    function handleHighlight(clickedElem, elemValue) {
+      console.log("elem value: " + elemValue);
       if (selectedRect === clickedElem) {
         // If the same cell is clicked again, unselect it
         d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
@@ -236,6 +244,14 @@ function drawPositionGraph(N) {
         // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
         d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
         selectedRect = clickedElem;
+
+        //increasing the number of participant's click so far
+        count++;
+        // console.log("count: " + count);
+
+        //participant's answer (value)
+        participantAnswer = elemValue;
+        // console.log("participant's answer: " + participantAnswer);
       }
     }
 
@@ -287,4 +303,88 @@ function drawPositionGraph(N) {
     addArrow(iCell2, jCell2, "B");
     // addArrow(N - 1, 0, "B");
   }
+}
+
+if (task == "compare") {
+  var slider = document.getElementById("value2");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  };
+}
+
+var btn = document.getElementById("submit");
+
+// Add an event listener to the submit button
+btn.addEventListener("click", function() {
+  btn.disabled = true;
+  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+
+  //preparing participant answer before logging
+  if (task == "compare") {
+    console.log("in the if for calculating answer for compare");
+    // console.log("slider.value is: " + slider.value)
+    participantAnswer = slider.value;
+    correctAnswer = ratio_value; 
+  } 
+  else if (task == "match") {
+    console.log("in the if for calculating answer for match");
+    participantAnswer = participantAnswer;
+    console.log("participant answer: " + participantAnswer);
+    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"position");
+    console.log("correct answer: " + correctAnswer);
+  } else if (task == "max") {
+    console.log("in the if for calculating answer for max");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.max(...xPositions1D);
+  } else if (task == "min") {
+    console.log("in the if for calculating answer for min");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.min(...xPositions1D);
+  }
+
+  // console.log("participant's answer: " + participantAnswer);
+
+  error = correctAnswer - participantAnswer;
+  postMessage(timeSpentOnPage);
+});
+
+const participantId = localStorage.getItem('participantId');
+
+function postMessage(timeSpentOnPage) {
+  // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count
+  var selectionCountValue = task === "compare" ? "N/A" : count;
+
+  var dataToSend = {
+    participant_id: participantId,
+    type_of_encoding: "position",
+    grid_size: parseInt(N),
+    task: task,
+    distribution: dist,
+    ratio: parseFloat(ratio_value),
+    trial_number: parseInt(url_data["trial"]),
+    time_spent: timeSpentOnPage,
+    participant_answer: parseFloat(participantAnswer),
+    correct_answer: parseFloat(correctAnswer),
+    error: parseFloat(error),
+    selection_count: selectionCountValue,
+    spaceKey_count: "N/A"
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "../json.php",
+    data: JSON.stringify(dataToSend),
+    contentType: "application/json",
+    success: function(response) {
+      console.log("Data sent successfully:", response);
+      window.top.load_page();
+    },
+    error: function(error) {
+      console.error("Error sending data:", error);
+      // You may want to handle the error here, e.g., by displaying an error message to the user.
+    },
+  });
 }
