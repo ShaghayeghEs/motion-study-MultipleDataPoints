@@ -1,19 +1,12 @@
-import { arrayToMatrix, shuffleArray, selectDistArray} from './core.js';
+import { arrayToMatrix, shuffleArray, selectDistArray, selectCorrectMatchAnswer} from './core.js';
 
 var iCell1 = 0;
 var jCell1 = 0;
 var iCell2 = 0;
 var jCell2 = 0;
 
-//Previous version measures (with header)
-// var margin = {
-//   top: 18,
-//   left: 18,
-//   bottom: 18,
-//   right: 18
-// };
-
 //Measures without header
+//pre: 18 (with header)
 var margin = {
   top: 30,
   left: 30,
@@ -37,9 +30,13 @@ var dist = url_data["dist"]; // distribution of data points
 var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
 // var N = 3; // test
 var task = url_data["task"]; // type of task
+let cellHeights = [];
+let cellHeights1D = [];
+let participantAnswer;
+let correctAnswer;
+let error; // when error is 0, the correct answer has been selected
+let count = 0;
 
-//TEST
-console.log(N, task, dist, ratio_value);
 drawLengthGraph(N); // Pass the N value to the function
 
 
@@ -59,25 +56,22 @@ function drawLengthGraph(N) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
-  var cellHeights = selectDistArray(dist,N,ratio_value,"gen");
-  console.log("original array"); //test
-  console.log(cellHeights); //test
+  cellHeights = selectDistArray(dist,N,ratio_value,"gen");
+  console.log("original array: " + cellHeights); //test
   
   var outputs = shuffleArray(cellHeights,task,ratio_value,N,dist,"gen"); //shuffling the data array based on the given task
   cellHeights = outputs[0];
+  cellHeights1D = cellHeights;
+
   iCell1 = outputs[1];
   jCell1 = outputs[2];
   iCell2 = outputs[3];
   jCell2 = outputs[4];
-  console.log("shuffled array"); //test
-  console.log(cellHeights); //test
-  // cellHeights = mapValues(cellHeights, Math.min(...cellHeights), Math.max(...cellHeights),5,(maxCellSize - 4.7)); //map the data array to the encoding max and min
-  //console.log("max cell size" + (maxCellSize));
-  // cellHeights = mapValues(cellHeights, 5, (maxCellSize - 4.7));
-  // console.log("mapped array is: " + cellHeights);
+  
+  console.log("shuffled array: " + cellHeights); //test
+  
   cellHeights = arrayToMatrix(cellHeights, N); //convert the data 1D array to a matrix
-  console.log("array in a matrix"); //test
-  console.log(cellHeights); //test
+  console.log("array in a matrix: " + cellHeights); //test
   
   // Specify the height values for each bar chart in the format [h1, h2, h3, ...]
   // var cellHeights = [
@@ -96,12 +90,16 @@ function drawLengthGraph(N) {
   // Generate box data based on grid size N
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
+      var arrayValue = cellHeights[i][j]; // Added by Shae
+      // console.log("arrayValue is: " + arrayValue);
+      
       box_data_2.push({
         x: j * cellSize,
         y: i * cellSize,
         h: cellSize,
         w: cellSize,
-        cellHeights: cellHeights[i][j]
+        cellHeights: cellHeights[i][j],
+        arrayValue: arrayValue, //Added by Shae
       });
     }
   }
@@ -175,11 +173,14 @@ function drawLengthGraph(N) {
       }
       var parentCellGroup = d3.select(this).node();
       var borderRect = d3.select(parentCellGroup).select(".cell-border").node();
-      handleHighlight(borderRect);
+      let correspondingRectValue = d.arrayValue;
+      console.log("clicking on the box: correspondingRectValue: " + correspondingRectValue);
+      handleHighlight(borderRect, correspondingRectValue);
     });
     
 
-    function handleHighlight(clickedElem) {
+    function handleHighlight(clickedElem, elemValue) {
+      console.log("elem value: " + elemValue);
       if (selectedRect === clickedElem) {
         // If the same cell is clicked again, unselect it
         d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
@@ -193,6 +194,14 @@ function drawLengthGraph(N) {
         // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
         d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
         selectedRect = clickedElem;
+
+        //increasing the number of participant's click so far
+        count++;
+        // console.log("count: " + count);
+
+        //participant's answer (value)
+        participantAnswer = elemValue;
+        // console.log("participant's answer: " + participantAnswer);
       }
     }
 
@@ -277,4 +286,88 @@ function drawLengthGraph(N) {
     addArrow(iCell2, jCell2, "B");
     // addArrow(N - 1, 0, "B");
   }
+}
+
+if (task == "compare") {
+  var slider = document.getElementById("value2");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  };
+}
+
+var btn = document.getElementById("submit");
+
+// Add an event listener to the submit button
+btn.addEventListener("click", function() {
+  btn.disabled = true;
+  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+
+  //preparing participant answer before logging
+  if (task == "compare") {
+    console.log("in the if for calculating answer for compare");
+    // console.log("slider.value is: " + slider.value)
+    participantAnswer = slider.value;
+    correctAnswer = ratio_value; 
+  } 
+  else if (task == "match") {
+    console.log("in the if for calculating answer for match");
+    participantAnswer = participantAnswer;
+    console.log("participant answer: " + participantAnswer);
+    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"gen");
+    console.log("correct answer: " + correctAnswer);
+  } else if (task == "max") {
+    console.log("in the if for calculating answer for max");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.max(...cellHeights1D);
+  } else if (task == "min") {
+    console.log("in the if for calculating answer for min");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.min(...cellHeights1D);
+  }
+
+  // console.log("participant's answer: " + participantAnswer);
+
+  error = correctAnswer - participantAnswer;
+  postMessage(timeSpentOnPage);
+});
+
+const participantId = localStorage.getItem('participantId');
+
+function postMessage(timeSpentOnPage) {
+  // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count
+  var selectionCountValue = task === "compare" ? "N/A" : count;
+
+  var dataToSend = {
+    participant_id: participantId,
+    type_of_encoding: "length",
+    grid_size: parseInt(N),
+    task: task,
+    distribution: dist,
+    ratio: parseFloat(ratio_value),
+    trial_number: parseInt(url_data["trial"]),
+    time_spent: timeSpentOnPage,
+    participant_answer: parseFloat(participantAnswer),
+    correct_answer: parseFloat(correctAnswer),
+    error: parseFloat(error),
+    selection_count: selectionCountValue,
+    spaceKey_count: "N/A"
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "../json.php",
+    data: JSON.stringify(dataToSend),
+    contentType: "application/json",
+    success: function(response) {
+      console.log("Data sent successfully:", response);
+      window.top.load_page();
+    },
+    error: function(error) {
+      console.error("Error sending data:", error);
+      // You may want to handle the error here, e.g., by displaying an error message to the user.
+    },
+  });
 }
