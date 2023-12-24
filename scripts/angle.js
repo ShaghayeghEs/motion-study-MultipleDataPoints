@@ -1,12 +1,4 @@
-import { selectDistArray, shuffleArray } from "./core.js";
-
-//Previous version measures (with header)
-// var margin = {
-//   top: 18,
-//   left: 18,
-//   bottom: 18,
-//   right: 18
-// };
+import { selectDistArray, shuffleArray, selectCorrectMatchAnswer } from "./core.js";
 
 //Measures without header
 var margin = {
@@ -36,6 +28,11 @@ var N = url_data["size"];
 var task = url_data["task"];
 var ratio_value = url_data["ratio"];
 var dist = url_data["dist"];
+let Values = [];
+let participantAnswer;
+let correctAnswer;
+let error; // when error is 0, the correct answer has been selected
+let count = 0;
 
 drawAngleGraph(N); // Pass the N value to the function
 
@@ -46,7 +43,7 @@ function drawAngleGraph(N) {
 
   var maxCellSize = Math.min(gridWidth, gridHeight) / 10; // Determine the maximum cell size for N = 10
   var cellSize = maxCellSize; // Use this as the fixed cell size for all values of N
-  console.log("cell size: " + cellSize);
+  // console.log("cell size: " + cellSize);
 
   var totalGridWidth = cellSize * N;
   var totalGridHeight = cellSize * N;
@@ -59,13 +56,13 @@ function drawAngleGraph(N) {
   var angle_data_2 = [];
   var box_data_2 = [];
 
-  var Values = [];
+  // var Values = [];
   Values = selectDistArray(dist, N, ratio_value,"angle");
-  console.log(Values);
+  console.log("original array: " + Values);
   
   var outputs = shuffleArray(Values,task,ratio_value,N,dist,"angle"); //shuffling the data array based on the given task
-  console.log("outputs:");
-  console.log(outputs);
+  // console.log("outputs:");
+  // console.log(outputs);
 
   cell1_i = outputs[1];
   cell1_j = outputs[2];
@@ -73,8 +70,7 @@ function drawAngleGraph(N) {
   cell2_j = outputs[4];
 
   Values = outputs[0];
-  console.log("after shuffling");
-  console.log(Values);
+  console.log("array after shuffling: " + Values);
 
   // Values = mapValues(Values, Math.min(...Values), //map the data array to the encoding max and min
   //  Math.max(...Values),10,180);
@@ -86,6 +82,9 @@ function drawAngleGraph(N) {
     for (var j = 0; j < N; j++) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
+      var arrayValue = Values[i * N + j];
+      // console.log("array value before transformation: " + arrayValue);
+      
       var value = Values[i * N + j]/20; // Get the value from the array based on the circle's index
 
       circle_data_2.push({
@@ -101,7 +100,8 @@ function drawAngleGraph(N) {
         x: cx,
         y: cy,
         id: i * N + j + 1,
-        startAngle: (90 - (20 * value)) * (Math.PI / 180) // Convert degrees to radians
+        startAngle: (90 - (20 * value)) * (Math.PI / 180), // Convert degrees to radians
+        arrayValue: arrayValue  //Added by Shae
       }
       );
 
@@ -109,7 +109,8 @@ function drawAngleGraph(N) {
         x: j * cellSize,
         y: i * cellSize,
         h: cellSize,
-        w: cellSize
+        w: cellSize,
+        arrayValue: arrayValue  //Added by Shae
       });
     }
   }
@@ -226,8 +227,8 @@ function drawAngleGraph(N) {
     var selectedRect = null; // To keep track of the selected circle
 
     box_2.on("click", function(d, i) {
-      console.log ("d is: " + d);
-      console.log ("i is: " + i);
+      // console.log ("d is: " + d);
+      // console.log ("i is: " + i);
       if (task == "compare") {
         return;
       } else {
@@ -235,7 +236,10 @@ function drawAngleGraph(N) {
         if (task == "match" && i === cell1_i * N + cell1_j) {
           return;  // Do nothing for the disabled cell
         }
-        handleHighlight(this);  
+
+        let correspondingRectValue = d.arrayValue;
+        // console.log("corresponding value:" + correspondingRectValue);
+        handleHighlight(this, correspondingRectValue);  
       }     
     });
       
@@ -246,11 +250,13 @@ function drawAngleGraph(N) {
       }
       var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
       var correspondingRect = box_2.nodes()[cellIndex];
-      handleHighlight(correspondingRect);
+      let correspondingRectValue = box_2.nodes()[cellIndex].arrayValue;
+      // console.log("corresponding value:" + correspondingRectValue);
+      handleHighlight(correspondingRect, correspondingRectValue);
     });
 
-    function handleHighlight(clickedElem) {
-        if (selectedRect === clickedElem) {
+    function handleHighlight(clickedElem, elemValue) {
+        if (selectedRect === clickedElem) {          
           // If the same cell is clicked again, unselect it
           // d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
           d3.select(clickedElem).attr("stroke", "#f9f9f9").attr("stroke-width", 0);
@@ -267,6 +273,14 @@ function drawAngleGraph(N) {
           d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
           // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 3.5);
           selectedRect = clickedElem;
+
+          //increasing the number of participant's click so far
+          count++;
+          // console.log("count: " + count);
+
+          //participant's answer (value)
+          participantAnswer = elemValue;
+          // console.log("participant's answer: " + participantAnswer);
         }
     }
 
@@ -326,13 +340,15 @@ function drawAngleGraph(N) {
   }
 }
 
-var slider = document.getElementById("value2");
-var output = document.getElementById("demo");
-output.innerHTML = slider.value;
-
-slider.oninput = function() {
-  output.innerHTML = this.value;
-};
+if (task == "compare") {
+  var slider = document.getElementById("value2");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value;
+  
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  };
+}
 
 var btn = document.getElementById("submit");
 
@@ -340,18 +356,49 @@ var btn = document.getElementById("submit");
 btn.addEventListener("click", function() {
   btn.disabled = true;
   var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+
+  //preparing participant answer before logging
+  if (task == "compare") {
+    // console.log("in the compare if: ");
+    // console.log("slider.value is: " + slider.value)
+    participantAnswer = slider.value;
+    correctAnswer = ratio_value; 
+  } 
+  else if (task == "match") {
+    participantAnswer = participantAnswer;
+    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"angle");
+  } else if (task == "max") {
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.max(...Values);
+  } else if (task == "min") {
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.min(...Values);
+  }
+
+  // console.log("participant's answer: " + participantAnswer);
+
+  error = correctAnswer - participantAnswer;
+
   postMessage(timeSpentOnPage);
 });
+
 const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
   var dataToSend = {
     participant_id: participantId,
-    ratio: parseFloat(url_data["ratio"]),
+    type_of_encoding: "angle",
+    grid_size: parseInt(N),
+    task: task,
+    distribution: dist,
+    ratio: parseFloat(ratio_value),
     trial_number: parseInt(url_data["trial"]),
     time_spent: timeSpentOnPage,
-    participant_answer: slider.value,
-    type_of_encoding: "angle",
+    participant_answer: parseFloat(participantAnswer),
+    correct_answer: parseFloat(correctAnswer),
+    error: parseFloat(error),
+    selection_count: parseInt(count),
+    spaceKey_count: "N/A"
   };
 
   $.ajax({

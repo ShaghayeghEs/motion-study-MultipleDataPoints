@@ -229,7 +229,7 @@ function load_page() {
     //     // "Angle"
     // }`;
 
-    rand_item[0][1] = "./min/position.html"; //for debugging purposes
+    rand_item[0][1] = "./min/angle.html"; //for debugging purposes
     rand_item[0][0] = "min";
     
     document

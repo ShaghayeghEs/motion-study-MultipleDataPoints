@@ -45,12 +45,12 @@ export function arrayToMatrix(arr, n) {
 //Output will be a randomized array with fixed values at their original positions
 export function randomizeArrayWithFixedIndices(arr, fixedIndex1, fixedIndex2) {
     //Test
-    console.log("//////////START OF FUNCTION//////");
-    console.log("arr is: " + arr);
-    console.log("fixedIndex1 is: " + fixedIndex1);
-    console.log("fixedIndex2 is: " + fixedIndex2);
-    console.log("fixed value 1 is: " + arr[fixedIndex1]);
-    console.log("fixed value 1 is: " + arr[fixedIndex2]);
+    // console.log("//////////START OF FUNCTION//////");
+    // console.log("arr is: " + arr);
+    // console.log("fixedIndex1 is: " + fixedIndex1);
+    // console.log("fixedIndex2 is: " + fixedIndex2);
+    // console.log("fixed value 1 is: " + arr[fixedIndex1]);
+    // console.log("fixed value 1 is: " + arr[fixedIndex2]);
 
       // Check if the provided indices are within the array bounds
   if (
@@ -79,24 +79,24 @@ export function randomizeArrayWithFixedIndices(arr, fixedIndex1, fixedIndex2) {
 
   // console.log("middle test array(91):" + shuffledValues[91]);
   // console.log("middle test array(40):" + shuffledValues[40]);
-  console.log("size of array" + shuffledValues.length);
+  // console.log("size of array" + shuffledValues.length);
 
   for (let i = shuffledValues.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffledValues[i], shuffledValues[j]] = [shuffledValues[j], shuffledValues[i]];
   }
 
-  console.log("after shuffle:");
+  // console.log("after shuffle:");
   // console.log("after shuffle(91):" + shuffledValues[91]);
   // console.log("after shuffle(40):" + shuffledValues[40]);
-  console.log("size of array" + shuffledValues.length);
+  // console.log("size of array" + shuffledValues.length);
 
   // Place the fixed values back into their original positions
-  console.log("////splice test//////");
-  console.log("fixed index 1: " + fixedIndex1);
-  console.log("fixed value 1: " + arr[fixedIndex1]);
-  console.log("fixed index 2: " + fixedIndex2);
-  console.log("fixed value 2: " + arr[fixedIndex2]);
+  // console.log("////splice test//////");
+  // console.log("fixed index 1: " + fixedIndex1);
+  // console.log("fixed value 1: " + arr[fixedIndex1]);
+  // console.log("fixed index 2: " + fixedIndex2);
+  // console.log("fixed value 2: " + arr[fixedIndex2]);
 
   if(fixedIndex2 < fixedIndex1) {
     shuffledValues.splice(fixedIndex2, 0, arr[fixedIndex2]);
@@ -121,12 +121,12 @@ export function randomizeArrayWithFixedIndices(arr, fixedIndex1, fixedIndex2) {
   // console.log("size of array" + shuffledValues.length);
 
   //TEST
-  console.log("//////////END OF FUNCTION//////");
-  console.log("shuffledValues is: " + shuffledValues);
-  console.log("fixedIndex1 is: " + fixedIndex1);
-  console.log("fixedIndex2 is: " + fixedIndex2);
-  console.log("fixed value 1 is: " + shuffledValues[fixedIndex1]);
-  console.log("fixed value 1 is: " + shuffledValues[fixedIndex2]);
+  // console.log("//////////END OF FUNCTION//////");
+  // console.log("shuffledValues is: " + shuffledValues);
+  // console.log("fixedIndex1 is: " + fixedIndex1);
+  // console.log("fixedIndex2 is: " + fixedIndex2);
+  // console.log("fixed value 1 is: " + shuffledValues[fixedIndex1]);
+  // console.log("fixed value 1 is: " + shuffledValues[fixedIndex2]);
 
   return shuffledValues;
     
@@ -214,17 +214,17 @@ export function findOuterPairsWithDistance(matrixSize, maxDistance) {
 export function selectDistArray(value1, value2, value3, value4) {
     // Define an object that maps values to arrays
     const arrays = {
-      "uniform_3_1.5_gen": [5, 10, 20, 30, 40, 50, 60, 70, 80],
+      "uniform_3_1.5_gen": [5, 14, 20, 30, 40, 50, 60, 70, 80],
       "uniform_3_1.5_angle": [15.2, 30.7, 40, 60, 89.3, 110.2, 123.6, 140.4, 160.8],
-      "uniform_3_1.5_area": [1, 20, 40, 60, 80, 100, 120, 140, 165],
+      "uniform_3_1.5_area": [1, 20, 40, 62, 80, 100, 120, 140, 165],
       "uniform_3_1.5_expansion": [5.49, 7.31, 10, 15, 26.08, 31.37, 39.01, 42.67, 48.16],
       "uniform_3_1.5_position": [13.05, 15, 22.5, 33.32, 42.74, 46.11, 56.12, 61.42, 71.51],
       "uniform_3_1.5_motion": [3.34, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55],
       "uniform_3_1.5_color": [5, 16.875, 22.5, 33.75, 52.5, 64.375, 76.25, 88.125, 100],  //Color: 22.5  //Min: 5  //Max: 100
       
-      "uniform_3_2_gen":[5, 10, 20, 30, 40, 50, 60, 70, 80],
+      "uniform_3_2_gen":[5, 10, 20, 30, 40, 45, 60, 70, 80],
       "uniform_3_2_angle": [15.2, 30.7, 40, 67.1, 80, 110.2, 123.6, 140.4, 160.8],
-      "uniform_3_2_area": [1, 20, 40, 60, 80, 100, 120, 140, 165],
+      "uniform_3_2_area": [1, 20, 40, 60, 80, 98, 120, 140, 165],
       "uniform_3_2_expansion": [5.49, 7.31, 10, 20, 26.08, 31.37, 39.01, 42.67, 48.16],
       "uniform_3_2_position": [13.05, 15, 28.18, 30, 42.74, 46.11, 56.12, 61.42, 71.51],
       "uniform_3_2_motion": [3.34, 5, 8.16, 10, 15.3, 18.66, 20.71, 25.67, 28.55],
@@ -254,7 +254,7 @@ export function selectDistArray(value1, value2, value3, value4) {
       "left-skewed_3_3.5_motion": [30, 29.943359375, 29.546875, 28.470703125, 26.375, 22.919921875, 17.5, 5, 1],
       "left-skewed_3_3.5_color": [100, 99.814453125, 98.515625, 94.990234375, 88.125, 78.75, 59.921875, 22.5, 5],
 
-      "left-skewed_3_4_gen": [10, 20, 60, 75, 79, 80, 80, 81, 82],
+      "left-skewed_3_4_gen": [10, 20, 60, 75, 78.5, 79.5, 80, 81, 82],
       "left-skewed_3_4_angle": [170, 167.5, 160, 147.5, 130, 107.5, 80, 40, 10],
       "left-skewed_3_4_area": [165, 162.4375, 160, 154.75, 141.9375, 100.9375, 72.75, 40, 1],
       "left-skewed_3_4_expansion": [50, 49.234375, 46.9375, 40, 37.75, 30.859375, 22.4375, 10, 1],
@@ -335,26 +335,26 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
   // const encoding = encoding;
 
 
-  console.log("arr is: " + arr);   //TEST
+  // console.log("arr is: " + arr);   //TEST
   // console.log (arr);
 
-  console.log("task is: ");   //TEST
-  console.log (task);
+  // console.log("task is: ");   //TEST
+  // console.log (task);
 
-  console.log("ratio is: ");   //TEST
-  console.log (ratio);
+  // console.log("ratio is: ");   //TEST
+  // console.log (ratio);
 
-  console.log("N is: ");   //TEST
-  console.log (N);
+  // console.log("N is: ");   //TEST
+  // console.log (N);
 
-  console.log("dist is: ");   //TEST
-  console.log (dist);
+  // console.log("dist is: ");   //TEST
+  // console.log (dist);
   
   let shuffledArray =[];
     
     
     if (task == "max" || task == "min") {
-        console.log("in the max/min if for suffling");
+        // console.log("in the max/min if for suffling");
       
         // Create a copy of the input array to avoid modifying the original array
       shuffledArray = arr.slice();
@@ -366,7 +366,7 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       } 
     }
     else if (task == "compare") {
-      console.log("in the compare if for shuffling");   //TEST  
+      // console.log("in the compare if for shuffling");   //TEST  
       
       let pairs = [];
       if (N == 3) {
@@ -376,27 +376,27 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       }
   
       const randomElement = pairs[Math.floor(Math.random() * pairs.length)]; //randomly selecting one of the pairs
-      console.log("random element:");
-      console.log(randomElement);
+      // console.log("random element:");
+      // console.log(randomElement);
       // Access the coordinates (i and j) of cell1 in the pair
       // const iCell1 = randomElement.cell1[0];
       // const jCell1 = randomElement.cell1[1];
       iCell1 = randomElement.cell1[0];
-      console.log(iCell1);
+      // console.log(iCell1);
       jCell1 = randomElement.cell1[1];
-      console.log(jCell1);
+      // console.log(jCell1);
       let index1 = (iCell1 * N) + jCell1; //index in the 1D array
-      console.log(index1);
+      // console.log(index1);
 
       // Access the coordinates (i and j) of cell2 in the pair
       // const iCell2 = randomElement.cell2[0];
       // const jCell2 = randomElement.cell2[1];
       iCell2 = randomElement.cell2[0];
-      console.log(iCell2);
+      // console.log(iCell2);
       jCell2 = randomElement.cell2[1];
-      console.log(jCell2);
+      // console.log(jCell2);
       let index2 = (iCell2 * N) + jCell2; //index in the 1D array
-      console.log(index2);
+      // console.log(index2);
   
   
       // TEST
@@ -473,12 +473,12 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       
       let temp;
       if (indexValue == index2 && indexRatio == index1 ) {
-        console.log("all equal");
+        // console.log("all equal");
         temp = arr[indexValue];
         arr[indexValue] = arr[index1];
         arr[index1] = temp;
       } else if (indexRatio == index1) {
-        console.log("ratio = index1");
+        // console.log("ratio = index1");
         temp = arr[indexRatio];
         arr[indexRatio] = arr[index2];
         arr[index2] = temp;
@@ -487,12 +487,12 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
         arr[indexValue] = arr[index1];
         arr[index1] = temp;
       } else if (indexRatio == index2) {
-        console.log("ratio = index2");
+        // console.log("ratio = index2");
         temp = arr[indexValue];
         arr[indexValue] = arr[index1];
         arr[index1] = temp;
       } else {
-        console.log("none equal");
+        // console.log("none equal");
         temp = arr[indexValue];
         arr[indexValue] = arr[index1];
         arr[index1] = temp;
@@ -505,18 +505,18 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       
   
       //Test
-      console.log("swapped test array:")
-      console.log(arr);
+      // console.log("swapped test array:")
+      // console.log(arr);
   
       shuffledArray = randomizeArrayWithFixedIndices(arr, index1, index2);
       // shuffledArray = randomizeArrayWithFixedIndices([5, 10, 80, 30, 40, 50, 60, 70, 20], 3, 8);
       // shuffledArray = randomizeArrayWithFixedIndices([5,5.000077295761409,5.000618366091277,5.00208698555806,5.004946928730216,5.009661970176204,5.01669588446448,5.026512446163502,5.0395754298417295,5.0563486100676185,5.077295761409627,5.102880658436214,5.1335670757158365,5.1698187878169515,5.212099569308017,5.260873194757492,5.316603438733834,5.379754075805499,5.450788880540947,5.530171627508634,5.618366091277019,5.715836046414559,5.823045267489712,5.940457529070936,6.068536605726688,6.207746272025427,6.35855030253561,6.521412471825695,6.6967965544641395,6.8851663250194015,7.086985558059938,7.302718028154208,7.532827509870669,7.777777777777777,8.038032606443993,8.314055770437772,8.606311044327573,8.915262202681854,9.24137302006907,9.585107271057684,60,10.327301172112925,10.72668837131647,11.145554102395241,11.584362139917694,12.04357625845229,12.523660232567487,13.02507783683174,13.548292845813508,14.093769034081248,14.66197017620342,15.253360046748476,15.868402420284884,16.50756107138109,17.171299774605558,17.86008230452675,18.574372435713112,19.314633942733117,63.247844221214294,20.87492618254785,21.69588446447951,22.54466922051862,23.421744225233667,24.327573253193084,25.262620078965355,26.22734847711891,27.222222222222218,28.247705088843748,29.30426085155194,30.392353284915274,31.512446163502176,32.665003261881125,33.85048835462059,35.069365216289,36.32209762145483,37.609149344686536,38.93098416055256,40.2880658436214,41.68085816846147,43.10982490964126,44.575429841729196,46.078136739293775,47.61840937690341,49.19671152912659,50,52.46925947568739,54.16443281916194,55.89949077552384,57.67489711934155,9.94692873021615,61.348610067618324,20,65.1892818605399,67.17338676016362,69.20062269465392,71.27145343857924,73.38634276650806,75.54575445300881,77.75015227264998,80], 91, 40);
       //TEST
-      console.log("shuffled after swap test array:")
-      console.log(shuffledArray);
+      // console.log("shuffled after swap test array:")
+      // console.log(shuffledArray);
   
     } else if (task == "match") {
-      console.log("DEBUG: in the match if for shuffling");   //TEST
+      // console.log("DEBUG: in the match if for shuffling");   //TEST
       let randomCell = getRandomOuterCellIndices(N, N);
       console.log("DEBUG: i of match cell is: " + randomCell.i);
       console.log("DEBUG: j of match cell is: " + randomCell.j);
@@ -529,12 +529,12 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
       let indexValue = 0;
 
       if (dist == "right-skewed" || dist == "left-skewed") {
-        console.log("DEBUG: in the skewed if");   //TEST
+        // console.log("DEBUG: in the skewed if");   //TEST
         if (ratio == 2.5 || ratio == 3.5) {
           indexValue = arr.indexOf(arr[2]);
           console.log("DEBUG: index is: " + indexValue);
           console.log("DEBUG: value is: " + arr[indexValue]);
-          console.log(ratio);
+          // console.log(ratio);
         } else if (ratio == 3 || ratio == 4) {
           indexValue = arr.indexOf(arr[arr.length - 3]);
           console.log("DEBUG: index is: " + indexValue);
@@ -542,14 +542,14 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
         }
 
       } else if (dist == "uniform") {
-        console.log("DEBUG: in the uniform if");   //TEST
+        // console.log("DEBUG: in the uniform if");   //TEST
         if (encoding == "angle" || encoding == "area") {
           console.log("is it here? 1");
           if (ratio == 1.5) {
             indexValue = arr.indexOf(40);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
-            console.log(ratio);
+            // console.log(ratio);
           } else if (ratio == 2) {
             indexValue = arr.indexOf(40 * ratio);
             console.log("DEBUG: index is: " + indexValue);
@@ -561,54 +561,54 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
             indexValue = arr.indexOf(10);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
-            console.log(ratio);
+            // console.log(ratio);
           } else if (ratio == 2) {
             indexValue = arr.indexOf(10 * ratio);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
           }
         } else if (encoding == "position") {
-          console.log("is it here? 3");
+          // console.log("is it here? 3");
           if (ratio == 1.5) {
             indexValue = arr.indexOf(15);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
-            console.log(ratio);
+            // console.log(ratio);
           } else if (ratio == 2) {
             indexValue = arr.indexOf(15 * ratio);
             console.log(indexValue);
           }
         } else if (encoding == "motion"){
-          console.log("is it here? 4");
+          // console.log("is it here? 4");
           if (ratio == 1.5) {
             indexValue = arr.indexOf(5);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
-            console.log(ratio);
+            // console.log(ratio);
           } else if (ratio == 2) {
             indexValue = arr.indexOf(5 * ratio);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
           }
         } else if (encoding == "color"){
-          console.log("is it here? 5");
+          // console.log("is it here? 5");
           if (ratio == 1.5) {
             indexValue = arr.indexOf(22.5);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
-            console.log(ratio);
+            // console.log(ratio);
           } else if (ratio == 2) {
             indexValue = arr.indexOf(22.5 * ratio);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
           }
         } else {
-          console.log("is it here?");
+          // console.log("is it here?");
           if (ratio == 1.5) {
             indexValue = arr.indexOf(20);
             console.log("DEBUG: index is: " + indexValue);
             console.log("DEBUG: value is: " + arr[indexValue]);
-            console.log(ratio);
+            // console.log(ratio);
           } else if (ratio == 2) {
             indexValue = arr.indexOf(20 * ratio);
             console.log("DEBUG: index is: " + indexValue);
@@ -617,20 +617,26 @@ export function shuffleArray(arr, task, ratio, N, dist, encoding) {
         }
       }
       
+      console.log("//////START of match debug");
+      console.log("array at this point is: " + arr);
       let temp;
       temp = arr[indexValue];
+      console.log("value to be matched is: " + arr[indexValue])
       arr[indexValue] = arr[index1];
       arr[index1] = temp;
   
+      console.log("array after swapping but before shuffling: " + arr);
+
       //Test
-      console.log("DEBUG: swapped test array before shuffling:")
-      console.log(arr);
+      // console.log("DEBUG: swapped test array before shuffling:")
+      // console.log(arr);
 
       shuffledArray = shuffleArrayKeepingIndex(arr, index1);
+      console.log("array after shuffling in core: " + shuffledArray);
       
       //TEST
-      console.log("DEBUG: shuffled after swap test array:")
-      console.log(shuffledArray);
+      // console.log("DEBUG: shuffled after swap test array:")
+      // console.log(shuffledArray);
     }
     return [shuffledArray,iCell1,jCell1,iCell2,jCell2];
 }
@@ -662,6 +668,11 @@ function getRandomOuterCellIndices(rows, columns) {
 }
 
 function shuffleArrayKeepingIndex(array, index) {
+  console.log("////// Debugging the shuffleArrayKeepingIndex function");
+  console.log("input array is: " + array);
+  console.log("index is: " + index);
+
+
   // Check if the index is within the bounds of the array
   if (index < 0 || index >= array.length) {
       throw new Error("Index is out of bounds for the given array");
@@ -672,14 +683,24 @@ function shuffleArrayKeepingIndex(array, index) {
 
   // Perform Fisher-Yates shuffle
   for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(Math.random() * (i));
+      console.log("i is: " + i);
+      console.log("j is: " + j);
 
+      // Swap elements, excluding the element at the specified index
+      if (i !== index && j !== index) {
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    
+    console.log("array at the end of for loop: " + shuffledArray);
       // Swap elements
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+      // [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
   }
 
   // Swap the element at the specified index back to its original position
-  [shuffledArray[index], shuffledArray[array.length - 1]] = [shuffledArray[array.length - 1], shuffledArray[index]];
+  // [shuffledArray[index], shuffledArray[array.length - 1]] = [shuffledArray[array.length - 1], shuffledArray[index]];
+
+  console.log("array at the end function: " + shuffledArray);
 
   return shuffledArray;
 }
@@ -695,4 +716,118 @@ export function multiplyArrayElements(arr, multiplier) {
   const multipliedArray = arr.map(element => element * multiplier);
 
   return multipliedArray;
+}
+
+//function to select the correct answer for match task
+export function selectCorrectMatchAnswer(value1, value2, value3, value4) {
+  // Define an object that maps values to arrays
+  const arrays = {
+    "uniform_3_1.5_gen": 14,
+    "uniform_3_1.5_angle": 30.7,
+    "uniform_3_1.5_area": 20,
+    "uniform_3_1.5_expansion": 7.31,
+    "uniform_3_1.5_position": 13.05,
+    "uniform_3_1.5_motion": 3.34,
+    "uniform_3_1.5_color": 16.875,
+    
+    "uniform_3_2_gen":45,
+    "uniform_3_2_angle": 67.1,
+    "uniform_3_2_area": 98,
+    "uniform_3_2_expansion": 26.08,
+    "uniform_3_2_position": 28.18,
+    "uniform_3_2_motion": 8.16,
+    "uniform_3_2_color": 33.75,
+    
+    "right-skewed_3_2.5_gen": 5.146484375,
+    "right-skewed_3_2.5_angle": 10.3125,
+    "right-skewed_3_2.5_area": 1.3203125,
+    "right-skewed_3_2.5_expansion": 1.095703125,
+    "right-skewed_3_2.5_position": 10.1244140625,
+    "right-skewed_3_2.5_motion": 1.056640625,
+    "right-skewed_3_2.5_color": 5.185546875,
+    
+    "right-skewed_3_3_gen": 20, 
+    "right-skewed_3_3_angle": 40,
+    "right-skewed_3_3_area": 40,
+    "right-skewed_3_3_expansion":30,
+    "right-skewed_3_3_position": 45,
+    "right-skewed_3_3_motion": 20.427734375,
+    "right-skewed_3_3_color": 67.5,
+
+    "left-skewed_3_3.5_gen": 60,
+    "left-skewed_3_3.5_angle": 167.5,
+    "left-skewed_3_3.5_area": 162.4375,
+    "left-skewed_3_3.5_expansion": 49.234375,
+    "left-skewed_3_3.5_position": 73.5755859375,
+    "left-skewed_3_3.5_motion": 29.943359375,
+    "left-skewed_3_3.5_color": 99.814453125,
+
+    "left-skewed_3_4_gen": 79.5,
+    "left-skewed_3_4_angle": 107.5,
+    "left-skewed_3_4_area": 100.9375,
+    "left-skewed_3_4_expansion": 30.859375,
+    "left-skewed_3_4_position": 60,
+    "left-skewed_3_4_motion": 20,
+    "left-skewed_3_4_color": 76.806640625,
+    
+    "uniform_10_1.5_gen": 20.15151515151515,
+    "uniform_10_1.5_angle": 38.8,
+    "uniform_10_1.5_area": 38.92,
+    "uniform_10_1.5_expansion": 9.95,
+    "uniform_10_1.5_position": 14.79,
+    "uniform_10_1.5_motion": 4.95,
+    "uniform_10_1.5_color": 23.232323232323232,
+
+    "uniform_10_2_gen": 39.84848484848485,
+    "uniform_10_2_angle": 81.6,
+    "uniform_10_2_area": 78.25,
+    "uniform_10_2_expansion": 19.66,
+    "uniform_10_2_position": 29.34,
+    "uniform_10_2_motion": 9.73,
+    "uniform_10_2_color": 44.343434343434346,
+    
+    "right-skewed_10_2.5_gen": 5.000077295761409,
+    "right-skewed_10_2.5_angle": 10.000164897624341,
+    "right-skewed_10_2.5_area": 1.0001690200649491,
+    "right-skewed_10_2.5_expansion": 1.0000504998974542,
+    "right-skewed_10_2.5_position": 10.000065649866691,
+    "right-skewed_10_2.5_motion": 1.0000298876944118,
+    "right-skewed_10_2.5_color": 5.000097907964452,
+
+    "right-skewed_10_3_gen": 73.38634276650806,
+    "right-skewed_10_3_angle": 155.89086456855054,
+    "right-skewed_10_3_area": 150.5381361827643,
+    "right-skewed_10_3_expansion": 45.6790772741186,
+    "right-skewed_10_3_position": 68.08280045635419,
+    "right-skewed_10_3_motion": 27.442719203049784,
+    "right-skewed_10_3_color": 91.62270083757689,
+    
+    "left-skewed_10_3.5_gen": 79.99234771962044,
+    "left-skewed_10_3.5_angle": 169.98367513519028,
+    "left-skewed_10_3.5_area": 164.98326701357004,
+    "left-skewed_10_3.5_expansion": 49.995000510152025,
+    "left-skewed_10_3.5_position": 73.6999343501333,
+    "left-skewed_10_3.5_motion": 29.99997011230559,
+    "left-skewed_10_3.5_color": 99.99990209203555,
+
+    "left-skewed_10_4_gen": 9.536271808999075,
+    "left-skewed_10_4_angle": 19.55004591368226,
+    "left-skewed_10_4_area":10.788797061524317,
+    "left-skewed_10_4_expansion":3.9247015610651923,
+    "left-skewed_10_4_position": 15,
+    "left-skewed_10_4_motion": 3.5572807969502156,
+    "left-skewed_10_4_color": 13.377299162423121
+    // Add more arrays and mappings as needed
+  };
+
+  // Generate the key based on the input values
+  const key = `${value1}_${value2}_${value3}_${value4}`;
+  console.log("key is: " + key);
+
+  // Check if the key exists in the object
+  if (key in arrays) {
+    return arrays[key];
+  } else {
+    return null; // Return null if the key does not exist
+  }
 }
