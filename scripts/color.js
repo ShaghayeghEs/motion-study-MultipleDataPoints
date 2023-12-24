@@ -1,6 +1,7 @@
-import { selectDistArray, shuffleArray } from "./core.js";
+import { selectDistArray, shuffleArray, selectCorrectMatchAnswer } from "./core.js";
 
 //Measures without header
+//pre: 18 (with header)
 var margin = {
   top: 30,
   left: 30,
@@ -28,6 +29,11 @@ var N = url_data["size"];
 var task = url_data["task"];
 var ratio_value = url_data["ratio"];
 var dist = url_data["dist"];
+let Values = [];
+let participantAnswer;
+let correctAnswer;
+let error; // when error is 0, the correct answer has been selected
+let count = 0;
 
 drawColorGraph(N); // Pass the N value to the function
 
@@ -48,13 +54,13 @@ function drawColorGraph(N) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
-  let Values = [];
+  // let Values = [];
   Values = selectDistArray(dist, N, ratio_value, "color");
-  console.log(Values);
+  console.log("original array: " + Values);
 
   var outputs = shuffleArray(Values,task,ratio_value,N,dist,"color"); //shuffling the data array based on the given task
-  console.log("outputs:");
-  console.log(outputs);
+  // console.log("outputs:");
+  // console.log(outputs);
 
   cell1_i = outputs[1];
   cell1_j = outputs[2];
@@ -62,8 +68,7 @@ function drawColorGraph(N) {
   cell2_j = outputs[4];
 
   Values = outputs[0];
-  console.log("after shuffling");
-  console.log(Values);
+  console.log("after shuffling: " + Values);
   
   // Generate circle and box data based on grid size N
   for (var i = 0; i < N; i++) {
@@ -75,6 +80,7 @@ function drawColorGraph(N) {
       // var colors = ["#fafafa", "#bfbfbf", "#7f7f7f", "#404040", "#000000"]; // Add more colors if needed
 
       var value = Values[i * N + j]; // Get the value from the array based on the circle's index
+      var arrayValue = Values[i * N + j]; // Added by Shae
       let color = shadeColor("#ffffff", value * -1);
       // console.log("color is: " + color);
 
@@ -86,6 +92,7 @@ function drawColorGraph(N) {
         radius: cellSize / 2,  // Set a constant value
         move: 0,
         value: value,
+        arrayValue: arrayValue, //Added by Shae
         color: color
       });
 
@@ -93,7 +100,8 @@ function drawColorGraph(N) {
         x: j * cellSize,
         y: i * cellSize,
         h: cellSize,
-        w: cellSize
+        w: cellSize,
+        arrayValue: arrayValue //Added by Shae
       });
     }
   }
@@ -190,7 +198,10 @@ function drawColorGraph(N) {
       if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare") {
         return; // Do nothing for the disabled cell
       }
-      handleHighlight(this);
+
+      let correspondingRectValue = d.arrayValue;
+      console.log("clicking on the box: correspondingRectValue: " + correspondingRectValue);
+      handleHighlight(this, correspondingRectValue);
     });
     
     circles_2.on("click", function(d, i) {
@@ -200,10 +211,13 @@ function drawColorGraph(N) {
       }
       var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
       var correspondingRect = box_2.nodes()[cellIndex];
-      handleHighlight(correspondingRect);
+      let correspondingRectValue = d.arrayValue;
+      console.log("clicking on the circle: correspondingRectValue: " + correspondingRectValue);
+      handleHighlight(correspondingRect, correspondingRectValue);
     });
 
-    function handleHighlight(clickedElem) {
+    function handleHighlight(clickedElem, elemValue) {
+      console.log("elem value: " + elemValue);
       if (selectedRect === clickedElem) {
         // If the same cell is clicked again, unselect it
         d3.select(clickedElem).attr("stroke", "white").attr("stroke-width", 0);
@@ -217,6 +231,14 @@ function drawColorGraph(N) {
         // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
         d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
         selectedRect = clickedElem;
+
+        //increasing the number of participant's click so far
+        count++;
+        // console.log("count: " + count);
+
+        //participant's answer (value)
+        participantAnswer = elemValue;
+        // console.log("participant's answer: " + participantAnswer);
       }
     }
 
@@ -302,4 +324,88 @@ function shadeColor(color, percent) {
   var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
 
   return "#"+RR+GG+BB;
+}
+
+if (task == "compare") {
+  var slider = document.getElementById("value2");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  };
+}
+
+var btn = document.getElementById("submit");
+
+// Add an event listener to the submit button
+btn.addEventListener("click", function() {
+  btn.disabled = true;
+  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+
+  //preparing participant answer before logging
+  if (task == "compare") {
+    console.log("in the if for calculating answer for compare");
+    // console.log("slider.value is: " + slider.value)
+    participantAnswer = slider.value;
+    correctAnswer = ratio_value; 
+  } 
+  else if (task == "match") {
+    console.log("in the if for calculating answer for match");
+    participantAnswer = participantAnswer;
+    console.log("participant answer: " + participantAnswer);
+    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"color");
+    console.log("correct answer: " + correctAnswer);
+  } else if (task == "max") {
+    console.log("in the if for calculating answer for max");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.max(...Values);
+  } else if (task == "min") {
+    console.log("in the if for calculating answer for min");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.min(...Values);
+  }
+
+  // console.log("participant's answer: " + participantAnswer);
+
+  error = correctAnswer - participantAnswer;
+  postMessage(timeSpentOnPage);
+});
+
+const participantId = localStorage.getItem('participantId');
+
+function postMessage(timeSpentOnPage) {
+  // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count
+  var selectionCountValue = task === "compare" ? "N/A" : count;
+
+  var dataToSend = {
+    participant_id: participantId,
+    type_of_encoding: "color",
+    grid_size: parseInt(N),
+    task: task,
+    distribution: dist,
+    ratio: parseFloat(ratio_value),
+    trial_number: parseInt(url_data["trial"]),
+    time_spent: timeSpentOnPage,
+    participant_answer: parseFloat(participantAnswer),
+    correct_answer: parseFloat(correctAnswer),
+    error: parseFloat(error),
+    selection_count: selectionCountValue,
+    spaceKey_count: "N/A"
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "../json.php",
+    data: JSON.stringify(dataToSend),
+    contentType: "application/json",
+    success: function(response) {
+      console.log("Data sent successfully:", response);
+      window.top.load_page();
+    },
+    error: function(error) {
+      console.error("Error sending data:", error);
+      // You may want to handle the error here, e.g., by displaying an error message to the user.
+    },
+  });
 }
