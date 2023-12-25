@@ -1,6 +1,7 @@
 import { selectDistArray, shuffleArray, selectCorrectMatchAnswer } from "./core.js";
 
 //Measures without header
+//pre: 18 (with header)
 var margin = {
   top: 30,
   left: 30,
@@ -250,38 +251,40 @@ function drawAngleGraph(N) {
       }
       var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
       var correspondingRect = box_2.nodes()[cellIndex];
-      let correspondingRectValue = box_2.nodes()[cellIndex].arrayValue;
+      // let correspondingRectValue = box_2.nodes()[cellIndex].arrayValue;
+      let correspondingRectValue = d.arrayValue;
       // console.log("corresponding value:" + correspondingRectValue);
       handleHighlight(correspondingRect, correspondingRectValue);
     });
 
     function handleHighlight(clickedElem, elemValue) {
-        if (selectedRect === clickedElem) {          
-          // If the same cell is clicked again, unselect it
-          // d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
-          d3.select(clickedElem).attr("stroke", "#f9f9f9").attr("stroke-width", 0);
-          selectedRect = null;
-          
-        } else {
-          // Unselect the previously selected cell (if any)
-          if (selectedRect) {
-            // d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
-            d3.select(selectedRect).attr("stroke", "#f9f9f9").attr("stroke-width", 0);
-          }
-          // Highlight the corresponding cell border
-          // d3.select(clickedElem).attr("stroke", "#ff7474").attr("stroke-width", 3.5);
-          d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
-          // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 3.5);
-          selectedRect = clickedElem;
-
-          //increasing the number of participant's click so far
-          count++;
-          // console.log("count: " + count);
-
-          //participant's answer (value)
-          participantAnswer = elemValue;
-          // console.log("participant's answer: " + participantAnswer);
+      console.log("elem value: " + elemValue);
+      if (selectedRect === clickedElem) {          
+        // If the same cell is clicked again, unselect it
+        // d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0.5);
+        d3.select(clickedElem).attr("stroke", "#f9f9f9").attr("stroke-width", 0);
+        selectedRect = null;
+        
+      } else {
+        // Unselect the previously selected cell (if any)
+        if (selectedRect) {
+          // d3.select(selectedRect).attr("stroke", "black").attr("stroke-width", 0.5);
+          d3.select(selectedRect).attr("stroke", "#f9f9f9").attr("stroke-width", 0);
         }
+        // Highlight the corresponding cell border
+        // d3.select(clickedElem).attr("stroke", "#ff7474").attr("stroke-width", 3.5);
+        d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
+        // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 3.5);
+        selectedRect = clickedElem;
+
+        //increasing the number of participant's click so far
+        count++;
+        // console.log("count: " + count);
+
+        //participant's answer (value)
+        participantAnswer = elemValue;
+        // console.log("participant's answer: " + participantAnswer);
+      }
     }
 
     if(task == "compare" || task == "match") {
@@ -385,6 +388,8 @@ btn.addEventListener("click", function() {
 const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
+  var selectionCountValue = task === "compare" ? "N/A" : count;
+  
   var dataToSend = {
     participant_id: participantId,
     type_of_encoding: "angle",
@@ -397,7 +402,7 @@ function postMessage(timeSpentOnPage) {
     participant_answer: parseFloat(participantAnswer),
     correct_answer: parseFloat(correctAnswer),
     error: parseFloat(error),
-    selection_count: parseInt(count),
+    selection_count: selectionCountValue,
     spaceKey_count: "N/A"
   };
 
