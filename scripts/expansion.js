@@ -1,10 +1,7 @@
-import { selectDistArray, shuffleArray, multiplyArrayElements } from "./core.js";
-
-// var speeds = [50, 25, 1]; // Define the speeds array (you can adjust these values)
-let speeds;
-let count = 0;
+import { selectDistArray, shuffleArray, multiplyArrayElements, selectCorrectMatchAnswer} from "./core.js";
 
 //Measures without header
+//pre: 18 (with header)
 var margin = {
   top: 30,
   left: 30,
@@ -37,16 +34,22 @@ let ratio_value = url_data["ratio"];
 // let ratio_value = 1.5;
 let dist = url_data["dist"];
 // let dist = "uniform";
+// var speeds = [50, 25, 1]; // Define the speeds array (you can adjust these values)
+let speeds = [];
+let participantAnswer;
+let correctAnswer;
+let error; // when error is 0, the correct answer has been selected
+let count = 0;
+let clickCount = 0;
+let spaceKeyCount = 0;
 
 var circles_2; // Declare circles_2 as a global variable
 var borders; // Declare borders as a global variable to maintain cell borders
 
 speeds = selectDistArray(dist, N, ratio_value, "expansion");
-console.log(speeds);
+console.log("original array: " + speeds);
 
 speeds = shuffleArray(speeds, task, ratio_value, N, dist, "expansion");
-console.log("speeds");
-console.log(speeds);
 
 cell1_i = speeds[1];
 cell1_j = speeds[2];
@@ -54,13 +57,11 @@ cell2_i = speeds[3];
 cell2_j = speeds[4];
   
 speeds = speeds[0];
-console.log("after shuffling");
-console.log(speeds);
+console.log("after shuffling: " + speeds);
 
 drawExpansionGraph(N, speeds); // Pass the N value to the function
 
 function drawExpansionGraph(N, speeds) {
-  console.log("DEBUG: in drawExpansionGraph function:" + speeds);
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -106,6 +107,9 @@ function drawExpansionGraph(N, speeds) {
       var cy = (i + 0.5) * cellSize; // Y position of circle center
 
       var colors = ["#008fb3"]; // Add more colors if needed
+      var arrayValue = speeds[i * N + j]; // Added by Shae
+      // console.log("array value: " + arrayValue);
+      // console.log("speed: " + speeds[(i * N + j) % speeds.length]);
 
       circle_data_2.push({
         x: cx,
@@ -115,15 +119,16 @@ function drawExpansionGraph(N, speeds) {
         currentRadius: cellSize / 5,
         move: 0,
         color: colors[i % colors.length], // Store the color for each circle
-        speed: speeds[(i * N + j) % speeds.length]  // Assigning speed to each circle
-
+        speed: speeds[(i * N + j) % speeds.length],  // Assigning speed to each circle
+        arrayValue: arrayValue //Added by Shae
       });
 
       box_data_2.push({
         x: j * cellSize,
         y: i * cellSize,
         h: cellSize,
-        w: cellSize
+        w: cellSize,
+        arrayValue: arrayValue //Added by Shae
       });
     }
   }
@@ -175,7 +180,9 @@ function drawExpansionGraph(N, speeds) {
     if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare") {
       return; // Do nothing for the disabled cell
     }
-    handleHighlight(this);
+    let correspondingRectValue = d.arrayValue;
+    console.log("clicking on the box: correspondingRectValue: " + correspondingRectValue);
+    handleHighlight(this,correspondingRectValue);
   });
     
   circles_2.on("click", function(d, i) {
@@ -185,10 +192,13 @@ function drawExpansionGraph(N, speeds) {
     }
     var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
     var correspondingRect = borders.nodes()[cellIndex];
-    handleHighlight(correspondingRect);
+    let correspondingRectValue = d.arrayValue;
+    console.log("clicking on the box: correspondingRectValue: " + correspondingRectValue);
+    handleHighlight(correspondingRect, correspondingRectValue);
   });
 
-  function handleHighlight(clickedElem) {
+  function handleHighlight(clickedElem, elemValue) {
+    console.log("elem value: " + elemValue);
     if (selectedRect === clickedElem) {
       // If the same cell is clicked again, unselect it
       d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0);
@@ -202,6 +212,13 @@ function drawExpansionGraph(N, speeds) {
       // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
       d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
       selectedRect = clickedElem;
+
+      //increasing the number of participant's click so far
+      clickCount++;
+
+      //participant's answer (value)
+      participantAnswer = elemValue;
+      // console.log("participant's answer: " + participantAnswer);
     }
   }
 
@@ -388,3 +405,87 @@ function toggleAnimation() {
 //     drawExpansionGraph(N, speeds);
 //   }
 // };
+
+if (task == "compare") {
+  var slider = document.getElementById("value2");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  };
+}
+
+var btn = document.getElementById("submit");
+
+// Add an event listener to the submit button
+btn.addEventListener("click", function() {
+  btn.disabled = true;
+  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+
+  //preparing participant answer before logging
+  if (task == "compare") {
+    console.log("in the if for calculating answer for compare");
+    // console.log("slider.value is: " + slider.value)
+    participantAnswer = slider.value;
+    correctAnswer = ratio_value; 
+  } 
+  else if (task == "match") {
+    console.log("in the if for calculating answer for match");
+    participantAnswer = participantAnswer;
+    console.log("participant answer: " + participantAnswer);
+    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"motion");
+    console.log("correct answer: " + correctAnswer);
+  } else if (task == "max") {
+    console.log("in the if for calculating answer for max");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.max(...speeds);
+  } else if (task == "min") {
+    console.log("in the if for calculating answer for min");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.min(...speeds);
+  }
+
+  // console.log("participant's answer: " + participantAnswer);
+
+  error = correctAnswer - participantAnswer;
+  postMessage(timeSpentOnPage);
+});
+
+const participantId = localStorage.getItem('participantId');
+
+function postMessage(timeSpentOnPage) {
+  // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count
+  var selectionCountValue = task === "compare" ? "N/A" : clickCount;
+
+  var dataToSend = {
+    participant_id: participantId,
+    type_of_encoding: "expansion",
+    grid_size: parseInt(N),
+    task: task,
+    distribution: dist,
+    ratio: parseFloat(ratio_value),
+    trial_number: parseInt(url_data["trial"]),
+    time_spent: timeSpentOnPage,
+    participant_answer: parseFloat(participantAnswer),
+    correct_answer: parseFloat(correctAnswer),
+    error: parseFloat(error),
+    selection_count: selectionCountValue,
+    spaceKey_count: count
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "../json.php",
+    data: JSON.stringify(dataToSend),
+    contentType: "application/json",
+    success: function(response) {
+      console.log("Data sent successfully:", response);
+      window.top.load_page();
+    },
+    error: function(error) {
+      console.error("Error sending data:", error);
+      // You may want to handle the error here, e.g., by displaying an error message to the user.
+    },
+  });
+}
