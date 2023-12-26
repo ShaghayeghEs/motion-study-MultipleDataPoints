@@ -46,6 +46,7 @@ let participantAnswer;
 let correctAnswer;
 let error; // when error is 0, the correct answer has been selected
 let clickCount = 0;
+let selectedRect = null; // To keep track of the selected circle
 
 // var speeds = [1,2,4,8,16,32,16,32,16,32,16,8,4,2,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,4,8,16,32,16,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; // Speeds array for each cell  
 speeds = selectDistArray(dist, N, ratio_value,"motion");
@@ -151,8 +152,6 @@ function drawHorizontalMotion(num, N, speeds) {
     .attr("cy", function (d) {
       return d.cy;
     });
-
-  var selectedRect = null; // To keep track of the selected circle
 
   box_2.on("click", function(d, i) {
     // Check if the clicked cell is the one to be disabled (task: match)
@@ -394,23 +393,27 @@ btn.addEventListener("click", function() {
     // console.log("slider.value is: " + slider.value)
     participantAnswer = slider.value;
     correctAnswer = ratio_value; 
-  } 
-  else if (task == "match") {
-    console.log("in the if for calculating answer for match");
-    participantAnswer = participantAnswer;
-    console.log("participant answer: " + participantAnswer);
-    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"motion");
-    console.log("correct answer: " + correctAnswer);
-  } else if (task == "max") {
-    console.log("in the if for calculating answer for max");
-    participantAnswer = participantAnswer;
-    correctAnswer = Math.max(...speeds);
-  } else if (task == "min") {
-    console.log("in the if for calculating answer for min");
-    participantAnswer = participantAnswer;
-    correctAnswer = Math.min(...speeds);
+  } else if (task != "compare" && selectedRect === null) {
+    alert("Please select an answer before proceeding.");
+    btn.disabled = false; // Enable the button to allow the participant to select an answer
+    return; // Stop further execution
+  } else {
+    if (task == "match") {
+      console.log("in the if for calculating answer for match");
+      participantAnswer = participantAnswer;
+      console.log("participant answer: " + participantAnswer);
+      correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"motion");
+      console.log("correct answer: " + correctAnswer);
+    } else if (task == "max") {
+      console.log("in the if for calculating answer for max");
+      participantAnswer = participantAnswer;
+      correctAnswer = Math.max(...speeds);
+    } else if (task == "min") {
+      console.log("in the if for calculating answer for min");
+      participantAnswer = participantAnswer;
+      correctAnswer = Math.min(...speeds);
+    }
   }
-
   // console.log("participant's answer: " + participantAnswer);
 
   error = correctAnswer - participantAnswer;

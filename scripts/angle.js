@@ -34,6 +34,7 @@ let participantAnswer;
 let correctAnswer;
 let error; // when error is 0, the correct answer has been selected
 let count = 0;
+let selectedRect = null; // To keep track of the selected circle
 
 drawAngleGraph(N); // Pass the N value to the function
 
@@ -225,7 +226,7 @@ function drawAngleGraph(N) {
       .attr("fill", "none")
       .attr('stroke', 'black');
 
-    var selectedRect = null; // To keep track of the selected circle
+    // var selectedRect = null; // To keep track of the selected circle
 
     box_2.on("click", function(d, i) {
       // console.log ("d is: " + d);
@@ -369,12 +370,27 @@ btn.addEventListener("click", function() {
   } 
   else if (task == "match") {
     participantAnswer = participantAnswer;
+    if (selectedRect === null) {
+      alert("Please select an answer before proceeding.");
+      btn.disabled = false; // Enable the button to allow the participant to select an answer
+      return; // Stop further execution
+    }
     correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"angle");
   } else if (task == "max") {
     participantAnswer = participantAnswer;
+    if (selectedRect === null) {
+      alert("Please select an answer before proceeding.");
+      btn.disabled = false; // Enable the button to allow the participant to select an answer
+      return; // Stop further execution
+    }
     correctAnswer = Math.max(...Values);
   } else if (task == "min") {
     participantAnswer = participantAnswer;
+    if (selectedRect === null) {
+      alert("Please select an answer before proceeding.");
+      btn.disabled = false; // Enable the button to allow the participant to select an answer
+      return; // Stop further execution
+    }
     correctAnswer = Math.min(...Values);
   }
 

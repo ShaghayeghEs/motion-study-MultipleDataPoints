@@ -36,6 +36,7 @@ let participantAnswer;
 let correctAnswer;
 let error; // when error is 0, the correct answer has been selected
 let count = 0;
+let selectedRect = null; // To keep track of the selected circle
 
 drawLengthGraph(N); // Pass the N value to the function
 
@@ -163,8 +164,6 @@ function drawLengthGraph(N) {
     .attr("d", "M 0,0 V 6 L9,3 Z")
     .attr("fill", "black");
   // }
-
-    var selectedRect = null; // To keep track of the selected circle
 
     cells.on("click", function(d, i) {
       // Check if the clicked cell is the one to be disabled (task: match)
@@ -311,21 +310,26 @@ btn.addEventListener("click", function() {
     // console.log("slider.value is: " + slider.value)
     participantAnswer = slider.value;
     correctAnswer = ratio_value; 
-  } 
-  else if (task == "match") {
-    console.log("in the if for calculating answer for match");
-    participantAnswer = participantAnswer;
-    console.log("participant answer: " + participantAnswer);
-    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"gen");
-    console.log("correct answer: " + correctAnswer);
-  } else if (task == "max") {
-    console.log("in the if for calculating answer for max");
-    participantAnswer = participantAnswer;
-    correctAnswer = Math.max(...cellHeights1D);
-  } else if (task == "min") {
-    console.log("in the if for calculating answer for min");
-    participantAnswer = participantAnswer;
-    correctAnswer = Math.min(...cellHeights1D);
+  } else if (task != "compare" && selectedRect === null) {
+    alert("Please select an answer before proceeding.");
+    btn.disabled = false; // Enable the button to allow the participant to select an answer
+    return; // Stop further execution
+  } else {
+    if (task == "match") {
+      console.log("in the if for calculating answer for match");
+      participantAnswer = participantAnswer;
+      console.log("participant answer: " + participantAnswer);
+      correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"gen");
+      console.log("correct answer: " + correctAnswer);
+    } else if (task == "max") {
+      console.log("in the if for calculating answer for max");
+      participantAnswer = participantAnswer;
+      correctAnswer = Math.max(...cellHeights1D);
+    } else if (task == "min") {
+      console.log("in the if for calculating answer for min");
+      participantAnswer = participantAnswer;
+      correctAnswer = Math.min(...cellHeights1D);
+    }
   }
 
   // console.log("participant's answer: " + participantAnswer);
