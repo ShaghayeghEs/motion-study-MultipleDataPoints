@@ -404,11 +404,11 @@ btn.addEventListener("click", function() {
   } else if (task == "max") {
     console.log("in the if for calculating answer for max");
     participantAnswer = participantAnswer;
-    correctAnswer = Math.max(...cellHeights1D);
+    correctAnswer = Math.max(...speeds);
   } else if (task == "min") {
     console.log("in the if for calculating answer for min");
     participantAnswer = participantAnswer;
-    correctAnswer = Math.min(...cellHeights1D);
+    correctAnswer = Math.min(...speeds);
   }
 
   // console.log("participant's answer: " + participantAnswer);
