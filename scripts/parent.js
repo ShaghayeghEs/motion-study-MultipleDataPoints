@@ -1,15 +1,17 @@
-function getId() {
-    // Check if participant ID exists inal  locstorage
-    if (localStorage.getItem("participant_id")) {
-        participant_id = localStorage.getItem("participant_id");
-    } else {
-        // Generate a new participant ID
-        participant_id = Math.floor(Math.random() * 1000);
-        // Store the participant ID in local storage for future sessions
-        localStorage.setItem("participant_id", participant_id);
-    }
+// previous version of assigning participant ID (pythonanywhere)
 
-    console.log(`getId() completed, id: ${participant_id}`);
+function getId() {
+    // // Check if participant ID exists inal  locstorage
+    // if (localStorage.getItem("participant_id")) {
+    //     participant_id = localStorage.getItem("participant_id");
+    // } else {
+    //     // Generate a new participant ID
+    //     participant_id = Math.floor(Math.random() * 1000);
+    //     // Store the participant ID in local storage for future sessions
+    //     localStorage.setItem("participant_id", participant_id);
+    // }
+    participant_id = 900; //TODO
+    // console.log(`getId() completed, id: ${participant_id}`);
     load_page();
 }
 
@@ -229,8 +231,8 @@ function load_page() {
     //     // "Angle"
     // }`;
 
-    rand_item[0][1] = "./min/expansion.html"; //for debugging purposes
-    rand_item[0][0] = "min";
+    // rand_item[0][1] = "./max/expansion.html"; //for debugging purposes
+    // rand_item[0][0] = "max";
     
     document
         .getElementById("content")
