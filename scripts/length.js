@@ -26,6 +26,7 @@ var svg = d3
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var N = url_data["size"]; // size of the grid
+
 var dist = url_data["dist"]; // distribution of data points
 var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
 // var N = 3; // test
@@ -36,7 +37,6 @@ let participantAnswer;
 let correctAnswer;
 let error; // when error is 0, the correct answer has been selected
 let count = 0;
-let selectedRect = null; // To keep track of the selected circle
 
 drawLengthGraph(N); // Pass the N value to the function
 
@@ -68,7 +68,7 @@ function drawLengthGraph(N) {
   jCell1 = outputs[2];
   iCell2 = outputs[3];
   jCell2 = outputs[4];
-  
+
   console.log("shuffled array: " + cellHeights); //test
   
   cellHeights = arrayToMatrix(cellHeights, N); //convert the data 1D array to a matrix
@@ -165,6 +165,8 @@ function drawLengthGraph(N) {
     .attr("fill", "black");
   // }
 
+    var selectedRect = null; // To keep track of the selected circle
+
     cells.on("click", function(d, i) {
       // Check if the clicked cell is the one to be disabled (task: match)
       if ((task == "match" && i === iCell1 * N + jCell1) || task == "compare") {
@@ -205,84 +207,190 @@ function drawLengthGraph(N) {
     }
 
     
-  // Function to add an arrow to a specific cell
-  function addArrow(row, col, label) {
-    var cellSize = maxCellSize;
-    var cx = (col + 0.5) * cellSize;
-    var cy = (row + 0.5) * cellSize;
-  
-    // Define a fixed arrow length
-    var arrowLength = cellSize / 2; // Adjust this value for arrow length
-  
-    // Calculate arrow endpoints based on the center of the cell
-    var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
+    function addArrow(row, col, label, N, cellSize, svg) {
+      if (N == 3) {
+        // Calculate the middle point of the cell
+        var edgeMidX = (col + 0.5) * cellSize;
+        var edgeMidY = (row + 0.5) * cellSize;
+    
+        // Initialize arrow start and end points
+        var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
+    
+        // Case 1: Top-left corner cell
+        if (row === 0 && col === 0) {
+          arrowStartX = -cellSize / 2 ;
+          arrowStartY = -cellSize / 2 ;
+          arrowEndX = -cellSize / 4 + 17 ;
+          arrowEndY = -cellSize / 4 + 10;
+        }
+        // Case 2: Bottom-left corner cell
+        else if (row === N - 1 && col === 0) {
+          arrowStartX = -cellSize / 2 ;
+          arrowStartY = -cellSize / 2 + 4 * cellSize ;
+          arrowEndX = -cellSize / 2 + 40;
+          arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17;
+        }
+        // Case 3: Bottom-right corner cell
+        else if (row === N - 1 && col === N - 1) {
+          arrowStartX = cellSize * 3.6 ;
+          arrowStartY = -cellSize / 2 + 4 * cellSize ;
+          arrowEndX = -cellSize / 4 + 45 + 3 * cellSize;
+          arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17;
+        }
+        // Case 4: Top-right corner cell
+        else if (row === 0 && col === N - 1) {
+          arrowStartX = cellSize * 3.6 ;
+          arrowStartY = -cellSize / 2 ;
+          arrowEndX = -cellSize / 4 + 45 + 3 * cellSize;
+          arrowEndY = -cellSize / 4 + 10;
+        }
 
-    if (col === 0) {
-      arrowStartX = -cellSize / 2;
-      arrowEndX = cx - arrowLength;
-    } else if (col === N - 1) {
-      arrowStartX = totalGridWidth + cellSize / 2;
-      arrowEndX = cx + arrowLength;
-    } else {
-      arrowStartX = arrowEndX = cx;
-    }
-  
-    if (row === 0) {
-      arrowStartY = -cellSize / 2;
-      arrowEndY = cy - arrowLength ;
-    } else if (row === N - 1) {
-      arrowStartY = totalGridHeight + cellSize / 2;
-      arrowEndY = cy + arrowLength;
-    } else {
-      arrowStartY = arrowEndY = cy;
-    }
-  
-    if (task == "compare" || task == "match") {  
-      // Add an arrow line
-      svg
-        .append("line")
-        .attr("x1", arrowStartX)
-        .attr("y1", arrowStartY)
-        .attr("x2", arrowEndX)
-        .attr("y2", arrowEndY)
-        .attr("stroke", "black")
-        .attr("stroke-width", 1.5)
-        .attr("marker-end", "url(#arrowhead)");
+        // Default case: Straight arrow to the middle of the cell
+        else {
+          // Top edge
+          if (row === 0) {
+            arrowStartX = edgeMidX+10;
+            arrowStartY = -cellSize +20;
+            arrowEndX = edgeMidX+10;
+            arrowEndY = -20;
+          }
+          // Bottom edge
+          else if (row === N - 1) {
+            arrowStartX = edgeMidX +10;
+            arrowStartY = N * cellSize + cellSize -20;
+            arrowEndX = edgeMidX +10;
+            arrowEndY = N * cellSize + 20;
+          }
+          // Left edge
+          else if (col === 0) {
+            arrowStartX = -cellSize + 30;
+            arrowStartY = edgeMidY ;
+            arrowEndX = -10;
+            arrowEndY = edgeMidY ;
+          }
+          // Right edge
+          else if (col === N - 1) {
+            arrowStartX = N * cellSize + cellSize -20;
+            arrowStartY = edgeMidY;
+            arrowEndX = N * cellSize +30;
+            arrowEndY = edgeMidY;
+          }
+        }
 
-      // Determine text-anchor based on the value of row
-      const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+    
 
-      let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
-      if (col == N - 1 && (row == 0 || row == N -1)) {
-        X = (arrowStartX + arrowEndX) / 2 + 12;
-      } else if (col == 0 && (row == 0 || row == N -1)) {
-        X = (arrowStartX + arrowEndX) / 2 + 8;        
+        // Add the arrow line
+        svg.append("line")
+          .attr("x1", arrowStartX)
+          .attr("y1", arrowStartY)
+          .attr("x2", arrowEndX)
+          .attr("y2", arrowEndY)
+          .attr("stroke", "black")
+          .attr("stroke-width", 1.5)
+          .attr("marker-end", "url(#arrowhead)");
+    
+        // Add the label for the arrow
+        svg.append("text")
+          .attr("x", arrowEndX)
+          .attr("y", arrowEndY - 13) // Adjust label position relative to the arrow end
+          .attr("text-anchor", "middle")
+          .attr("fill", "black")
+          .text(label);
       }
+      else if (N == 10) {
+        // Calculate the middle point of the cell
+        var edgeMidX = (col + 0.5) * cellSize;
+        var edgeMidY = (row + 0.5) * cellSize;
+    
+        // Initialize arrow start and end points
+        var arrowStartX, arrowStartY, arrowEndX, arrowEndY;
+    
+        // Case 1: Top-left corner cell
+        if (row === 0 && col === 0) {
+          arrowStartX = -cellSize / 2 ;
+          arrowStartY = -cellSize / 2 ;
+          arrowEndX = -cellSize / 4 + 17 ;
+          arrowEndY = -cellSize / 4 + 10;
+        }
+        // Case 2: Bottom-left corner cell
+        else if (row === N - 1 && col === 0) {
+          arrowStartX = -cellSize / 2 ;
+          arrowStartY = -cellSize / 2 + 4 * cellSize + 7 * cellSize;
+          arrowEndX = -cellSize / 2 + 40;
+          arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17 + 7 * cellSize;
+        }
+        // Case 3: Bottom-right corner cell
+        else if (row === N - 1 && col === N - 1) {
+          arrowStartX = cellSize * 3.6 + 7 * cellSize;
+          arrowStartY = -cellSize / 2 + 4 * cellSize + 7 * cellSize;
+          arrowEndX = -cellSize / 4 + 45 + 3 * cellSize+ 7 * cellSize;
+          arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17+ 7 * cellSize;
+        }
+        // Case 4: Top-right corner cell
+        else if (row === 0 && col === N - 1) {
+          arrowStartX = cellSize * 3.6 + 7 * cellSize ;
+          arrowStartY = -cellSize / 2 ;
+          arrowEndX = -cellSize / 4 + 45 + 3 * cellSize + 7 * cellSize;
+          arrowEndY = -cellSize / 4 + 10;
+        }
 
-      let Y = row === 0 || row === N - 1 ? arrowEndY + 5 : (arrowStartY + arrowEndY) / 2 - 3;
-      if (col == 0 && row == N - 1 ) {
-        Y = (arrowStartY + arrowEndY) / 2 - 10;
-      } else if (col == N - 1 && row == 0) {
-        Y = (arrowStartY + arrowEndY) / 2 + 23;
+        // Default case: Straight arrow to the middle of the cell
+        else {
+          // Top edge
+          if (row === 0) {
+            arrowStartX = edgeMidX+10;
+            arrowStartY = -cellSize +20;
+            arrowEndX = edgeMidX+10;
+            arrowEndY = -20;
+          }
+          // Bottom edge
+          else if (row === N - 1) {
+            arrowStartX = edgeMidX +10;
+            arrowStartY = N * cellSize + cellSize -20;
+            arrowEndX = edgeMidX +10;
+            arrowEndY = N * cellSize + 20;
+          }
+          // Left edge
+          else if (col === 0) {
+            arrowStartX = -cellSize + 30;
+            arrowStartY = edgeMidY ;
+            arrowEndX = -10;
+            arrowEndY = edgeMidY ;
+          }
+          // Right edge
+          else if (col === N - 1) {
+            arrowStartX = N * cellSize + cellSize -20;
+            arrowStartY = edgeMidY;
+            arrowEndX = N * cellSize +30;
+            arrowEndY = edgeMidY;
+          }
+        }
+
+        // Add the arrow line
+        svg.append("line")
+          .attr("x1", arrowStartX)
+          .attr("y1", arrowStartY)
+          .attr("x2", arrowEndX)
+          .attr("y2", arrowEndY)
+          .attr("stroke", "black")
+          .attr("stroke-width", 1.5)
+          .attr("marker-end", "url(#arrowhead)");
+    
+        // Add the label for the arrow
+        svg.append("text")
+          .attr("x", arrowEndX)
+          .attr("y", arrowEndY - 13) // Adjust label position relative to the arrow end
+          .attr("text-anchor", "middle")
+          .attr("fill", "black")
+          .text(label);
       }
-      // console.log ("X: " + X, "Y: " + Y);
-
-      // Add a label
-      svg
-      .append("text")
-      .attr("x", X)
-      .attr("y", Y)
-      .attr("text-anchor", textAnchor)
-      .attr("fill", "black")
-      .text(label);
-  
     }
-  }
+
   // Create arrows for specific cells
-  addArrow(iCell1, jCell1, "A");
+  addArrow(iCell1, jCell1, "A", N, cellSize, svg);
   // addArrow(0, N - 1, "A");
   if (task == "compare") {
-    addArrow(iCell2, jCell2, "B");
+    addArrow(iCell2, jCell2, "B", N, cellSize, svg);
     // addArrow(N - 1, 0, "B");
   }
 }
@@ -310,26 +418,21 @@ btn.addEventListener("click", function() {
     // console.log("slider.value is: " + slider.value)
     participantAnswer = slider.value;
     correctAnswer = ratio_value; 
-  } else if (task != "compare" && selectedRect === null) {
-    alert("Please select an answer before proceeding.");
-    btn.disabled = false; // Enable the button to allow the participant to select an answer
-    return; // Stop further execution
-  } else {
-    if (task == "match") {
-      console.log("in the if for calculating answer for match");
-      participantAnswer = participantAnswer;
-      console.log("participant answer: " + participantAnswer);
-      correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"gen");
-      console.log("correct answer: " + correctAnswer);
-    } else if (task == "max") {
-      console.log("in the if for calculating answer for max");
-      participantAnswer = participantAnswer;
-      correctAnswer = Math.max(...cellHeights1D);
-    } else if (task == "min") {
-      console.log("in the if for calculating answer for min");
-      participantAnswer = participantAnswer;
-      correctAnswer = Math.min(...cellHeights1D);
-    }
+  } 
+  else if (task == "match") {
+    console.log("in the if for calculating answer for match");
+    participantAnswer = participantAnswer;
+    console.log("participant answer: " + participantAnswer);
+    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"gen");
+    console.log("correct answer: " + correctAnswer);
+  } else if (task == "max") {
+    console.log("in the if for calculating answer for max");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.max(...cellHeights1D);
+  } else if (task == "min") {
+    console.log("in the if for calculating answer for min");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.min(...cellHeights1D);
   }
 
   // console.log("participant's answer: " + participantAnswer);
