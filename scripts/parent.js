@@ -167,18 +167,7 @@ for (const trial of trials) {
 
 //Debugging-finish
 
-
-//TODO
 const page_to_name = {
-    // "./area.html": "Area",
-    // "./angle.html": "Angle",
-    // "./color.html": "Color",
-    // "./length.html": "Length",
-    // "./position.html": "Position",
-    // "./expansion.html": "Expansion",
-    // "./flicker.html": "Flicker",
-    // "./horizontal_motion.html": "Horizontal Motion", //changed by shae, previously "Vibration"
-    // "./vertical_motion.html": "Vertical Motion"
     "compare/area.html": "Area",
     "match/area.html": "Area",
     "max/area.html": "Area",
@@ -219,7 +208,7 @@ function load_page() {
     if (items.length == 0) {
         window.setTimeout(
         () => window.location.assign(`./end.html?id=${participant_id}`),
-        500
+        500 //the code waits for 500 milliseconds (0.5 seconds) and then redirects the user to the "end.html"
         );
     }
     var rand_item = items.splice(Math.floor(Math.random() * items.length), 1);
@@ -231,8 +220,8 @@ function load_page() {
     //     // "Angle"
     // }`;
 
-    // rand_item[0][1] = "./max/expansion.html"; //for debugging purposes
-    // rand_item[0][0] = "max";
+    rand_item[0][1] = "./compare/angle.html"; //for debugging purposes
+    rand_item[0][0] = "compare";
     
     document
         .getElementById("content")

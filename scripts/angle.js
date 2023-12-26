@@ -359,14 +359,16 @@ var btn = document.getElementById("submit");
 // Add an event listener to the submit button
 btn.addEventListener("click", function() {
   btn.disabled = true;
-  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+  // var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+  let timeSpentOnPage;
 
   //preparing participant answer before logging
   if (task == "compare") {
     // console.log("in the compare if: ");
     // console.log("slider.value is: " + slider.value)
     participantAnswer = slider.value;
-    correctAnswer = ratio_value; 
+    correctAnswer = ratio_value;
+    timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds(); 
   } 
   else if (task == "match") {
     participantAnswer = participantAnswer;
@@ -376,6 +378,7 @@ btn.addEventListener("click", function() {
       return; // Stop further execution
     }
     correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"angle");
+    timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
   } else if (task == "max") {
     participantAnswer = participantAnswer;
     if (selectedRect === null) {
@@ -384,6 +387,7 @@ btn.addEventListener("click", function() {
       return; // Stop further execution
     }
     correctAnswer = Math.max(...Values);
+    timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
   } else if (task == "min") {
     participantAnswer = participantAnswer;
     if (selectedRect === null) {
@@ -392,6 +396,7 @@ btn.addEventListener("click", function() {
       return; // Stop further execution
     }
     correctAnswer = Math.min(...Values);
+    timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
   }
 
   // console.log("participant's answer: " + participantAnswer);

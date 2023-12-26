@@ -388,13 +388,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 			initialize: function (options) {
 
-				var idleTimeoutInSeconds = TimeMe.idleTimeoutMs || 30;
+				// var idleTimeoutInSeconds = TimeMe.idleTimeoutMs || 30;
+				var idleTimeoutInSeconds = 1000;
 				var currentPageName = TimeMe.currentPageName || "default-page-name";
 				var websocketOptions = undefined;
 				var initialStartTime = undefined;
 
 				if (options) {
-					idleTimeoutInSeconds = options.idleTimeoutInSeconds || idleTimeoutInSeconds;
+					// idleTimeoutInSeconds = options.idleTimeoutInSeconds || idleTimeoutInSeconds;
+					idleTimeoutInSeconds = 1000;
 					currentPageName = options.currentPageName || currentPageName;
 					websocketOptions = options.websocketOptions;
 					initialStartTime = options.initialStartTime;
