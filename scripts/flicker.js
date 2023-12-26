@@ -1,9 +1,12 @@
-import { selectDistArray, shuffleArray, multiplyArrayElements } from "./core.js";
+import { selectDistArray, shuffleArray, multiplyArrayElements, selectCorrectMatchAnswer } from "./core.js";
 
-let speedArray;
-let count = 0;
+let speedArray = [];
+let count = 0; //SpaceKey count
+let circles;
+let box_2;
 
 //Measures without header
+//pre: 18 (with header)
 var margin = {
   top: 30,
   left: 30,
@@ -32,17 +35,16 @@ let N = url_data["size"];
 let task = url_data["task"];
 let ratio_value = url_data["ratio"];
 let dist = url_data["dist"];
-
-let circles;
-let box_2;
+let participantAnswer;
+let correctAnswer;
+let error; // when error is 0, the correct answer has been selected
+let clickCount = 0;
 
 // Array of speeds for each circle
 speedArray = selectDistArray(dist, N, ratio_value, "motion");
-console.log(speedArray);
+console.log("original array: " + speedArray);
 
 var outputs = shuffleArray(speedArray,task,ratio_value,N,dist,"motion"); //shuffling the data array based on the given task
-console.log("outputs:");
-console.log(outputs);
 
 cell1_i = outputs[1];
 cell1_j = outputs[2];
@@ -50,12 +52,10 @@ cell2_i = outputs[3];
 cell2_j = outputs[4];
 
 speedArray = outputs[0];
-console.log("after shuffling");
-console.log(speedArray);
+console.log("after shuffling: " + speedArray);
 
 speedArray = multiplyArrayElements(speedArray, 4);
-console.log("after multiplying");
-console.log(speedArray);
+console.log("after multiplying: " + speedArray);
 
 // N = 3;
 // speedArray = [10000, 5, 7.5, 12.25, 15.3, 18.66, 20.71, 25.67, 28.55];
@@ -66,7 +66,6 @@ console.log(speedArray);
 drawFlickerGraph(N, speedArray);
 
 function drawFlickerGraph(N, speedArray) {
-  console.log("DEBUG: in drawFlickerGraph function:" + speedArray);
   var circle_data_2 = [];
   var box_data_2 = [];
 
@@ -89,6 +88,7 @@ function drawFlickerGraph(N, speedArray) {
       var cx = (j + 0.5) * cellSize; // X position of circle center
       var cy = (i + 0.5) * cellSize; // Y position of circle center
 
+      let arrayValue = speedArray[i * N + j];
       var speed = (1 / speedArray[i * N + j]) * 50 * 150; // Get the speed value from the speedArray
 
       circle_data_2.push({
@@ -99,14 +99,16 @@ function drawFlickerGraph(N, speedArray) {
         flickering: true,
         color: "#008fb3",
         time: 0,
-        speed: speed // Different speed for each circle
+        speed: speed, // Different speed for each circle
+        arrayValue: arrayValue
       });
 
       box_data_2.push({
         x: j * cellSize,
         y: i * cellSize,
         h: cellSize,
-        w: cellSize
+        w: cellSize,
+        arrayValue: arrayValue
       });
     }
   }
@@ -160,7 +162,9 @@ function drawFlickerGraph(N, speedArray) {
     if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare") {
       return; // Do nothing for the disabled cell
     }
-    handleHighlight(this);
+    let correspondingRectValue = d.arrayValue;
+    console.log("clicking on the box: correspondingRectValue: " + correspondingRectValue);
+    handleHighlight(this, correspondingRectValue);
   });
 
   circles.on("click", function(d, i) {
@@ -170,10 +174,12 @@ function drawFlickerGraph(N, speedArray) {
     }
     var cellIndex = d.id ; // Adjust the index to match the box_data_2 array
     var correspondingRect = box_2.nodes()[cellIndex];
-    handleHighlight(correspondingRect);
+    let correspondingRectValue = d.arrayValue;
+    console.log("clicking on the circle: correspondingRectValue: " + correspondingRectValue);
+    handleHighlight(correspondingRect, correspondingRectValue);
   });
 
-  function handleHighlight(clickedElem) {
+  function handleHighlight(clickedElem, elemValue) {
     if (selectedRect === clickedElem) {
       // If the same cell is clicked again, unselect it
       d3.select(clickedElem).attr("stroke", "black").attr("stroke-width", 0);
@@ -187,6 +193,14 @@ function drawFlickerGraph(N, speedArray) {
       // d3.select(clickedElem).attr("stroke", "red").attr("stroke-width", 2);
       d3.select(clickedElem).attr("stroke", "#ff3232").attr("stroke-width", 4);
       selectedRect = clickedElem;
+
+      //increasing the number of participant's click so far
+      clickCount++;
+      // console.log("count: " + count);
+
+      //participant's answer (value)
+      participantAnswer = elemValue;
+      console.log("participant's answer: " + participantAnswer);
     }
   }
 
@@ -389,3 +403,87 @@ document.addEventListener('keydown', (e) => {
 //     drawFlickerGraph(N, speedArray);
 //   }
 // };
+
+if (task == "compare") {
+  var slider = document.getElementById("value2");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value;
+
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  };
+}
+
+var btn = document.getElementById("submit");
+
+// Add an event listener to the submit button
+btn.addEventListener("click", function() {
+  btn.disabled = true;
+  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+
+  //preparing participant answer before logging
+  if (task == "compare") {
+    console.log("in the if for calculating answer for compare");
+    // console.log("slider.value is: " + slider.value)
+    participantAnswer = slider.value;
+    correctAnswer = ratio_value; 
+  } 
+  else if (task == "match") {
+    console.log("in the if for calculating answer for match");
+    participantAnswer = participantAnswer;
+    console.log("participant answer: " + participantAnswer);
+    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"motion") * 4;
+    console.log("correct answer: " + correctAnswer);
+  } else if (task == "max") {
+    console.log("in the if for calculating answer for max");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.max(...speedArray);
+  } else if (task == "min") {
+    console.log("in the if for calculating answer for min");
+    participantAnswer = participantAnswer;
+    correctAnswer = Math.min(...speedArray);
+  }
+
+  // console.log("participant's answer: " + participantAnswer);
+
+  error = correctAnswer - participantAnswer;
+  postMessage(timeSpentOnPage);
+});
+
+const participantId = localStorage.getItem('participantId');
+
+function postMessage(timeSpentOnPage) {
+  // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count
+  var selectionCountValue = task === "compare" ? "N/A" : clickCount;
+
+  var dataToSend = {
+    participant_id: participantId,
+    type_of_encoding: "flicker",
+    grid_size: parseInt(N),
+    task: task,
+    distribution: dist,
+    ratio: parseFloat(ratio_value),
+    trial_number: parseInt(url_data["trial"]),
+    time_spent: timeSpentOnPage,
+    participant_answer: parseFloat(participantAnswer),
+    correct_answer: parseFloat(correctAnswer),
+    error: parseFloat(error),
+    selection_count: selectionCountValue,
+    spaceKey_count: count
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "../json.php",
+    data: JSON.stringify(dataToSend),
+    contentType: "application/json",
+    success: function(response) {
+      console.log("Data sent successfully:", response);
+      window.top.load_page();
+    },
+    error: function(error) {
+      console.error("Error sending data:", error);
+      // You may want to handle the error here, e.g., by displaying an error message to the user.
+    },
+  });
+}
