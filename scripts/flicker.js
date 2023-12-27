@@ -17,6 +17,7 @@ var margin = {
 var chartWidth = document.getElementById("chartContainer").offsetWidth - margin.left - margin.right;
 var chartHeight = document.getElementById("chartContainer").offsetHeight - margin.top - margin.bottom;
 var isAnimating = true;  // This flag will control whether the animation should run or not.
+var animationTimer; // Global variable to hold the animation timer reference
 
 var svg = d3
   .select("#chart")
@@ -355,34 +356,26 @@ function animateCircle(circle, speed) {
 }
 
 // var stopButton = document.getElementById("stop");
+var animationStopped = false;
 
-// Function to stop or resume the animation
 function toggleAnimation() {
-  console.log("DEBUG: in toggle: isAnimating: " + isAnimating);
-  isAnimating = !isAnimating;
-  if (!isAnimating) {
-    // stopButton.textContent = "Resume";
+  animationStopped = !animationStopped;
+  if (animationStopped) {
+    // Hide circles and stop the animation
+    circles.style("visibility", "hidden");
+    if (animationTimer) animationTimer.stop();
   } else {
-    // stopButton.textContent = "Stop";
-    animate(); // Resume animation
+    // Show circles and restart the animation
+    circles.style("visibility", "visible");
+    animate(); // Restart the animation
+    count++;
   }
 }
 
 document.addEventListener('keydown', (e) => {
-  console.log("in LISTENER");
-  if (e.code == "Space") {
-    toggleAnimation();
-    console.log("after toggling: isAnimating: " + isAnimating);
-    if (!isAnimating) {
-      console.log("STOP clicked!!!!");
-      // If animation is stopped, remove all circles
-      circles.remove();
-    } else {
-      console.log("resume clicked!!!!");
-      // If animation is resumed, recreate circles and start animation
-      count++;
-      drawFlickerGraph(N, speedArray);
-    }
+  if(e.code == "Space") {
+    console.log("Space pressed");
+    toggleAnimation();    
   }
 });
 

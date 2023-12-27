@@ -324,17 +324,15 @@ function drawExpansionGraph(N, speeds) {
   animate();  
 }
 
-// Function to animate the circles
+var animationTimer; // Global variable to hold the animation timer reference
+
 function animate() {
-  // console.log("in animate function");
-  var maxSpeed = Math.max(...speeds); // Find the maximum speed in the array
+  var maxSpeed = Math.max(...speeds);
   console.log("max speed: " + maxSpeed);
 
-  var circleData = circles_2.data();
-
-  var timer = d3.timer(function (elapsed) {
+  animationTimer = d3.timer(function (elapsed) {
     if (animationStopped) {
-      timer.stop(); // Stop the animation timer
+      animationTimer.stop(); // Stop the animation timer
       return;
     }
 
@@ -364,32 +362,26 @@ function animate() {
 
 // var stopButton = document.getElementById("stop");
 
-document.addEventListener('keydown', (e) => {
-  if(e.code == "Space") {
-    console.log("PRESSED");
-    
-    toggleAnimation();
-    if (animationStopped) {
-      // If animation is stopped, remove all circles
-      circles_2.remove();
-    } else {
-      // If animation is resumed, recreate circles and start animation
-      count++;
-      drawExpansionGraph(N, speeds);
-    }    
-  }
-});
-
-// Function to stop or resume the animation
 function toggleAnimation() {
   animationStopped = !animationStopped;
   if (animationStopped) {
-    // stopButton.textContent = "Resume";
+    // Hide circles and stop the animation
+    circles_2.style("visibility", "hidden");
+    if (animationTimer) animationTimer.stop();
   } else {
-    // stopButton.textContent = "Stop";
-    animate(); // Resume animation
+    // Show circles and restart the animation
+    circles_2.style("visibility", "visible");
+    animate(); // Restart the animation
+    count++;
   }
 }
+
+document.addEventListener('keydown', (e) => {
+  if(e.code == "Space") {
+    console.log("Space pressed");
+    toggleAnimation();    
+  }
+});
 
 // Handle the stop/resume button click event
 // stopButton.onclick = function () {
