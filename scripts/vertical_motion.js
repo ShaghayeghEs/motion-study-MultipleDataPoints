@@ -165,7 +165,7 @@ function drawVerticalMotionGraph(num, N, speeds) {
 
   box_2.on("click", function(d, i) {
     // Check if the clicked cell is the one to be disabled (task: match)
-    if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare") {
+    if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare" || circles.style("visibility") === "hidden") {
       return; // Do nothing for the disabled cell
     }
     let correspondingRectValue = d.speed;
@@ -175,7 +175,7 @@ function drawVerticalMotionGraph(num, N, speeds) {
     
   circles.on("click", function(d, i) {
     // Check if the clicked cell is the one to be disabled (task: match)
-    if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare") {
+    if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare" || circles.style("visibility") === "hidden") {
       return; // Do nothing for the disabled cell
     }
     var cellIndex = d.id ; // Adjust the index to match the box_data_2 array

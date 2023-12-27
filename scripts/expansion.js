@@ -175,7 +175,7 @@ function drawExpansionGraph(N, speeds) {
 
   borders.on("click", function(d, i) {
     // Check if the clicked cell is the one to be disabled (task: match)
-    if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare") {
+    if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare" || animationStopped) {
       return; // Do nothing for the disabled cell
     }
     let correspondingRectValue = d.arrayValue;
@@ -185,7 +185,7 @@ function drawExpansionGraph(N, speeds) {
     
   circles_2.on("click", function(d, i) {
     // Check if the clicked cell is the one to be disabled (task: match)
-    if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare") {
+    if ((task == "match" && i === cell1_i * N + cell1_j) || task == "compare" || animationStopped) {
       return; // Do nothing for the disabled cell
     }
     var cellIndex = d.id - 1; // Adjust the index to match the box_data_2 array
