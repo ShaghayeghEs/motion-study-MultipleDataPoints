@@ -11,9 +11,6 @@
     <link rel="stylesheet" href="./styles/simple-style.css" />
     
     <script>
-      function proceed() {
-        window.location.href = "./parent.html";
-      }
     </script>
   </head>
 
@@ -33,70 +30,66 @@
     </div>
     
     <!-- style="margin-left:40%;" -->
-    <button
-      id="submitForm"
-      class="button"
-      
-      type="button"
-      value="Submit"
-      onClick="proceed()"
-    >
+    <button id="submitForm" class="button" type="button" value="Submit">
       Accept and Continue
     </button>
 
 
     <script>
-document.getElementById("submitForm").addEventListener("click", function () {
-    fetchLastParticipantId()
-        .then(lastParticipantId => {
-            // If lastParticipantId is not a number, default to 0
-            lastParticipantId = isNaN(lastParticipantId) ? 0 : parseInt(lastParticipantId);
+    document.getElementById("submitForm").addEventListener("click", function () {
+  console.log("Submit button clicked.");
+  fetchMaxParticipantId()
+    .then(lastParticipantId => {
+      const newParticipantId = (!lastParticipantId || isNaN(lastParticipantId)) ? 1 : (parseInt(lastParticipantId) + 1).toString();
+      localStorage.setItem("participantId", newParticipantId);
+      console.log("New Participant ID set in local storage:", newParticipantId);
 
-            // Compute the new participant ID
-            const newParticipantId = lastParticipantId + 1;
-
-            // Store the new participant ID in localStorage
-            localStorage.setItem("participantId", newParticipantId.toString());
-
-            window.location.href = "parent.html";
-        })
-        .catch(error => {
-            console.error("Error fetching last participant ID:", error);
-        });
+      // Now proceed to the next page
+      window.location.href = "./parent.html";
+    })
+    .catch(error => {
+      console.error("Error fetching last participant ID:", error);
+      // Handle error, maybe show a message to the user
+    });
 });
 
-function fetchLastParticipantId() {
+
+        
+function fetchMaxParticipantId() {
     return new Promise((resolve, reject) => {
         fetch("json/log.json")
-            .then(response => response.text()) // Get the response as text
-            .then(text => {
-                // Split the text into lines and parse each line as JSON
-                const lines = text.split('\n');
-                let maxParticipantId = 0;
-
-                lines.forEach(line => {
-                    try {
-                        const entry = JSON.parse(line);
-                        if (entry && entry.participant_id) {
+            .then(response => response.text())
+            .then(data => {
+                if (!data || data.trim() === "") {
+                    resolve("0");
+                } else {
+                    const lines = data.trim().split("\n");
+                    let maxId = 0;
+                    lines.forEach(line => {
+                        try {
+                            const entry = JSON.parse(line);
                             const participantId = parseInt(entry.participant_id);
-                            if (!isNaN(participantId)) {
-                                maxParticipantId = Math.max(maxParticipantId, participantId);
+                            if (!isNaN(participantId) && participantId > maxId) {
+                                maxId = participantId;
                             }
+                        } catch (error) {
+                            // You can handle parsing errors here if needed
                         }
-                    } catch (e) {
-                        // Handle possible JSON parsing errors
-                        console.error("Error parsing line:", e);
-                    }
-                });
-
-                resolve(maxParticipantId);
+                    });
+                    resolve(maxId.toString());
+                }
             })
             .catch(error => {
-                console.error("Error fetching log.json:", error);
-                resolve(0);
+                reject(error);
             });
     });
 }
+
+
+
+
+
+
 
       </script>
 
