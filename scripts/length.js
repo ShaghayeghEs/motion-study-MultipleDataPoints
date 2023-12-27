@@ -29,7 +29,7 @@ var N = url_data["size"]; // size of the grid
 
 var dist = url_data["dist"]; // distribution of data points
 var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
-// var N = 3; // test
+// var N = 10; // test
 var task = url_data["task"]; // type of task
 let cellHeights = [];
 let cellHeights1D = [];
@@ -37,6 +37,7 @@ let participantAnswer;
 let correctAnswer;
 let error; // when error is 0, the correct answer has been selected
 let count = 0;
+let selectedRect = null; // To keep track of the selected circle
 
 drawLengthGraph(N); // Pass the N value to the function
 
@@ -68,6 +69,10 @@ function drawLengthGraph(N) {
   jCell1 = outputs[2];
   iCell2 = outputs[3];
   jCell2 = outputs[4];
+  // iCell1 = 1;
+  // jCell1 = 0;
+  // iCell2 = 0;
+  // jCell2 = 5;
 
   console.log("shuffled array: " + cellHeights); //test
   
@@ -164,8 +169,6 @@ function drawLengthGraph(N) {
     .attr("d", "M 0,0 V 6 L9,3 Z")
     .attr("fill", "black");
   // }
-
-    var selectedRect = null; // To keep track of the selected circle
 
     cells.on("click", function(d, i) {
       // Check if the clicked cell is the one to be disabled (task: match)
@@ -276,11 +279,10 @@ function drawLengthGraph(N) {
             arrowEndY = edgeMidY;
           }
         }
-
-    
-
-        // Add the arrow line
-        svg.append("line")
+        
+        if (task == "compare" || task == "match") {
+          // Add the arrow line
+          svg.append("line")
           .attr("x1", arrowStartX)
           .attr("y1", arrowStartY)
           .attr("x2", arrowEndX)
@@ -288,14 +290,42 @@ function drawLengthGraph(N) {
           .attr("stroke", "black")
           .attr("stroke-width", 1.5)
           .attr("marker-end", "url(#arrowhead)");
+
+          // Determine text-anchor based on the value of row
+          const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+
+          let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
+          if (col == N - 1 && (row == 0 || row == N -1)) {
+            X = (arrowStartX + arrowEndX) / 2 + 12;
+          } else if (col == 0 && (row == 0 || row == N -1)) {
+            X = (arrowStartX + arrowEndX) / 2 + 8;        
+          }
+
+          let Y = row === 0 || row === N - 1 ? arrowEndY + 5 : (arrowStartY + arrowEndY) / 2 - 3;
+          if (col == 0 && row == N - 1 ) {
+            Y = (arrowStartY + arrowEndY) / 2 - 10;
+          } else if (col == N - 1 && row == 0) {
+            Y = (arrowStartY + arrowEndY) / 2 + 23;
+          }
+          // console.log ("X: " + X, "Y: " + Y);
     
-        // Add the label for the arrow
-        svg.append("text")
-          .attr("x", arrowEndX)
-          .attr("y", arrowEndY - 13) // Adjust label position relative to the arrow end
-          .attr("text-anchor", "middle")
+          // Add the label for the arrow
+          // svg.append("text")
+          //   .attr("x", arrowEndX)
+          //   .attr("y", arrowEndY - 13) // Adjust label position relative to the arrow end
+          //   .attr("text-anchor", "middle")
+          //   .attr("fill", "black")
+          //   .text(label);
+
+          svg
+          .append("text")
+          .attr("x", X)
+          .attr("y", Y)
+          .attr("text-anchor", textAnchor)
           .attr("fill", "black")
           .text(label);
+
+        }
       }
       else if (N == 10) {
         // Calculate the middle point of the cell
@@ -366,8 +396,9 @@ function drawLengthGraph(N) {
           }
         }
 
-        // Add the arrow line
-        svg.append("line")
+        if (task == "compare" || task == "match") {
+          // Add the arrow line
+          svg.append("line")
           .attr("x1", arrowStartX)
           .attr("y1", arrowStartY)
           .attr("x2", arrowEndX)
@@ -375,14 +406,42 @@ function drawLengthGraph(N) {
           .attr("stroke", "black")
           .attr("stroke-width", 1.5)
           .attr("marker-end", "url(#arrowhead)");
-    
-        // Add the label for the arrow
-        svg.append("text")
-          .attr("x", arrowEndX)
-          .attr("y", arrowEndY - 13) // Adjust label position relative to the arrow end
-          .attr("text-anchor", "middle")
+
+          // Determine text-anchor based on the value of row
+          const textAnchor = row === 0 || row === N - 1 ? "end" : "middle";
+
+          let X = row === 0 || row === N - 1 ? (arrowStartX + arrowEndX) / 2 - 7 : (arrowStartX + arrowEndX) / 2;
+          if (col == N - 1 && (row == 0 || row == N -1)) {
+            X = (arrowStartX + arrowEndX) / 2 + 12;
+          } else if (col == 0 && (row == 0 || row == N -1)) {
+            X = (arrowStartX + arrowEndX) / 2 + 8;        
+          }
+
+          let Y = row === 0 || row === N - 1 ? arrowEndY + 5 : (arrowStartY + arrowEndY) / 2 - 3;
+          if (col == 0 && row == N - 1 ) {
+            Y = (arrowStartY + arrowEndY) / 2 - 10;
+          } else if (col == N - 1 && row == 0) {
+            Y = (arrowStartY + arrowEndY) / 2 + 23;
+          }
+          // console.log ("X: " + X, "Y: " + Y);
+          
+          // Add the label for the arrow
+          // svg.append("text")
+          // .attr("x", arrowEndX)
+          // .attr("y", arrowEndY - 13) // Adjust label position relative to the arrow end
+          // .attr("text-anchor", "middle")
+          // .attr("fill", "black")
+          // .text(label);
+
+          svg
+          .append("text")
+          .attr("x", X)
+          .attr("y", Y)
+          .attr("text-anchor", textAnchor)
           .attr("fill", "black")
           .text(label);
+        }
+        
       }
     }
 
@@ -417,22 +476,28 @@ btn.addEventListener("click", function() {
     // console.log("slider.value is: " + slider.value)
     participantAnswer = slider.value;
     correctAnswer = ratio_value; 
-  } 
-  else if (task == "match") {
-    console.log("in the if for calculating answer for match");
-    participantAnswer = participantAnswer;
-    console.log("participant answer: " + participantAnswer);
-    correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"gen");
-    console.log("correct answer: " + correctAnswer);
-  } else if (task == "max") {
-    console.log("in the if for calculating answer for max");
-    participantAnswer = participantAnswer;
-    correctAnswer = Math.max(...cellHeights1D);
-  } else if (task == "min") {
-    console.log("in the if for calculating answer for min");
-    participantAnswer = participantAnswer;
-    correctAnswer = Math.min(...cellHeights1D);
+  } else if (task != "compare" && selectedRect === null) {
+    alert("Please select an answer before proceeding.");
+    btn.disabled = false; // Enable the button to allow the participant to select an answer
+    return; // Stop further execution
+  } else {
+    if (task == "match") {
+      console.log("in the if for calculating answer for match");
+      participantAnswer = participantAnswer;
+      console.log("participant answer: " + participantAnswer);
+      correctAnswer = selectCorrectMatchAnswer(dist, N, ratio_value,"gen");
+      console.log("correct answer: " + correctAnswer);
+    } else if (task == "max") {
+      console.log("in the if for calculating answer for max");
+      participantAnswer = participantAnswer;
+      correctAnswer = Math.max(...cellHeights1D);
+    } else if (task == "min") {
+      console.log("in the if for calculating answer for min");
+      participantAnswer = participantAnswer;
+      correctAnswer = Math.min(...cellHeights1D);
+    }
   }
+  
 
   // console.log("participant's answer: " + participantAnswer);
 
