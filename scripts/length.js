@@ -410,7 +410,6 @@ var btn = document.getElementById("submit");
 // Add an event listener to the submit button
 btn.addEventListener("click", function() {
   btn.disabled = true;
-  var timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
 
   //preparing participant answer before logging
   if (task == "compare") {
@@ -438,6 +437,7 @@ btn.addEventListener("click", function() {
   // console.log("participant's answer: " + participantAnswer);
 
   error = correctAnswer - participantAnswer;
+  let timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
   postMessage(timeSpentOnPage);
 });
 

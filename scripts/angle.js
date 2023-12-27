@@ -406,9 +406,11 @@ btn.addEventListener("click", function() {
   postMessage(timeSpentOnPage);
 });
 
-const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
+
+  const participantId = localStorage.getItem('participantId');
+
   var selectionCountValue = task === "compare" ? "N/A" : count;
   
   var dataToSend = {
