@@ -84,6 +84,10 @@ function drawFlickerGraph(N, speedArray) {
   var translateY = (chartHeight - totalGridHeight) / 2;
   svg.attr("transform", "translate(" + translateX + "," + translateY + ")");
 
+  circle_data_2.forEach(circle => {
+    circle.timeout = null;  // Initialize with null
+  });
+  
   // Generate data for each cell in the grid
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
@@ -335,7 +339,11 @@ function animate() {
 
 function animateCircle(circle, speed) {
   if (!isAnimating) return;  // If animation should not run, simply return
-
+// Clear the existing timeout if any
+var currentData = circle.datum();
+if (currentData.timeout) {
+    clearTimeout(currentData.timeout);
+}
   var flickering = circle.datum().flickering;
 
   if (flickering) {
@@ -348,11 +356,10 @@ function animateCircle(circle, speed) {
     circle.datum().flickering = true;
   }
 
-  // Recursive call after a delay based on the speed of the circle
-  setTimeout(function() {
+  // Set a new timeout and store its reference
+  currentData.timeout = setTimeout(function() {
     animateCircle(circle, speed);
-  }, speed);
-
+}, speed);
 }
 
 // var stopButton = document.getElementById("stop");
@@ -361,14 +368,21 @@ var animationStopped = false;
 function toggleAnimation() {
   animationStopped = !animationStopped;
   if (animationStopped) {
-    // Hide circles and stop the animation
-    circles.style("visibility", "hidden");
-    if (animationTimer) animationTimer.stop();
+      // Stop the animation and clear all timeouts
+      circles.each(function() {
+          var circle = d3.select(this);
+          var currentData = circle.datum();
+          if (currentData.timeout) {
+              clearTimeout(currentData.timeout);
+          }
+      });
+      circles.style("visibility", "hidden");
+      if (animationTimer) animationTimer.stop();
   } else {
-    // Show circles and restart the animation
-    circles.style("visibility", "visible");
-    animate(); // Restart the animation
-    count++;
+      // Restart the animation
+      circles.style("visibility", "visible");
+      animate(); // Restart the animation
+      count++;
   }
 }
 
