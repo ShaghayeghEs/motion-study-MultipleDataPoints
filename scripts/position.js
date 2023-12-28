@@ -135,7 +135,7 @@ function drawPositionGraph(N) {
     .attr("fill", "black");
     
   // Function to add an arrow to a specific cell
-  function addArrow(row, col, label) {
+  function addArrow(row, col, label, N, cellSize, svg) {
     if (N == 3) {
       // Calculate the middle point of the cell
       var edgeMidX = (col + 0.5) * cellSize;
@@ -441,10 +441,10 @@ function drawPositionGraph(N) {
   }
 
   // Add arrows to cells
-  addArrow(iCell1, jCell1, "A");
+  addArrow(iCell1, jCell1, "A", N, cellSize, svg);
   // addArrow(0, N - 1, "A");
   if (task == "compare") {
-    addArrow(iCell2, jCell2, "B");
+    addArrow(iCell2, jCell2, "B", N, cellSize, svg);
     // addArrow(N - 1, 0, "B");
   }
 }
