@@ -42,6 +42,7 @@ var N = url_data["size"];
 var task = url_data["task"];
 var ratio_value = url_data["ratio"];
 var dist = url_data["dist"];
+let participantId = url_data["id"];
 let participantAnswer;
 let correctAnswer;
 let error; // when error is 0, the correct answer has been selected
@@ -420,7 +421,7 @@ btn.addEventListener("click", function() {
   postMessage(timeSpentOnPage);
 });
 
-const participantId = localStorage.getItem('participantId');
+// const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
   // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count

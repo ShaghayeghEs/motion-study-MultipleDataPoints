@@ -9,9 +9,10 @@
     <!-- CSS -->
     <link rel="stylesheet" href="./styles/dropdown.css" />
     <link rel="stylesheet" href="./styles/simple-style.css" />
-    
-    <script>
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- <script>
+    </script> -->
   </head>
 
   <body>
@@ -34,64 +35,94 @@
       Accept and Continue
     </button>
 
-
     <script>
-    document.getElementById("submitForm").addEventListener("click", function () {
-  console.log("Submit button clicked.");
-  fetchMaxParticipantId()
-    .then(lastParticipantId => {
-      const newParticipantId = (!lastParticipantId || isNaN(lastParticipantId)) ? 1 : (parseInt(lastParticipantId) + 1).toString();
-      localStorage.setItem("participantId", newParticipantId);
-      console.log("New Participant ID set in local storage:", newParticipantId);
+      // Function to generate a unique participant ID
+      // function generateParticipantID() {
+      //   const timestamp = new Date().getTime(); // Get current timestamp
+      //   const randomNum = Math.floor(Math.random() * 10000); // Generate a random number
+      //   console.log("DEBUG: Generated participant ID: " + `participant_${timestamp}_${randomNum}`);
+      //   return `participant_${timestamp}_${randomNum}`;
+      // }
+      
+      document.getElementById("submitForm").addEventListener("click", function () {
+        console.log("Submit button clicked.");
 
-      // Now proceed to the next page
-      window.location.href = "./parent.html";
-    })
-    .catch(error => {
-      console.error("Error fetching last participant ID:", error);
-      // Handle error, maybe show a message to the user
-    });
-});
+        // Generate a unique participant ID
+        // const participantID = generateParticipantID();
 
+        // Now proceed to the next page with the participant ID as a query parameter
+        // window.location.href = `./parent.html?id=${participantID}`;
+        window.location.href = `./parent.html`;
+      });
 
-        
-function fetchMaxParticipantId() {
-    return new Promise((resolve, reject) => {
-        fetch("json/log.json")
-            .then(response => response.text())
-            .then(data => {
-                if (!data || data.trim() === "") {
-                    resolve("0");
-                } else {
-                    const lines = data.trim().split("\n");
-                    let maxId = 0;
-                    lines.forEach(line => {
-                        try {
-                            const entry = JSON.parse(line);
-                            const participantId = parseInt(entry.participant_id);
-                            if (!isNaN(participantId) && participantId > maxId) {
-                                maxId = participantId;
-                            }
-                        } catch (error) {
-                            // You can handle parsing errors here if needed
-                        }
-                    });
-                    resolve(maxId.toString());
-                }
-            })
-            .catch(error => {
-                reject(error);
-            });
-    });
-}
+      //version using server and data in json
+      // document.getElementById("submitForm").addEventListener("click", function () {
+      //   console.log("Submit button clicked.");
+      //   fetchMaxParticipantId()
+      //     .then(lastParticipantId => {
+      //       const newParticipantId = (!lastParticipantId || isNaN(lastParticipantId)) ? 1 : (parseInt(lastParticipantId) + 1).toString();
+      //       localStorage.setItem("participantId", newParticipantId);
+      //       const participantId = localStorage.getItem('participantId');
 
+      //       const dataToSend = {
+      //       participant_id: participantId,
+      //       };
 
+      //       $.ajax({
+      //         type: "POST",
+      //         url: "json.php",
+      //         data: JSON.stringify(dataToSend),
+      //         contentType: "application/json",
+      //         success: function(response) {
+      //           console.log("Data sent successfully:", response);
+      //           window.top.load_page();
+      //         },
+      //         error: function(error) {
+      //           console.error("Error sending data:", error);
+      //         },
+      //       });
 
+      //       console.log("New Participant ID set in local storage:", newParticipantId);
 
-
-
-
-      </script>
-
+      //       // Now proceed to the next page
+      //       window.location.href = "./parent.html";
+      //       postMessage();
+      //     })
+      //     .catch(error => {
+      //       console.error("Error fetching last participant ID:", error);
+      //       // Handle error, maybe show a message to the user
+      //     });
+      // });
+  
+      // function fetchMaxParticipantId() {
+      //   return new Promise((resolve, reject) => {
+      //     fetch("json/log.json")
+      //     .then(response => response.text())
+      //     .then(data => {
+      //       if (!data || data.trim() === "") {
+      //           resolve("0");
+      //       } else {
+      //           const lines = data.trim().split("\n");
+      //           let maxId = 0;
+      //           lines.forEach(line => {
+      //               try {
+      //                   const entry = JSON.parse(line);
+      //                   const participantId = parseInt(entry.participant_id);
+      //                   if (!isNaN(participantId) && participantId > maxId) {
+      //                       maxId = participantId;
+      //                   }
+      //               } catch (error) {
+      //                   // You can handle parsing errors here if needed
+      //               }
+      //           });
+      //           resolve(maxId.toString());
+      //       }
+      //     })
+      //     .catch(error => {
+      //         reject(error);
+      //     });
+      //   });
+      // }
+    </script>
   </body>
 </html>

@@ -1,6 +1,12 @@
 // previous version of assigning participant ID (pythonanywhere)
+let participant_id;
 
 function getId() {
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const randomNum = Math.floor(Math.random() * 10000); // Generate a random number
+    participant_id =  `participant_${timestamp}_${randomNum}`;
+    console.log("DEBUG: Generated participant ID: " + participant_id);
+    
     // // Check if participant ID exists inal  locstorage
     // if (localStorage.getItem("participant_id")) {
     //     participant_id = localStorage.getItem("participant_id");
@@ -10,11 +16,10 @@ function getId() {
     //     // Store the participant ID in local storage for future sessions
     //     localStorage.setItem("participant_id", participant_id);
     // }
-    participant_id = 900; //TODO
+    //participant_id = 900; //TODO
     // console.log(`getId() completed, id: ${participant_id}`);
     load_page();
 }
-
 
 const dists = ["uniform", "left-skewed", "right-skewed"]; //data distributions //TBD: normal distribution might be added
 // var tasks = ["compare", "max", "min"];   //TBD: "match" might be added
@@ -214,14 +219,15 @@ function load_page() {
     var rand_item = items.splice(Math.floor(Math.random() * items.length), 1);
     // console.log(rand_item); //debugging
     console.log(rand_item[0][1], items.length);  //commented by Shae
+    console.log("DEBUG: double checking participant ID: " + participant_id);
 
     // document.getElementById("head").innerHTML = `${
     //     page_to_name[rand_item[0][1]] //changed by Shae
     //     // "Angle"
     // }`;
 
-    rand_item[0][1] = "./compare/angle.html"; //for debugging purposes
-    rand_item[0][0] = "compare";
+    // rand_item[0][1] = "./match/flicker.html"; //for debugging purposes
+    // rand_item[0][0] = "match";
     
     document
         .getElementById("content")

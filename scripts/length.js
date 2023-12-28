@@ -26,11 +26,11 @@ var svg = d3
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var N = url_data["size"]; // size of the grid
-
 var dist = url_data["dist"]; // distribution of data points
 var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
 // var N = 10; // test
 var task = url_data["task"]; // type of task
+let participantId = url_data["id"];
 let cellHeights = [];
 let cellHeights1D = [];
 let participantAnswer;
@@ -506,7 +506,7 @@ btn.addEventListener("click", function() {
   postMessage(timeSpentOnPage);
 });
 
-const participantId = localStorage.getItem('participantId');
+// const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
   // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count

@@ -34,6 +34,7 @@ let ratio_value = url_data["ratio"];
 // let ratio_value = 1.5;
 let dist = url_data["dist"];
 // let dist = "uniform";
+let participantId = url_data["id"];
 // var speeds = [50, 25, 1]; // Define the speeds array (you can adjust these values)
 let speeds = [];
 let participantAnswer;
@@ -593,7 +594,7 @@ btn.addEventListener("click", function() {
   postMessage(timeSpentOnPage);
 });
 
-const participantId = localStorage.getItem('participantId');
+// const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
   // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count

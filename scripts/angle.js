@@ -29,6 +29,7 @@ var N = url_data["size"];
 var task = url_data["task"];
 var ratio_value = url_data["ratio"];
 var dist = url_data["dist"];
+let participantId = url_data["id"];
 let Values = [];
 let participantAnswer;
 let correctAnswer;
@@ -409,7 +410,7 @@ btn.addEventListener("click", function() {
 
 function postMessage(timeSpentOnPage) {
 
-  const participantId = localStorage.getItem('participantId');
+  // const participantId = localStorage.getItem('participantId');
 
   var selectionCountValue = task === "compare" ? "N/A" : count;
   

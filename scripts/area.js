@@ -33,6 +33,7 @@ const task = url_data["task"];
 const ratio_value = url_data["ratio"];
 // const dist = "left-skewed";
 const dist = url_data["dist"];
+let participantId = url_data["id"];
 let Values = [];
 let participantAnswer;
 let correctAnswer;
@@ -368,7 +369,7 @@ btn.addEventListener("click", function() {
   postMessage(timeSpentOnPage);
 });
 
-const participantId = localStorage.getItem('participantId');
+// const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
   // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count

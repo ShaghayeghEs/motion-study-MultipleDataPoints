@@ -33,6 +33,7 @@ const task = url_data["task"]; // type of task
 const ratio_value = url_data["ratio"]; // ratio for compare task, value for max/min
 // const dist = "right-skewed";
 const dist = url_data["dist"]; // distribution of data points
+let participantId = url_data["id"];
 let xPositions = [];
 let xPositions1D = [];
 let participantAnswer;
@@ -500,7 +501,7 @@ btn.addEventListener("click", function() {
   postMessage(timeSpentOnPage);
 });
 
-const participantId = localStorage.getItem('participantId');
+// const participantId = localStorage.getItem('participantId');
 
 function postMessage(timeSpentOnPage) {
   // Initialize selection_count with "N/A" if the task is "compare", otherwise use the value of count
