@@ -136,29 +136,29 @@ function drawColorGraph(N) {
       if (row === 0 && col === 0) {
         arrowStartX = -cellSize / 2 ;
         arrowStartY = -cellSize / 2 ;
-        arrowEndX = -cellSize / 4 + 17 ;
+        arrowEndX = -cellSize / 4 + 11 ;
         arrowEndY = -cellSize / 4 + 10;
       }
       // Case 2: Bottom-left corner cell
       else if (row === N - 1 && col === 0) {
         arrowStartX = -cellSize / 2 ;
         arrowStartY = -cellSize / 2 + 4 * cellSize ;
-        arrowEndX = -cellSize / 2 + 40;
-        arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17;
+        arrowEndX = -cellSize / 2 + 32;
+        arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 15;
       }
       // Case 3: Bottom-right corner cell
       else if (row === N - 1 && col === N - 1) {
         arrowStartX = cellSize * 3.6 ;
         arrowStartY = -cellSize / 2 + 4 * cellSize ;
-        arrowEndX = -cellSize / 4 + 45 + 3 * cellSize;
-        arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17;
+        arrowEndX = -cellSize / 4 + 45 + 3 * cellSize - 12;
+        arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 14;
       }
       // Case 4: Top-right corner cell
       else if (row === 0 && col === N - 1) {
         arrowStartX = cellSize * 3.6 ;
         arrowStartY = -cellSize / 2 ;
-        arrowEndX = -cellSize / 4 + 45 + 3 * cellSize;
-        arrowEndY = -cellSize / 4 + 10;
+        arrowEndX = -cellSize / 4 + 45 + 3 * cellSize - 12;
+        arrowEndY = -cellSize / 4 + 12;
       }
 
       // Default case: Straight arrow to the middle of the cell
@@ -168,27 +168,27 @@ function drawColorGraph(N) {
           arrowStartX = edgeMidX+10;
           arrowStartY = -cellSize +20;
           arrowEndX = edgeMidX+10;
-          arrowEndY = -20;
+          arrowEndY = -15;
         }
         // Bottom edge
         else if (row === N - 1) {
           arrowStartX = edgeMidX +10;
-          arrowStartY = N * cellSize + cellSize -20;
+          arrowStartY = N * cellSize + cellSize -40;
           arrowEndX = edgeMidX +10;
-          arrowEndY = N * cellSize + 20;
+          arrowEndY = N * cellSize + 14;
         }
         // Left edge
         else if (col === 0) {
           arrowStartX = -cellSize + 30;
           arrowStartY = edgeMidY ;
-          arrowEndX = -5;
+          arrowEndX = -13;
           arrowEndY = edgeMidY ;
         }
         // Right edge
         else if (col === N - 1) {
-          arrowStartX = N * cellSize + cellSize -20;
+          arrowStartX = N * cellSize + cellSize -30;
           arrowStartY = edgeMidY;
-          arrowEndX = N * cellSize +30;
+          arrowEndX = N * cellSize +15;
           arrowEndY = edgeMidY;
         }
       }
@@ -252,29 +252,29 @@ function drawColorGraph(N) {
       if (row === 0 && col === 0) {
         arrowStartX = -cellSize / 2 ;
         arrowStartY = -cellSize / 2 ;
-        arrowEndX = -cellSize / 4 + 17 ;
-        arrowEndY = -cellSize / 4 + 10;
+        arrowEndX = -cellSize / 4 + 11 ;
+        arrowEndY = -cellSize / 4 + 11;
       }
       // Case 2: Bottom-left corner cell
       else if (row === N - 1 && col === 0) {
         arrowStartX = -cellSize / 2 ;
         arrowStartY = -cellSize / 2 + 4 * cellSize + 7 * cellSize;
-        arrowEndX = -cellSize / 2 + 40;
-        arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17 + 7 * cellSize;
+        arrowEndX = -cellSize / 2 + 32;
+        arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17 + 7 * cellSize - 2;
       }
       // Case 3: Bottom-right corner cell
       else if (row === N - 1 && col === N - 1) {
-        arrowStartX = cellSize * 3.6 + 7 * cellSize;
+        arrowStartX = cellSize * 3.6 + 7 * cellSize-12;
         arrowStartY = -cellSize / 2 + 4 * cellSize + 7 * cellSize;
-        arrowEndX = -cellSize / 4 + 45 + 3 * cellSize+ 7 * cellSize;
-        arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17+ 7 * cellSize;
+        arrowEndX = -cellSize / 4 + 45 + 3 * cellSize+ 7 * cellSize - 13;
+        arrowEndY = -cellSize/ 2 + 3.45 * cellSize + 17+ 7 * cellSize -2;
       }
       // Case 4: Top-right corner cell
       else if (row === 0 && col === N - 1) {
         arrowStartX = cellSize * 3.6 + 7 * cellSize ;
         arrowStartY = -cellSize / 2 ;
-        arrowEndX = -cellSize / 4 + 45 + 3 * cellSize + 7 * cellSize;
-        arrowEndY = -cellSize / 4 + 10;
+        arrowEndX = -cellSize / 4 + 45 + 3 * cellSize + 7 * cellSize - 13;
+        arrowEndY = -cellSize / 4 + 12;
       }
 
       // Default case: Straight arrow to the middle of the cell
@@ -284,27 +284,27 @@ function drawColorGraph(N) {
           arrowStartX = edgeMidX+10;
           arrowStartY = -cellSize +20;
           arrowEndX = edgeMidX+10;
-          arrowEndY = -20;
+          arrowEndY = -15;
         }
         // Bottom edge
         else if (row === N - 1) {
           arrowStartX = edgeMidX +10;
           arrowStartY = N * cellSize + cellSize -20;
           arrowEndX = edgeMidX +10;
-          arrowEndY = N * cellSize + 20;
+          arrowEndY = N * cellSize + 15;
         }
         // Left edge
         else if (col === 0) {
           arrowStartX = -cellSize + 30;
           arrowStartY = edgeMidY ;
-          arrowEndX = -10;
+          arrowEndX = -16;
           arrowEndY = edgeMidY ;
         }
         // Right edge
         else if (col === N - 1) {
           arrowStartX = N * cellSize + cellSize -20;
           arrowStartY = edgeMidY;
-          arrowEndX = N * cellSize +30;
+          arrowEndX = N * cellSize +15;
           arrowEndY = edgeMidY;
         }
       }
@@ -520,6 +520,7 @@ function drawColorGraph(N) {
 
   // Add arrows to cells
   addArrow(cell1_i, cell1_j, "A", N, cellSize, svg);
+  // addArrow(2, N-1, "A", N, cellSize, svg);
   // addArrow(0, N - 1, "A");
   if (task == "compare") {
     addArrow(cell2_i, cell2_j, "B", N, cellSize, svg);

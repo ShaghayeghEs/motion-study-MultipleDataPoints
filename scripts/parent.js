@@ -193,7 +193,7 @@ const page_to_name = {
     "min/vertical_motion.html": "Vertical Motion"
 };
 
-const maxPagesBeforeBreak = 3; //90 for 648 items //TOOD: needs to be changed based on the final number of conditions
+const maxPagesBeforeBreak = 10; //90 for 648 items //TOOD: needs to be changed based on the final number of conditions
 let pageCounter = 0;
 let visualBreakCount = 0;
 
@@ -234,8 +234,9 @@ function load_page() {
         //     // "Angle"
         // }`;
     
-        // rand_item[0][1] = "./match/expansion.html"; //for debugging purposes
-        // rand_item[0][0] = "match";
+        // rand_item[0][1] = "./compare/color.html";  //for debugging purposes
+        // rand_item[0][0] = "compare";                  //for debugging purposes
+        // rand_item[0][3] = 10;                          //for debugging purposes
         
         document
             .getElementById("content")
