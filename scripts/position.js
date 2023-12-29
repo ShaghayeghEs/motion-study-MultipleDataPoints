@@ -523,18 +523,22 @@ function postMessage(timeSpentOnPage) {
     spaceKey_count: "N/A"
   };
 
-  $.ajax({
-    type: "POST",
-    url: "../json.php",
-    data: JSON.stringify(dataToSend),
-    contentType: "application/json",
-    success: function(response) {
-      console.log("Data sent successfully:", response);
-      window.top.load_page();
-    },
-    error: function(error) {
-      console.error("Error sending data:", error);
-      // You may want to handle the error here, e.g., by displaying an error message to the user.
-    },
-  });
+  if(participantId != 0) {
+    $.ajax({
+      type: "POST",
+      url: "../json.php",
+      data: JSON.stringify(dataToSend),
+      contentType: "application/json",
+      success: function(response) {
+        console.log("Data sent successfully:", response);
+        window.top.load_page();
+      },
+      error: function(error) {
+        console.error("Error sending data:", error);
+        // You may want to handle the error here, e.g., by displaying an error message to the user.
+      },
+    });
+  } else {
+    window.location.href = `./practice_compare_vertical_motion.html`;
+  }
 }

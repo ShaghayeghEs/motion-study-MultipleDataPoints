@@ -636,17 +636,22 @@ function postMessage(timeSpentOnPage) {
     selection_count: selectionCountValue,
     spaceKey_count: "N/A"
   };
-  $.ajax({
-    type: "POST",
-    url: "../json.php",
-    data: JSON.stringify(dataToSend),
-    contentType: "application/json",
-    success: function(response) {
-      console.log("Data sent successfully:", response);
-      window.top.load_page();
-    },
-    error: function(error) {
-      console.error("Error sending data:", error);
-    },
-  });
+
+  if(participantId != 0) {
+    $.ajax({
+      type: "POST",
+      url: "../json.php",
+      data: JSON.stringify(dataToSend),
+      contentType: "application/json",
+      success: function(response) {
+        console.log("Data sent successfully:", response);
+        window.top.load_page();
+      },
+      error: function(error) {
+        console.error("Error sending data:", error);
+      },
+    });
+  } else {
+    window.location.href = `./practice_match_position.html`;
+  }
 }

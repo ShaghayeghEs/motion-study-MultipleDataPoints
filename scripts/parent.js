@@ -9,11 +9,9 @@ function getId() {
     load_page();
 }
 
-const dists = ["uniform", "left-skewed", "right-skewed"]; //data distributions //TBD: normal distribution might be added
-// var tasks = ["compare", "max", "min"];   //TBD: "match" might be added
+const dists = ["uniform", "left-skewed", "right-skewed"]; //data distributions
 const tasks = ["compare", "match", "max", "min"];
 const ratios = [1.5, 2, 2.5, 3, 3.5, 4];
-// const values = [1.5, 2, 2.5, 3, 3.5, 4];   //TODO: mix and min values
 const sizes = [3, 10]; //grid size
 const trials = [1, 2];
 const pages_compare = [

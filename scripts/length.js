@@ -31,6 +31,12 @@ var ratio_value = url_data["ratio"]; // ratio for compare task, value for max/mi
 // var N = 10; // test
 var task = url_data["task"]; // type of task
 let participantId = url_data["id"];
+console.log("N: " + N);
+console.log("dist: " + dist);
+console.log("ratio_value: " + ratio_value);
+console.log("task: " + task);
+console.log("participantId: " + participantId);
+
 let cellHeights = [];
 let cellHeights1D = [];
 let participantAnswer;
@@ -528,18 +534,22 @@ function postMessage(timeSpentOnPage) {
     spaceKey_count: "N/A"
   };
 
-  $.ajax({
-    type: "POST",
-    url: "../json.php",
-    data: JSON.stringify(dataToSend),
-    contentType: "application/json",
-    success: function(response) {
-      console.log("Data sent successfully:", response);
-      window.top.load_page();
-    },
-    error: function(error) {
-      console.error("Error sending data:", error);
-      // You may want to handle the error here, e.g., by displaying an error message to the user.
-    },
-  });
+  if(participantId != 0) {
+    $.ajax({
+      type: "POST",
+      url: "../json.php",
+      data: JSON.stringify(dataToSend),
+      contentType: "application/json",
+      success: function(response) {
+        console.log("Data sent successfully:", response);
+        window.top.load_page();
+      },
+      error: function(error) {
+        console.error("Error sending data:", error);
+        // You may want to handle the error here, e.g., by displaying an error message to the user.
+      },
+    });
+  } else {
+    window.location.href = `./practice_search(max)_color.html`;
+  }
 }

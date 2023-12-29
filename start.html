@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Start Study</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" href="styles/dropdown.css" />
+    <link rel="stylesheet" href="styles/simple-style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="libraries/d3.js"></script>
+    <script src="libraries/jquery-3.2.1.min.js"></script>
+    <script src="libraries/timeme.js"></script>
+    <style>
+        /* Custom CSS for styling */
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+        }
+        
+        #startStudy {
+          font-size: 30px;
+          font-weight: bold;
+          font-family: "Gill Sans", sans-serif; /* Replace with your preferred font family */
+          color: #000000; /* Adjust the color as needed */
+          margin-top: 10px;
+          margin-bottom: 10px;
+          text-align: center;
+        }
+    </style>
+  </head>
+
+  <body>
+    <section id="startStudy">
+        <!-- <h1>Welcome to the Study</h1> -->
+        <p>Click the button below to start the study.</p>
+        <!-- <button id="startButton" onclick="startStudy()">Start</button> -->
+        <button class="button" id="submit" onclick="startStudy()" style="font-size: 25px;">Start</button>
+    </section>
+
+    <script>
+        function startStudy() {
+            // Redirect to the study page
+            window.location.href = `./parent.html`; // Replace with the actual study page URL
+        }
+    </script>
+  </body>
+</html>
