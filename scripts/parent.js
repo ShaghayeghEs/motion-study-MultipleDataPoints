@@ -1,4 +1,3 @@
-// previous version of assigning participant ID (pythonanywhere)
 let participant_id;
 
 function getId() {
@@ -6,18 +5,7 @@ function getId() {
     const randomNum = Math.floor(Math.random() * 10000); // Generate a random number
     participant_id =  `participant_${timestamp}_${randomNum}`;
     console.log("DEBUG: Generated participant ID: " + participant_id);
-    
-    // // Check if participant ID exists inal  locstorage
-    // if (localStorage.getItem("participant_id")) {
-    //     participant_id = localStorage.getItem("participant_id");
-    // } else {
-    //     // Generate a new participant ID
-    //     participant_id = Math.floor(Math.random() * 1000);
-    //     // Store the participant ID in local storage for future sessions
-    //     localStorage.setItem("participant_id", participant_id);
-    // }
-    //participant_id = 900; //TODO
-    // console.log(`getId() completed, id: ${participant_id}`);
+
     load_page();
 }
 
@@ -143,7 +131,6 @@ for (const trial of trials) {
                 }
             }
         }
-    // }
 }
 
 //Debugging-start
@@ -208,31 +195,61 @@ const page_to_name = {
     "min/vertical_motion.html": "Vertical Motion"
 };
 
+const maxPagesBeforeBreak = 3; //90 for 648 items //TOOD: needs to be changed based on the final number of conditions
+let pageCounter = 0;
+let visualBreakCount = 0;
+
 function load_page() {
+    // console.log("In the LOAD PAGE function");
+    // console.log("page counter: " + pageCounter);
+    // console.log("visual break count: " + visualBreakCount);
     // console.log(`parent domain: ${document.domain}`); //Commented by Shae
-    if (items.length == 0) {
-        window.setTimeout(
-        () => window.location.assign(`./end.html?id=${participant_id}`),
-        500 //the code waits for 500 milliseconds (0.5 seconds) and then redirects the user to the "end.html"
-        );
-    }
-    var rand_item = items.splice(Math.floor(Math.random() * items.length), 1);
-    // console.log(rand_item); //debugging
-    console.log(rand_item[0][1], items.length);  //commented by Shae
-    console.log("DEBUG: double checking participant ID: " + participant_id);
+    if (pageCounter % maxPagesBeforeBreak === 0 && pageCounter > 0 && visualBreakCount > 0) {
+        visualBreakCount = 0;
 
-    // document.getElementById("head").innerHTML = `${
-    //     page_to_name[rand_item[0][1]] //changed by Shae
-    //     // "Angle"
-    // }`;
-
-    // rand_item[0][1] = "./match/flicker.html"; //for debugging purposes
-    // rand_item[0][0] = "match";
+        // Display visual break page
+        document
+            .getElementById("content")
+            .setAttribute(
+            "src",
+            `./break/break.html`
+            );
+    } else {
+        if (items.length == 0) {
+            window.setTimeout(
+            () => window.location.assign(`../end.html?id=${participant_id}`),
+            500 //the code waits for 500 milliseconds (0.5 seconds) and then redirects the user to the "end.html"
+            );
+        }
+        // console.log("original items: " + items + " its length: " + items.length);
+        console.log("items length before splice: " + items.length);
+        // console.log("random number is: " + Math.floor(Math.random() * items.length));
+        var rand_item = items.splice(Math.floor(Math.random() * items.length), 1);
+        // console.log("after splice items length: " + items.length);
+        // console.log("rand item is: " + rand_item);
+        // console.log("the changed items array is: " + items);
+        console.log(rand_item[0][1], items.length); //the remaining number of conditions
+        // console.log("DEBUG: double checking participant ID: " + participant_id);
     
-    document
-        .getElementById("content")
-        .setAttribute(
-        "src",
-        `${rand_item[0][1]}?task=${rand_item[0][0]}&dist=${rand_item[0][2]}&size=${rand_item[0][3]}&ratio=${rand_item[0][4]}&trial=${rand_item[0][5]}&id=${participant_id}`
-        );
+        // document.getElementById("head").innerHTML = `${
+        //     page_to_name[rand_item[0][1]] //changed by Shae
+        //     // "Angle"
+        // }`;
+    
+        // rand_item[0][1] = "./match/expansion.html"; //for debugging purposes
+        // rand_item[0][0] = "match";
+        
+        document
+            .getElementById("content")
+            .setAttribute(
+            "src",
+            `${rand_item[0][1]}?task=${rand_item[0][0]}&dist=${rand_item[0][2]}&size=${rand_item[0][3]}&ratio=${rand_item[0][4]}&trial=${rand_item[0][5]}&id=${participant_id}`
+            );
+
+        pageCounter++;
+        if (pageCounter % maxPagesBeforeBreak === 0) {
+            // Increment visual break count after every visual break
+            visualBreakCount++;
+        }
+    }
 }

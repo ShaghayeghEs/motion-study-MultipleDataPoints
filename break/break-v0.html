@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Break</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f8f8;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    #techniques {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #techniques li {
+      margin: 10px 0;
+      font-size: 18px;
+      color: #555;
+    }
+
+    #techniques li::before {
+      content: '\2022'; /* Bullet point character */
+      color: #00bcd4; /* Teal color */
+      font-size: 24px;
+      display: inline-block;
+      width: 1em;
+      margin-left: -1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Take a break and rest your eyes!</h1>
+  <p>Some Eye Rest Techniques:</p>
+  <ul id="techniques">
+    <li>Look away from the screen</li>
+    <li>Close your eyes</li>
+    <li>Focus on a distant object</li>
+    <li>Do light stretches</li>
+  </ul>
+</body>
+</html>
