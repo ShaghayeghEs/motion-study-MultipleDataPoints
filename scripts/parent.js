@@ -215,7 +215,7 @@ function load_page() {
     } else {
         if (items.length == 0) {
             window.setTimeout(
-            () => window.location.assign(`../end.html?id=${participant_id}`),
+            () => window.location.assign(`./end.html?id=${participant_id}`),
             500 //the code waits for 500 milliseconds (0.5 seconds) and then redirects the user to the "end.html"
             );
         }
