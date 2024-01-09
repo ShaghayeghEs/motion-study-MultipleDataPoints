@@ -387,12 +387,28 @@ function toggleAnimation() {
   }
 }
 
-document.addEventListener('keydown', (e) => {
-  if(e.code == "Space") {
-    console.log("Space pressed");
-    toggleAnimation();    
+window.onload = function() {
+  // Focus the window on load
+  window.focus();
+
+  // Function to check focus and attach event listener
+  function check_focus() {
+    if (!document.hasFocus()) {
+      window.focus();
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.code === "Space") {
+        e.preventDefault();  // Prevent default space key actions
+        console.log("PRESSED");
+        toggleAnimation();
+      }
+    });
   }
-});
+
+  // Call the check_focus function to set up the event listener
+  check_focus();
+};
 
 
 // Handle the stop/resume button click event
